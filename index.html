@@ -157,4 +157,719 @@ button:disabled{opacity:.6;transform:none}
   position:absolute;
   inset:0;
   background:linear-gradient(180deg,rgba(10,132,255,.10),transparent 60%);
-  poi
+  pointer-events:none
+}
+
+.brand{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:22px
+}
+.chip{
+  position:relative;
+  overflow:hidden;
+  padding:6px 14px;
+  border-radius:10px;
+  background:rgba(255,255,255,.68);
+  border:1px solid rgba(0,0,0,.06);
+  font-weight:800;
+  backdrop-filter:saturate(1.8) blur(8px);
+  box-shadow:inset 0 0 0 .5px rgba(255,255,255,.6)
+}
+.chip:after{
+  content:"";
+  position:absolute;
+  top:-50%;
+  left:-30%;
+  width:60%;
+  height:200%;
+  background:linear-gradient(120deg,rgba(255,255,255,0) 0%,rgba(255,255,255,.65) 50%,rgba(255,255,255,0) 100%);
+  transform:rotate(12deg);
+  animation:shimmer 3.6s linear infinite;
+  pointer-events:none
+}
+@keyframes shimmer{
+  0%{transform:translateX(-120%) rotate(12deg)}
+  100%{transform:translateX(220%) rotate(12deg)}
+}
+.logo-line{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:4px;
+  font-size:clamp(22px,3.6vw,28px);
+  font-weight:800;
+  letter-spacing:.02em
+}
+.logo-xpo{color:#E53935;font-weight:900;animation:logoPop .7s var(--ease-snap)}
+.logo-log{color:var(--text);font-weight:900;animation:logoFade .9s var(--ease-soft)}
+@keyframes logoPop{
+  0%{transform:translateY(6px) scale(.96);opacity:0}
+  100%{transform:none;opacity:1}
+}
+@keyframes logoFade{
+  0%{letter-spacing:.12em;opacity:0}
+  100%{letter-spacing:.02em;opacity:1}
+}
+.headline{
+  margin:4px 0 2px;
+  text-align:center;
+  font-weight:500;
+  font-size:clamp(20px,3.2vw,26px)
+}
+
+.card,.panel,.pill,.record,.compact{
+  background:linear-gradient(180deg,rgba(255,255,255,.45) 0%,rgba(255,255,255,.15) 12%,rgba(245,246,250,0) 28%),linear-gradient(145deg,rgba(255,255,255,.80),rgba(245,246,250,.92));
+  backdrop-filter:blur(18px);
+  -webkit-backdrop-filter:blur(18px);
+  border-radius:16px;
+  border:1px solid rgba(255,255,255,.65);
+  box-shadow:inset 0 1px 3px rgba(255,255,255,.9),inset 0 10px 22px rgba(255,255,255,.25),0 12px 28px rgba(0,0,0,.06),0 4px 10px rgba(0,0,0,.04);
+  transition:all .25s ease
+}
+.card:hover,.panel:hover,.pill:hover,.record:hover,.compact:hover{
+  box-shadow:inset 0 1px 3px rgba(255,255,255,.9),inset 0 12px 26px rgba(255,255,255,.28),0 14px 32px rgba(0,0,0,.08),0 4px 12px rgba(0,0,0,.05);
+  transform:translateY(-1px)
+}
+
+.card{
+  padding:16px;
+  margin:18px 0 20px;
+  overflow:hidden
+}
+.card-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  padding:12px 16px;
+  border-bottom:1px solid var(--line);
+  background:linear-gradient(180deg,#FBFBFD,transparent)
+}
+.title-lg{font-weight:600;letter-spacing:.01em}
+.chevron{opacity:.65;user-select:none}
+.card-content{position:relative;min-height:240px;perspective:1000px}
+
+.screen{
+  position:absolute;
+  inset:0;
+  padding:18px 16px;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  align-items:center;
+  justify-content:flex-start;
+  opacity:0;
+  transform:translateY(20px) scale(.98) translateZ(0);
+  pointer-events:none;
+  transition:opacity .55s cubic-bezier(.22,1,.36,1),transform .55s cubic-bezier(.22,1,.36,1)
+}
+.screen.active{
+  opacity:1;
+  transform:translateY(0) scale(1) translateZ(0);
+  pointer-events:auto
+}
+
+.row{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  justify-content:center;
+  width:100%;
+  max-width:560px
+}
+.row.states{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:10px;
+  width:100%;
+  max-width:560px
+}
+.row .btn,.row.states .btn{width:100%}
+
+.btn,.btn-primary,.btn-secondary,.action-btn{position:relative;overflow:hidden}
+.btn-primary,.btn-secondary,.action-btn{
+  height:44px;
+  border-radius:14px;
+  font-weight:600
+}
+.btn-primary{background:var(--accent);color:#fff;border-color:transparent}
+.btn-primary:hover{background:#0A7AF0}
+.btn-secondary{background:#F3F4F6;border:1px solid #E3E4E6}
+.btn-secondary:hover{background:#ECEEF2}
+
+.action-btn{
+  padding:10px 16px!important;
+  font-size:14.5px!important;
+  border-radius:12px!important;
+  border:1px solid rgba(255,255,255,.65)!important;
+  background:linear-gradient(150deg,rgba(255,255,255,.90),rgba(240,240,245,.96))!important;
+  backdrop-filter:blur(14px);
+  -webkit-backdrop-filter:blur(14px);
+  box-shadow:inset 0 1px 2px rgba(255,255,255,.75),inset 0 4px 8px rgba(255,255,255,.18),0 6px 14px rgba(0,0,0,.04),0 2px 6px rgba(0,0,0,.03)!important
+}
+.action-btn:hover{
+  box-shadow:inset 0 2px 4px rgba(255,255,255,.9),inset 0 6px 10px rgba(255,255,255,.22),0 8px 18px rgba(0,0,0,.05),0 2px 6px rgba(0,0,0,.04)!important
+}
+.action-btn:active{opacity:.85;transform:scale(.96)}
+
+.input-error{
+  border-color:#FF4D4F!important;
+  box-shadow:0 0 0 2px rgba(255,77,79,.20)!important
+}
+
+.pills{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:12px
+}
+.pill{
+  position:relative;
+  overflow:hidden;
+  padding:12px 16px;
+  border-radius:999px;
+  background:#FFFFFF;
+  border:1px solid rgba(0,0,0,.04)
+}
+.pill:before{
+  content:"";
+  position:absolute;
+  inset:0;
+  width:var(--fill,0%);
+  background:linear-gradient(90deg,rgba(10,132,255,.18),rgba(10,132,255,.32));
+  transition:all .22s var(--ease-soft)
+}
+.pill-inner{
+  position:relative;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  z-index:1
+}
+.pill .label{font-weight:500;letter-spacing:.01em}
+.pill .val{
+  font-weight:700;
+  min-width:2.5ch;
+  text-align:right;
+  color:var(--accent);
+  font-variant-numeric:tabular-nums
+}
+
+.compact{padding:0;border-radius:16px}
+.compact-header{
+  position:sticky;
+  top:12px;
+  z-index:5;
+  padding:10px;
+  border-bottom:1px solid var(--line);
+  background:linear-gradient(180deg,#FBFBFD,transparent);
+  display:flex;
+  gap:8px;
+  justify-content:center;
+  flex-wrap:wrap;
+  border-top-left-radius:16px;
+  border-top-right-radius:16px
+}
+.segment{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+  padding:4px;
+  justify-content:center
+}
+.segment button{
+  position:relative;
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding:5px 10px;
+  min-height:0;
+  border-radius:999px;
+  border:1px solid rgba(0,0,0,.04);
+  background:rgba(255,255,255,.7);
+  font-size:13px;
+  font-weight:500;
+  color:#4B5563;
+  box-shadow:0 1px 2px rgba(0,0,0,.04)
+}
+.segment button:before{
+  content:"";
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  background:#D0D3D8
+}
+.segment button[data-tab="TODAS"]:before{background:linear-gradient(135deg,#0A84FF,#00B487)}
+.segment button[data-tab="CARGADA"]:before{background:#0A8369}
+.segment button[data-tab="VACÍA"]:before{background:#1564C0}
+.segment button[data-tab="AVERIADA"]:before{background:#8F6200}
+.segment button.active{
+  background:rgba(10,132,255,.10);
+  border-color:rgba(10,132,255,.35);
+  color:var(--text);
+  box-shadow:0 0 0 1px rgba(10,132,255,.18)
+}
+.segment .badge{
+  margin-left:2px;
+  padding:1px 6px;
+  border-radius:999px;
+  font-size:11px;
+  font-weight:600;
+  background:rgba(0,0,0,.04);
+  color:var(--accent)
+}
+
+.record{
+  position:relative;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  padding:18px 12px;
+  margin-bottom:8px;
+  border:1px solid rgba(0,0,0,.06);
+  border-radius:12px;
+  background:#fff;
+  animation:recordEntry .3s ease-out
+}
+.record:before{
+  content:"";
+  position:absolute;
+  left:0;
+  top:0;
+  bottom:0;
+  width:3px;
+  border-radius:3px;
+  background:var(--record-state-color,rgba(0,0,0,.1))
+}
+.record.state-empty{background:var(--state-empty-bg);border-color:var(--state-empty-border);color:var(--state-empty-text)}
+.record.state-loaded{background:var(--state-loaded-bg);border-color:var(--state-loaded-border);color:var(--state-loaded-text)}
+.record.state-broken{background:var(--state-broken-bg);border-color:var(--state-broken-border);color:var(--state-broken-text)}
+
+.rowline{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px
+}
+.rowline .mat{
+  font-weight:600;
+  max-width:46%;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis
+}
+.rowline .est{opacity:.85}
+.rowline .ts{opacity:.65;font-size:12px}
+
+.record-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:6px
+}
+.record-matricula{font-weight:500;font-size:17px}
+.record-estado{font-weight:500;opacity:.85}
+.record-time{font-size:13px;opacity:.65;margin-top:2px}
+.record-content{line-height:1.45;margin-top:6px;margin-bottom:14px}
+.record-actions{text-align:right;margin-top:6px}
+.record .actions{
+  display:flex;
+  justify-content:flex-end;
+  gap:8px;
+  margin-top:6px
+}
+.record .actions .action-btn{
+  padding:6px 10px;
+  font-size:12px;
+  border-radius:10px;
+  border:1px solid rgba(0,0,0,.08);
+  background:#F7F8FA
+}
+
+.steps,.step-circles{
+  display:flex;
+  justify-content:center;
+  gap:12px;
+  margin-top:18px;
+  margin-bottom:16px;
+  padding-top:18px;
+  position:relative
+}
+.steps .dot,.step-circle{
+  width:12px;
+  height:12px;
+  border-radius:50%;
+  background:#D0D3D8;
+  opacity:.6;
+  transition:all .28s var(--ease-snap);
+  animation:dotEnter .38s ease-out forwards
+}
+.steps .dot.active,.step-circle.active{
+  background:var(--accent);
+  transform:scale(1.35);
+  opacity:1;
+  animation:popDot .28s var(--ease-snap)
+}
+.steps .dot.done,.step-circle.done{background:#6CAEFF;opacity:.9}
+
+@keyframes recordEntry{0%{opacity:0;transform:translateY(8px)}100%{opacity:1;transform:translateY(0)}}
+@keyframes popDot{0%{transform:scale(.85)}55%{transform:scale(1.42)}100%{transform:scale(1.35)}}
+@keyframes dotEnter{0%{opacity:0;transform:translateY(8px)}100%{opacity:1;transform:translateY(0)}}
+
+.step-title{
+  display:block;
+  text-align:left;
+  font-weight:600;
+  margin-top:14px;
+  margin-bottom:8px;
+  position:relative
+}
+.step-title.active:after{
+  content:"";
+  position:absolute;
+  left:0;
+  right:0;
+  bottom:-2px;
+  height:2px;
+  background:var(--accent);
+  border-radius:2px
+}
+.step-title.inactive{opacity:.45}
+.step-sub{
+  font-size:14px;
+  color:#7A7F85;
+  margin-bottom:18px
+}
+.step-panel{
+  opacity:0;
+  transform:translateY(6px);
+  transition:opacity .20s var(--ease-soft),transform .20s var(--ease-soft);
+  padding-top:20px
+}
+.step-panel.visible{
+  opacity:1;
+  transform:translateY(0);
+  padding-top:12px
+}
+.btn-back{
+  margin-top:32px!important;
+  margin-bottom:10px!important;
+  position:relative;
+  z-index:10;
+  display:block
+}
+
+.state-button.selected{
+  box-shadow:0 0 0 2px rgba(10,132,255,.35);
+  background:rgba(10,132,255,.08)
+}
+.state-empty{background:var(--state-empty-bg);border-color:var(--state-empty-border);color:var(--state-empty-text)}
+.state-loaded{background:var(--state-loaded-bg);border-color:var(--state-loaded-border);color:var(--state-loaded-text)}
+.state-broken{background:var(--state-broken-bg);border-color:var(--state-broken-border);color:var(--state-broken-text)}
+
+.toast{
+  position:fixed;
+  left:50%;
+  top:16px;
+  transform:translateX(-50%) translateY(-16px);
+  background:rgba(52,199,89,.96);
+  color:#fff;
+  padding:10px 14px;
+  border-radius:12px;
+  box-shadow:0 10px 28px rgba(0,0,0,.18);
+  opacity:0;
+  z-index:50;
+  border:1px solid rgba(255,255,255,.6)
+}
+.toast.show{animation:toastIn 1.8s var(--ease-soft)}
+@keyframes toastIn{
+  0%{opacity:0;transform:translateX(-50%) translateY(-16px)}
+  12%{opacity:1;transform:translateX(-50%) translateY(0)}
+  88%{opacity:1}
+  100%{opacity:0;transform:translateX(-50%) translateY(-16px)}
+}
+
+.modal{
+  position:fixed;
+  inset:0;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:30;
+  background:rgba(0,0,0,.18)
+}
+.modal.open{display:flex}
+.modal-card{
+  width:min(96vw,560px);
+  background:#fff;
+  border:1px solid rgba(0,0,0,.06);
+  border-radius:20px;
+  box-shadow:var(--shadow-2);
+  padding:16px;
+  display:flex;
+  flex-direction:column;
+  gap:10px
+}
+.modal-title{font-weight:500;font-size:18px}
+.modal-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end}
+
+#dynamicIsland{
+  position:fixed;
+  top:12px;
+  left:50%;
+  transform:translateX(-50%) scale(.96);
+  opacity:0;
+  min-width:120px;
+  text-align:center;
+  padding:10px 18px;
+  background:linear-gradient(145deg,rgba(255,255,255,.82),rgba(245,246,250,.96));
+  backdrop-filter:blur(22px);
+  -webkit-backdrop-filter:blur(22px);
+  border-radius:18px;
+  border:1px solid rgba(255,255,255,.6);
+  box-shadow:0 10px 28px rgba(0,0,0,.08),inset 0 1px 3px rgba(255,255,255,.7);
+  font-weight:600;
+  color:#1c1f24;
+  letter-spacing:.01em;
+  z-index:9999;
+  isolation:isolate;
+  overflow:hidden
+}
+#dynamicIsland.di-show{opacity:1;transform:translateX(-50%) scale(1);animation:diMorph .35s var(--ease-snap) both}
+#dynamicIsland.di-hide{animation:diShrink .32s ease both}
+#dynamicIsland:after{
+  content:"";
+  position:absolute;
+  left:10px;
+  right:10px;
+  bottom:6px;
+  height:3px;
+  background:rgba(180,188,194,.45);
+  border-radius:3px
+}
+#dynamicIsland .bar{
+  position:absolute;
+  left:10px;
+  bottom:6px;
+  height:3px;
+  width:0%;
+  background:var(--accent);
+  border-radius:3px;
+  transition:width .2s ease
+}
+@keyframes diMorph{
+  0%{transform:translateX(-50%) scale(.94);opacity:0}
+  60%{transform:translateX(-50%) scale(1.02);opacity:1}
+  100%{transform:translateX(-50%) scale(1);opacity:1}
+}
+@keyframes diShrink{
+  0%{transform:translateX(-50%) scale(1);opacity:1}
+  100%{transform:translateX(-50%) scale(.96);opacity:0}
+}
+
+#clearEffect{
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  display:none;
+  z-index:3000
+}
+.particle{
+  position:absolute;
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  background:rgba(255,255,255,.9);
+  box-shadow:0 0 14px rgba(255,255,255,.9);
+  animation:particleOut .6s ease-out forwards
+}
+@keyframes particleOut{
+  to{transform:translate(var(--dx),var(--dy)) scale(0);opacity:0}
+}
+.flash{
+  position:absolute;
+  inset:0;
+  background:radial-gradient(circle at center,rgba(255,255,255,.9),transparent 70%);
+  animation:flashOut .5s ease-out forwards
+}
+@keyframes flashOut{from{opacity:1}to{opacity:0}}
+
+@media (max-width:600px){
+  .app{padding-left:12px;padding-right:12px}
+  .pills{grid-template-columns:1fr;gap:10px}
+  .pill{padding:14px 16px}
+  .record{padding:8px 10px}
+  .record .meta{display:flex;flex-direction:column;gap:2px}
+  .record .meta .item,.record .content{font-size:12.5px!important}
+  .record .actions{display:flex;justify-content:flex-end;gap:8px;margin-top:6px}
+  .record .actions button{padding:6px 10px!important;font-size:12px!important}
+  .segment button{padding:6px 10px!important;font-size:13px!important}
+  .card{padding:14px!important}
+  .btn-primary,.btn-secondary{font-size:14px!important;padding:10px!important}
+  .modal-row{grid-template-columns:1fr}
+}
+
+@media (min-width:600px) and (max-width:900px){
+  .pills{grid-template-columns:repeat(2,1fr)}
+  .record .content{font-size:14px}
+}
+
+@media (min-width:900px){
+  .record{padding:12px 14px}
+}
+</style>
+</head>
+<body>
+<div id="dynamicIsland">XPO listo<div class="bar"></div></div>
+<div id="clearEffect"></div>
+<div class="toast" id="toast">Guardado correctamente</div>
+
+<div class="app">
+  <header class="header">
+    <div class="brand">
+      <div class="chip">Registro</div>
+      <div>
+        <div class="logo-line"><span class="logo-xpo">XPO</span><span class="logo-log">Log</span></div>
+        <p class="headline">Registro de Plataformas</p>
+      </div>
+      <div class="chip">v1</div>
+    </div>
+  </header>
+
+  <section class="card" id="flowCard">
+    <div class="card-header">
+      <div class="title-lg">Nueva entrada</div>
+      <div class="chevron">›</div>
+    </div>
+
+    <div class="card-content">
+      <div class="screen active" id="screen1">
+        <div class="steps">
+          <span class="dot active"></span><span class="dot"></span><span class="dot"></span>
+        </div>
+        <div class="step-title">Selecciona estado</div>
+        <div class="row states">
+          <button class="btn state-button selected" data-state="loaded">CARGADA</button>
+          <button class="btn state-button" data-state="empty">VACÍA</button>
+          <button class="btn state-button" data-state="broken">AVERIADA</button>
+        </div>
+        <div class="step-sub">Elige el estado de la plataforma antes de registrar la matrícula.</div>
+        <div class="row">
+          <button class="btn btn-primary" id="nextBtn">Continuar</button>
+        </div>
+      </div>
+
+      <div class="screen" id="screen2">
+        <div class="steps">
+          <span class="dot done"></span><span class="dot active"></span><span class="dot"></span>
+        </div>
+        <div class="step-title">Datos del registro</div>
+        <input class="input" id="matricula" placeholder="Matrícula" />
+        <textarea class="textarea" id="detalle" placeholder="Observaciones"></textarea>
+        <div class="row">
+          <button class="btn btn-secondary" id="backBtn">Volver</button>
+          <button class="btn btn-primary" id="saveBtn">Guardar</button>
+        </div>
+      </div>
+
+      <div class="screen" id="screen3">
+        <div class="steps">
+          <span class="dot done"></span><span class="dot done"></span><span class="dot active"></span>
+        </div>
+        <div class="step-title">Confirmación</div>
+        <div class="pill" style="width:100%"><div class="pill-inner"><span class="label">Último estado</span><span class="val" id="finalState">CARGADA</span></div></div>
+        <div class="pill" style="width:100%"><div class="pill-inner"><span class="label">Matrícula</span><span class="val" id="finalMat">—</span></div></div>
+        <div class="row">
+          <button class="btn btn-secondary" id="newBtn">Nuevo registro</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="pills">
+      <div class="pill"><div class="pill-inner"><span class="label">Cargadas</span><span class="val">18</span></div></div>
+      <div class="pill"><div class="pill-inner"><span class="label">Vacías</span><span class="val">7</span></div></div>
+      <div class="pill"><div class="pill-inner"><span class="label">Averiadas</span><span class="val">3</span></div></div>
+    </div>
+  </section>
+
+  <section class="compact">
+    <div class="compact-header">
+      <div class="segment">
+        <button class="active" data-tab="TODAS">TODAS <span class="badge">28</span></button>
+        <button data-tab="CARGADA">CARGADA <span class="badge">18</span></button>
+        <button data-tab="VACÍA">VACÍA <span class="badge">7</span></button>
+        <button data-tab="AVERIADA">AVERIADA <span class="badge">3</span></button>
+      </div>
+    </div>
+
+    <div style="padding:12px;">
+      <div class="record state-loaded">
+        <div class="record-header"><div class="record-matricula">1234-ABC</div><div class="record-estado">CARGADA</div></div>
+        <div class="record-time">Hoy · 18:02</div>
+        <div class="record-content">Plataforma lista para salida. Sin incidencias.</div>
+        <div class="actions"><button class="action-btn">Editar</button><button class="action-btn">Eliminar</button></div>
+      </div>
+
+      <div class="record state-empty">
+        <div class="record-header"><div class="record-matricula">8721-KLM</div><div class="record-estado">VACÍA</div></div>
+        <div class="record-time">Hoy · 17:41</div>
+        <div class="record-content">Esperando asignación de mercancía.</div>
+        <div class="actions"><button class="action-btn">Editar</button><button class="action-btn">Eliminar</button></div>
+      </div>
+
+      <div class="record state-broken">
+        <div class="record-header"><div class="record-matricula">4480-ZXY</div><div class="record-estado">AVERIADA</div></div>
+        <div class="record-time">Hoy · 16:55</div>
+        <div class="record-content">Revisión mecánica pendiente.</div>
+        <div class="actions"><button class="action-btn">Editar</button><button class="action-btn">Eliminar</button></div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+const stateButtons=[...document.querySelectorAll('.state-button')];
+const screens=[...document.querySelectorAll('.screen')];
+const stateMap={loaded:'CARGADA',empty:'VACÍA',broken:'AVERIADA'};
+let currentState='loaded';
+const toast=document.getElementById('toast');
+const island=document.getElementById('dynamicIsland');
+const bar=island.querySelector('.bar');
+
+function showScreen(i){screens.forEach((s,idx)=>s.classList.toggle('active',idx===i))}
+
+stateButtons.forEach(b=>b.onclick=()=>{
+  stateButtons.forEach(x=>x.classList.remove('selected'));
+  b.classList.add('selected');
+  currentState=b.dataset.state;
+  island.childNodes[0].textContent=`${stateMap[currentState]} seleccionada`;
+  island.classList.add('di-show');
+  clearTimeout(window._islandT);
+  window._islandT=setTimeout(()=>island.classList.remove('di-show'),1200);
+});
+
+document.getElementById('nextBtn').onclick=()=>showScreen(1);
+document.getElementById('backBtn').onclick=()=>showScreen(0);
+
+document.getElementById('saveBtn').onclick=()=>{
+  document.getElementById('finalState').textContent=stateMap[currentState];
+  document.getElementById('finalMat').textContent=document.getElementById('matricula').value||'—';
+  showScreen(2);
+  toast.classList.remove('show');
+  void toast.offsetWidth;
+  toast.classList.add('show');
+};
+
+document.getElementById('newBtn').onclick=()=>{
+  document.getElementById('matricula').value='';
+  document.getElementById('detalle').value='';
+  showScreen(0);
+};
+</script>
+</body>
+</html>
