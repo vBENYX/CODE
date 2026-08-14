@@ -1,875 +1,446 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0"/>
-<title>XPO — Registro de Plataformas</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f3f5f9">
+<title>XPO · Control de Plataformas</title>
+
+
 <style>
-*,
-*:before,
-*:after{box-sizing:border-box}
-html,h1,h2,h3,h4,p{margin:0}
-img,svg,video{display:block;max-width:100%}
-button,input,textarea,select{font:inherit;font-size:16px}
-button{-webkit-tap-highlight-color:transparent;touch-action:manipulation}
-a,a:visited,a:hover,a:active{text-decoration:none!important;color:inherit}
-
 :root{
-  --accent:#0A84FF;
-  --bg:#F5F6F7;
-  --panel:#FFFFFF;
-  --line:rgba(0,0,0,.06);
-  --text:#111418;
-  --muted:#6A6F75;
-  --ok:#34C759;
-
-  --state-empty-bg:rgba(33,131,255,.10);
-  --state-empty-border:rgba(33,131,255,.22);
-  --state-empty-text:#1564C0;
-
-  --state-loaded-bg:rgba(0,180,135,.10);
-  --state-loaded-border:rgba(0,180,135,.22);
-  --state-loaded-text:#0A8369;
-
-  --state-broken-bg:rgba(241,184,58,.12);
-  --state-broken-border:rgba(241,184,58,.22);
-  --state-broken-text:#8F6200;
-
-  --radius-sm:12px;
-  --radius-md:16px;
-  --radius-lg:20px;
-  --radius-xl:22px;
-
-  --shadow-1:0 4px 12px rgba(0,0,0,.05);
-  --shadow-2:0 10px 28px rgba(0,0,0,.06);
-  --ease-snap:cubic-bezier(.22,1,.36,1);
-  --ease-soft:cubic-bezier(.25,.8,.25,1);
-  --blur:18px;
-
-  --space-xxs:4px;
-  --space-xs:8px;
-  --space-sm:12px;
-  --space-md:16px;
-  --space-lg:20px;
-  --space-xl:28px;
+  --bg:#f4f5f9;--surface:rgba(255,255,255,.84);--surface2:#fff;
+  --line:rgba(15,23,42,.075);--text:#111827;--muted:#667085;
+  --blue:#007aff;--green:#16a56b;--orange:#f59e0b;--red:#ff3b30;
+  --shadow:0 12px 35px rgba(16,24,40,.075)
 }
-
-html{
-  -webkit-font-smoothing:antialiased;
-  -moz-osx-font-smoothing:grayscale;
-  text-rendering:optimizeLegibility;
-  scroll-behavior:smooth;
-}
-
+*{box-sizing:border-box}
+html,body{width:100%;min-width:0;margin:0;padding:0;background:var(--bg)}
 body{
-  margin:0;
-  min-height:100%;
-  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Inter",system-ui,sans-serif;
-  line-height:1.46;
   color:var(--text);
-  background:linear-gradient(to bottom,#ffffff 0%,#f2f3f7 70%,#eaecf2 100%);
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text","Helvetica Neue",Helvetica,Arial,sans-serif;
+  font-feature-settings:"kern" 1,"liga" 1;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
 }
-
-@media (prefers-reduced-motion: reduce){
-  *,
-  *:before,
-  *:after{
-    animation-duration:.001ms!important;
-    animation-iteration-count:1!important;
-    transition-duration:.001ms!important;
-    scroll-behavior:auto!important
-  }
-}
-
-input,textarea{
-  width:100%;
-  display:block;
-  max-width:100%;
-  background:linear-gradient(145deg,rgba(255,255,255,.85),rgba(245,246,250,.95));
-  border:1px solid #E5E6E7;
-  border-radius:12px;
-  padding:10px 14px;
-  color:var(--text);
-  box-shadow:inset 0 2px 4px rgba(255,255,255,.8),inset 0 -2px 6px rgba(220,220,230,.4),0 2px 6px rgba(0,0,0,.04);
-  transition:all .2s ease;
-}
-input:hover,textarea:hover,select:hover{
-  box-shadow:inset 0 2px 6px rgba(255,255,255,.9),inset 0 -3px 8px rgba(220,220,230,.5),0 3px 10px rgba(0,0,0,.06)
-}
-input:focus,textarea:focus,select:focus{
-  outline:none;
-  border-color:var(--accent);
-  box-shadow:inset 0 2px 6px rgba(255,255,255,1),inset 0 -3px 10px rgba(220,220,230,.6),0 0 0 3px rgba(10,132,255,.20),0 3px 10px rgba(0,0,0,.08)
-}
-textarea{min-height:88px;max-height:220px;resize:vertical}
-select{appearance:none;background-image:linear-gradient(145deg,rgba(255,255,255,.85),rgba(245,246,250,.95))}
-
-button{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  gap:8px;
-  min-height:48px;
-  padding:0 18px;
-  border:1px solid rgba(255,255,255,.7);
-  border-radius:14px;
-  background:linear-gradient(150deg,rgba(255,255,255,.90),rgba(240,240,245,.95));
-  color:var(--text);
-  font-weight:600;
-  box-shadow:inset 0 1px 3px rgba(255,255,255,.85),inset 0 6px 12px rgba(255,255,255,.25),0 10px 18px rgba(0,0,0,.05),0 3px 8px rgba(0,0,0,.03);
-  transition:all .25s ease;
-}
-button:hover{
-  transform:translateY(-1px);
-  box-shadow:inset 0 2px 5px rgba(255,255,255,1),inset 0 8px 14px rgba(255,255,255,.35),0 12px 26px rgba(0,0,0,.07),0 4px 10px rgba(0,0,0,.04)
-}
-button:active{transform:scale(.97);opacity:.9}
-button:disabled{opacity:.6;transform:none}
-
+button,input,textarea,select{font:inherit}
+button{touch-action:manipulation}
 .app{
-  max-width:1040px;
+  width:100%;
+  max-width:520px;
   margin:0 auto;
-  padding:calc(18px + env(safe-area-inset-top)) 16px calc(28px + env(safe-area-inset-bottom)) 16px;
+  padding:0 10px calc(env(safe-area-inset-bottom) + 94px);
 }
-.main-container,.card,.record,.group,.step-panel{
-  margin-left:auto;
-  margin-right:auto;
-  max-width:440px;
+.topbar{
+  width:calc(100% + 20px);
+  margin-left:-10px;
+  position:sticky;top:0;z-index:30;
+  display:flex;align-items:center;gap:10px;
+  padding:calc(env(safe-area-inset-top) + 9px) 10px 10px;
+  background:rgba(244,245,249,.88);
+  border-bottom:1px solid rgba(15,23,42,.045);
+  backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px)
 }
-
-.header{
-  position:sticky;
-  top:12px;
-  z-index:10;
-  border-radius:22px;
-  padding:18px 20px;
-  background:rgba(255,255,255,.28);
-  border:1px solid rgba(255,255,255,.35);
-  backdrop-filter:blur(18px) saturate(180%);
-  -webkit-backdrop-filter:blur(18px) saturate(180%);
-  box-shadow:0 8px 24px rgba(0,0,0,.06);
-  overflow:hidden;
-  isolation:isolate;
-  transform:translateZ(0);
-}
-.header:before{
-  content:"";
-  position:absolute;
-  inset:0;
-  background:linear-gradient(180deg,rgba(10,132,255,.10),transparent 60%);
-  pointer-events:none
-}
-
-.brand{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:22px
-}
-.chip{
-  position:relative;
-  overflow:hidden;
-  padding:6px 14px;
-  border-radius:10px;
-  background:rgba(255,255,255,.68);
-  border:1px solid rgba(0,0,0,.06);
-  font-weight:800;
-  backdrop-filter:saturate(1.8) blur(8px);
-  box-shadow:inset 0 0 0 .5px rgba(255,255,255,.6)
-}
-.chip:after{
-  content:"";
-  position:absolute;
-  top:-50%;
-  left:-30%;
-  width:60%;
-  height:200%;
-  background:linear-gradient(120deg,rgba(255,255,255,0) 0%,rgba(255,255,255,.65) 50%,rgba(255,255,255,0) 100%);
-  transform:rotate(12deg);
-  animation:shimmer 3.6s linear infinite;
-  pointer-events:none
-}
-@keyframes shimmer{
-  0%{transform:translateX(-120%) rotate(12deg)}
-  100%{transform:translateX(220%) rotate(12deg)}
-}
-.logo-line{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:4px;
-  font-size:clamp(22px,3.6vw,28px);
-  font-weight:800;
-  letter-spacing:.02em
-}
-.logo-xpo{color:#E53935;font-weight:900;animation:logoPop .7s var(--ease-snap)}
-.logo-log{color:var(--text);font-weight:900;animation:logoFade .9s var(--ease-soft)}
-@keyframes logoPop{
-  0%{transform:translateY(6px) scale(.96);opacity:0}
-  100%{transform:none;opacity:1}
-}
-@keyframes logoFade{
-  0%{letter-spacing:.12em;opacity:0}
-  100%{letter-spacing:.02em;opacity:1}
-}
-.headline{
-  margin:4px 0 2px;
-  text-align:center;
-  font-weight:500;
-  font-size:clamp(20px,3.2vw,26px)
-}
-
-.card,.panel,.pill,.record,.compact{
-  background:linear-gradient(180deg,rgba(255,255,255,.45) 0%,rgba(255,255,255,.15) 12%,rgba(245,246,250,0) 28%),linear-gradient(145deg,rgba(255,255,255,.80),rgba(245,246,250,.92));
-  backdrop-filter:blur(18px);
-  -webkit-backdrop-filter:blur(18px);
-  border-radius:16px;
-  border:1px solid rgba(255,255,255,.65);
-  box-shadow:inset 0 1px 3px rgba(255,255,255,.9),inset 0 10px 22px rgba(255,255,255,.25),0 12px 28px rgba(0,0,0,.06),0 4px 10px rgba(0,0,0,.04);
-  transition:all .25s ease
-}
-.card:hover,.panel:hover,.pill:hover,.record:hover,.compact:hover{
-  box-shadow:inset 0 1px 3px rgba(255,255,255,.9),inset 0 12px 26px rgba(255,255,255,.28),0 14px 32px rgba(0,0,0,.08),0 4px 12px rgba(0,0,0,.05);
-  transform:translateY(-1px)
-}
-
+.brand{display:flex;align-items:center;gap:9px;min-width:0}
+.logo{width:41px;height:41px;flex:0 0 41px;border-radius:13px;display:grid;place-items:center;background:linear-gradient(145deg,#ff7844,#ff4b30);color:#fff;font-size:12px;font-weight:900;box-shadow:0 8px 18px rgba(255,80,50,.23)}
+h1{margin:0;font-size:18px;line-height:1.05;letter-spacing:-.045em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.subtitle{margin-top:3px;font-size:9px;color:var(--muted);white-space:nowrap}
+.live{margin-left:auto;flex:0 0 auto;display:flex;align-items:center;gap:5px;padding:7px 9px;border-radius:999px;background:#fff;border:1px solid var(--line);font-size:8px;font-weight:800;box-shadow:0 4px 12px rgba(16,24,40,.05)}
+.dot{width:6px;height:6px;border-radius:50%;background:#18c77a;box-shadow:0 0 0 3px #18c77a1c}
+.view{display:none;width:100%;animation:appear .28s ease}.view.active{display:block}
+@keyframes appear{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.hero{width:100%;padding:18px 2px 12px}.eyebrow,.kicker{font-size:9px;letter-spacing:.09em;font-weight:850;color:var(--blue);text-transform:uppercase}
+.hero h2{margin:3px 0 4px;font-size:29px;line-height:1;letter-spacing:-.06em;font-weight:780}
+.hero p{margin:0;color:var(--muted);font-size:11px;line-height:1.4}
 .card{
-  padding:16px;
-  margin:18px 0 20px;
-  overflow:hidden
+  width:100%;margin:0 0 10px;padding:13px;
+  border-radius:21px;border:1px solid rgba(255,255,255,.95);
+  background:var(--surface);box-shadow:var(--shadow);
+  backdrop-filter:blur(25px) saturate(160%);-webkit-backdrop-filter:blur(25px) saturate(160%)
 }
-.card-header{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:8px;
-  padding:12px 16px;
-  border-bottom:1px solid var(--line);
-  background:linear-gradient(180deg,#FBFBFD,transparent)
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:7px;width:100%}
+.stat{min-width:0;padding:12px;border-radius:16px;background:rgba(255,255,255,.62);border:1px solid var(--line)}
+.stat b{display:block;font-size:25px;line-height:1;letter-spacing:-.055em;font-variant-numeric:tabular-nums}
+.stat span{display:block;margin-top:5px;color:var(--muted);font-size:8px;font-weight:850;letter-spacing:.04em}
+.stat.blue b{color:var(--blue)}.stat.green b{color:var(--green)}.stat.orange b{color:#c47a00}.stat.red b{color:var(--red)}
+.section-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:7px}
+.section-head h3{margin:0;font-size:14px;letter-spacing:-.025em;font-weight:780}
+.link{border:0;background:#007aff0b;color:var(--blue);min-height:32px;padding:6px 9px;border-radius:10px;font-size:9px;font-weight:800}
+.activity,.record{display:flex;align-items:center;gap:9px;width:100%;min-width:0;padding:10px 1px;border-bottom:1px solid var(--line)}
+.activity:last-child,.record:last-child{border-bottom:0}
+.activity-icon,.record-badge{width:35px;height:35px;flex:0 0 35px;border-radius:11px;display:grid;place-items:center;font-size:12px;font-weight:900;background:#007aff10;color:var(--blue)}
+.activity-icon.bad,.record-badge.bad{background:#ff3b3010;color:var(--red)}
+.activity-icon.empty,.record-badge.empty{background:#f59e0b12;color:#a16207}
+.activity-main,.record-main{min-width:0;flex:1}.activity-main strong,.record-main strong{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:11px}.activity-main small,.record-main small{display:block;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--muted);font-size:8px}.activity-time{flex:0 0 auto;color:var(--muted);font-size:8px}
+.quick-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;width:100%;margin-top:1px}
+.quick-action{width:100%;min-width:0;min-height:63px;display:flex;align-items:center;gap:8px;padding:9px;border:0;border-radius:17px;cursor:pointer}
+.quick-action.primary{margin:0;background:linear-gradient(180deg,#0a84ff,#007aff);color:#fff;box-shadow:0 9px 20px #007aff25}
+.quick-action.alert{background:#ff3b300b;color:#b42318;border:1px solid #ff3b3017}
+.qa-icon{width:31px;height:31px;flex:0 0 31px;border-radius:10px;display:grid;place-items:center;background:#ffffff26;font-size:17px}
+.alert .qa-icon{background:#ff3b3010}.quick-action b{display:block;font-size:10px;text-align:left}.quick-action small{display:block;margin-top:2px;font-size:7px;opacity:.72;text-align:left}.qa-arrow{margin-left:auto;font-size:18px;opacity:.65}
+.form-card{padding:14px}
+.stepper{display:grid;grid-template-columns:auto 1fr auto 1fr auto;align-items:center;gap:5px;width:100%;margin:2px 0 20px}
+.step-dot{display:flex;flex-direction:column;align-items:center;gap:3px;min-width:45px;color:#98a2b3}.step-dot span{width:26px;height:26px;display:grid;place-items:center;border-radius:50%;background:#66708512;font-size:9px;font-weight:850;transition:.3s}.step-dot small{font-size:7px;font-weight:750;white-space:nowrap}.step-dot.active{color:var(--blue)}.step-dot.active span{background:var(--blue);color:#fff;box-shadow:0 5px 13px #007aff30;transform:scale(1.04)}.step-dot.done span{background:var(--green);color:#fff}.step-line{height:2px;overflow:hidden;border-radius:9px;background:#66708512}.step-line i{display:block;height:100%;width:0;background:var(--blue);transition:.4s}
+.step-panel{display:none;animation:step .35s ease}.step-panel.active{display:block}@keyframes step{from{opacity:0;transform:translateX(10px)}to{opacity:1;transform:none}}
+.step-panel h3{margin:4px 0;font-size:24px;line-height:1.03;letter-spacing:-.055em;font-weight:780}.help{margin:0 0 16px;color:var(--muted);font-size:11px;line-height:1.4}
+.label{display:block;margin:0 0 6px;color:var(--muted);font-size:8px;font-weight:850;letter-spacing:.06em;text-transform:uppercase}
+input,textarea,select{width:100%;min-width:0;border:1px solid var(--line);outline:0;background:#f9fafc;color:var(--text);border-radius:15px}
+input{min-height:52px;padding:13px;font-size:20px;font-weight:750;letter-spacing:.035em}textarea{min-height:72px;padding:12px;font-size:11px;resize:vertical}select{min-height:46px;padding:11px;font-size:11px}
+input:focus,textarea:focus,select:focus{border-color:#007aff45;box-shadow:0 0 0 4px #007aff0c}
+.primary,.secondary,.danger{width:100%;min-height:48px;border-radius:15px;font-size:11px;font-weight:850;cursor:pointer;transition:transform .15s,box-shadow .2s}
+.primary{border:0;background:linear-gradient(180deg,#0a84ff,#007aff);color:#fff;box-shadow:0 8px 19px #007aff28}.primary.green{background:linear-gradient(180deg,#19b877,#16a56b);box-shadow:0 8px 19px #16a56b28}
+.secondary{background:#fff;border:1px solid var(--line);color:var(--text);box-shadow:0 4px 12px #10182808}.danger{background:#ff3b300a;border:1px solid #ff3b3014;color:var(--red)}
+.primary:active,.secondary:active,.danger:active,.quick-action:active,.status:active,.nav:active,.mini:active{transform:scale(.97)}
+.status-hint{margin:0 0 7px 1px;color:var(--muted);font-size:9px}.status-hint.selected{color:var(--blue);font-weight:750}
+.statuses{display:grid;grid-template-columns:1fr;gap:6px}.status{position:relative;display:grid;grid-template-columns:32px 1fr auto;align-items:center;width:100%;min-height:57px;padding:8px 10px;border:1px solid var(--line);border-radius:16px;background:#ffffff70;color:var(--muted);text-align:left;overflow:hidden;cursor:pointer}.status b{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:#66708512;font-size:11px}.status span{font-size:10px;font-weight:850;color:var(--text)}.status small{font-size:8px;color:var(--muted)}.status.active{box-shadow:0 7px 18px #1018280a}.status[data-s=CARGADA].active{background:#16a56b0c;border-color:#16a56b4d;color:var(--green)}.status[data-s=CARGADA].active b{background:var(--green);color:#fff}.status[data-s="VACÍA"].active{background:#f59e0b0c;border-color:#f59e0b4d;color:#a16207}.status[data-s="VACÍA"].active b{background:var(--orange);color:#fff}.status[data-s=AVERIADA].active{background:#ff3b300b;border-color:#ff3b304d;color:var(--red)}.status[data-s=AVERIADA].active b{background:var(--red);color:#fff}
+.selected{width:100%;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:11px 12px;margin-bottom:9px;border-radius:14px;background:#007aff09;border:1px solid #007aff12}.selected span{font-size:8px;color:var(--muted)}.selected strong{font-size:14px;letter-spacing:.04em}
+.issue-extra{display:none;margin-top:9px}.issue-extra.show{display:block}.step-actions{display:grid;grid-template-columns:86px 1fr;gap:7px;margin-top:9px}.confirmation{width:100%;margin:14px 0;border:1px solid var(--line);border-radius:16px;overflow:hidden;background:#ffffff54}.confirmation div{display:flex;justify-content:space-between;gap:8px;padding:11px 12px;border-bottom:1px solid var(--line)}.confirmation div:last-child{border-bottom:0}.confirmation span{font-size:8px;color:var(--muted)}.confirmation strong{max-width:62%;font-size:9px;text-align:right;word-break:break-word}.success{width:52px;height:52px;border-radius:50%;display:grid;place-items:center;margin-bottom:12px;background:var(--green);color:#fff;font-size:23px;font-weight:850;box-shadow:0 11px 25px #16a56b25}.full{margin-top:7px}
+.search-row{display:grid;grid-template-columns:minmax(0,1fr) 102px;gap:6px;width:100%;position:relative}.search-row:before{content:"⌕";position:absolute;left:12px;top:10px;z-index:1;color:#98a2b3;font-size:16px}.search-row input{min-height:44px;padding-left:32px;font-size:11px}.search-row select{min-height:44px}
+.record-actions{display:flex;gap:4px;flex:0 0 auto}.mini{border:1px solid var(--line);background:#fff;border-radius:9px;padding:7px 7px;font-size:8px;font-weight:800;color:var(--text)}.mini.delete{color:var(--red);background:#ff3b300a}
+.empty-state{text-align:center;padding:30px 8px;color:var(--muted);font-size:10px;line-height:1.6}
+.bottom{
+  position:fixed;z-index:40;left:10px;right:10px;bottom:calc(env(safe-area-inset-bottom) + 8px);
+  width:auto;max-width:500px;margin:auto;
+  display:grid;grid-template-columns:repeat(4,1fr);gap:3px;
+  padding:5px;border:1px solid rgba(255,255,255,.96);border-radius:22px;
+  background:rgba(255,255,255,.88);box-shadow:0 15px 45px rgba(16,24,40,.15);
+  backdrop-filter:blur(28px) saturate(180%);-webkit-backdrop-filter:blur(28px) saturate(180%)
 }
-.title-lg{font-weight:600;letter-spacing:.01em}
-.chevron{opacity:.65;user-select:none}
-.card-content{position:relative;min-height:240px;perspective:1000px}
-
-.screen{
-  position:absolute;
-  inset:0;
-  padding:18px 16px;
-  display:flex;
-  flex-direction:column;
-  gap:12px;
-  align-items:center;
-  justify-content:flex-start;
-  opacity:0;
-  transform:translateY(20px) scale(.98) translateZ(0);
-  pointer-events:none;
-  transition:opacity .55s cubic-bezier(.22,1,.36,1),transform .55s cubic-bezier(.22,1,.36,1)
+.nav{position:relative;min-width:0;min-height:50px;border:0;background:transparent;color:#7c8797;border-radius:17px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:7px;font-weight:850;cursor:pointer}
+.nav-icon,.nav-add{width:25px;height:25px;border-radius:9px;display:grid;place-items:center;font-size:16px;line-height:1;transition:.2s}.nav-add{background:var(--blue);color:#fff;box-shadow:0 5px 12px #007aff25;font-size:19px}.nav.active{color:var(--blue);background:#007aff0a}.nav.active .nav-icon{background:var(--blue);color:#fff;box-shadow:0 5px 12px #007aff20}.nav em{position:absolute;display:none;top:3px;right:calc(50% - 22px);min-width:15px;height:15px;padding:0 3px;border-radius:999px;background:var(--red);color:#fff;border:2px solid #fff;font-size:7px;font-style:normal;line-height:11px}.nav em.show{display:grid;place-items:center}
+.sheet-backdrop{position:fixed;inset:0;z-index:50;background:#0004;opacity:0;pointer-events:none;transition:.2s}.sheet-backdrop.open{opacity:1;pointer-events:auto}.sheet{position:fixed;z-index:51;left:0;right:0;bottom:0;width:100%;max-width:520px;margin:auto;padding:8px 13px calc(env(safe-area-inset-bottom) + 16px);background:#fff;border-radius:25px 25px 0 0;box-shadow:0 -18px 55px #10182825;transform:translateY(100%);transition:.4s cubic-bezier(.2,.8,.2,1)}.sheet.open{transform:translateY(0)}.grab{width:34px;height:4px;margin:2px auto 13px;border-radius:99px;background:#98a2b355}.sheet h3{margin:0 0 3px;font-size:20px;letter-spacing:-.04em}.sheet p{margin:0 0 11px;color:var(--muted);font-size:10px}.sheet-row{display:flex;justify-content:space-between;gap:8px;padding:11px 0;border-bottom:1px solid var(--line);font-size:10px}.sheet-row span{color:var(--muted)}.sheet-row strong{max-width:60%;text-align:right;word-break:break-word}.sheet-actions{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:11px}
+.toast{position:fixed;z-index:70;left:50%;bottom:calc(env(safe-area-inset-bottom) + 76px);transform:translate(-50%,12px);padding:10px 14px;border-radius:999px;background:#111827;color:#fff;font-size:9px;font-weight:850;box-shadow:0 10px 28px #0003;opacity:0;pointer-events:none;transition:.2s;white-space:nowrap}.toast.show{opacity:1;transform:translate(-50%,0)}
+@media(min-width:521px){
+ .app{padding-left:14px;padding-right:14px}.topbar{width:calc(100% + 28px);margin-left:-14px;padding-left:14px;padding-right:14px}
 }
-.screen.active{
-  opacity:1;
-  transform:translateY(0) scale(1) translateZ(0);
-  pointer-events:auto
-}
-
-.row{
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-  justify-content:center;
-  width:100%;
-  max-width:560px
-}
-.row.states{
-  display:grid;
-  grid-template-columns:repeat(3,minmax(0,1fr));
-  gap:10px;
-  width:100%;
-  max-width:560px
-}
-.row .btn,.row.states .btn{width:100%}
-
-.btn,.btn-primary,.btn-secondary,.action-btn{position:relative;overflow:hidden}
-.btn-primary,.btn-secondary,.action-btn{
-  height:44px;
-  border-radius:14px;
-  font-weight:600
-}
-.btn-primary{background:var(--accent);color:#fff;border-color:transparent}
-.btn-primary:hover{background:#0A7AF0}
-.btn-secondary{background:#F3F4F6;border:1px solid #E3E4E6}
-.btn-secondary:hover{background:#ECEEF2}
-
-.action-btn{
-  padding:10px 16px!important;
-  font-size:14.5px!important;
-  border-radius:12px!important;
-  border:1px solid rgba(255,255,255,.65)!important;
-  background:linear-gradient(150deg,rgba(255,255,255,.90),rgba(240,240,245,.96))!important;
-  backdrop-filter:blur(14px);
-  -webkit-backdrop-filter:blur(14px);
-  box-shadow:inset 0 1px 2px rgba(255,255,255,.75),inset 0 4px 8px rgba(255,255,255,.18),0 6px 14px rgba(0,0,0,.04),0 2px 6px rgba(0,0,0,.03)!important
-}
-.action-btn:hover{
-  box-shadow:inset 0 2px 4px rgba(255,255,255,.9),inset 0 6px 10px rgba(255,255,255,.22),0 8px 18px rgba(0,0,0,.05),0 2px 6px rgba(0,0,0,.04)!important
-}
-.action-btn:active{opacity:.85;transform:scale(.96)}
-
-.input-error{
-  border-color:#FF4D4F!important;
-  box-shadow:0 0 0 2px rgba(255,77,79,.20)!important
-}
-
-.pills{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-  gap:12px
-}
-.pill{
-  position:relative;
-  overflow:hidden;
-  padding:12px 16px;
-  border-radius:999px;
-  background:#FFFFFF;
-  border:1px solid rgba(0,0,0,.04)
-}
-.pill:before{
-  content:"";
-  position:absolute;
-  inset:0;
-  width:var(--fill,0%);
-  background:linear-gradient(90deg,rgba(10,132,255,.18),rgba(10,132,255,.32));
-  transition:all .22s var(--ease-soft)
-}
-.pill-inner{
-  position:relative;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:10px;
-  z-index:1
-}
-.pill .label{font-weight:500;letter-spacing:.01em}
-.pill .val{
-  font-weight:700;
-  min-width:2.5ch;
-  text-align:right;
-  color:var(--accent);
-  font-variant-numeric:tabular-nums
-}
-
-.compact{padding:0;border-radius:16px}
-.compact-header{
-  position:sticky;
-  top:12px;
-  z-index:5;
-  padding:10px;
-  border-bottom:1px solid var(--line);
-  background:linear-gradient(180deg,#FBFBFD,transparent);
-  display:flex;
-  gap:8px;
-  justify-content:center;
-  flex-wrap:wrap;
-  border-top-left-radius:16px;
-  border-top-right-radius:16px
-}
-.segment{
-  display:flex;
-  flex-wrap:wrap;
-  gap:6px;
-  padding:4px;
-  justify-content:center
-}
-.segment button{
-  position:relative;
-  display:inline-flex;
-  align-items:center;
-  gap:6px;
-  padding:5px 10px;
-  min-height:0;
-  border-radius:999px;
-  border:1px solid rgba(0,0,0,.04);
-  background:rgba(255,255,255,.7);
-  font-size:13px;
-  font-weight:500;
-  color:#4B5563;
-  box-shadow:0 1px 2px rgba(0,0,0,.04)
-}
-.segment button:before{
-  content:"";
-  width:8px;
-  height:8px;
-  border-radius:50%;
-  background:#D0D3D8
-}
-.segment button[data-tab="TODAS"]:before{background:linear-gradient(135deg,#0A84FF,#00B487)}
-.segment button[data-tab="CARGADA"]:before{background:#0A8369}
-.segment button[data-tab="VACÍA"]:before{background:#1564C0}
-.segment button[data-tab="AVERIADA"]:before{background:#8F6200}
-.segment button.active{
-  background:rgba(10,132,255,.10);
-  border-color:rgba(10,132,255,.35);
-  color:var(--text);
-  box-shadow:0 0 0 1px rgba(10,132,255,.18)
-}
-.segment .badge{
-  margin-left:2px;
-  padding:1px 6px;
-  border-radius:999px;
-  font-size:11px;
-  font-weight:600;
-  background:rgba(0,0,0,.04);
-  color:var(--accent)
-}
-
-.record{
-  position:relative;
-  display:flex;
-  flex-direction:column;
-  gap:12px;
-  padding:18px 12px;
-  margin-bottom:8px;
-  border:1px solid rgba(0,0,0,.06);
-  border-radius:12px;
-  background:#fff;
-  animation:recordEntry .3s ease-out
-}
-.record:before{
-  content:"";
-  position:absolute;
-  left:0;
-  top:0;
-  bottom:0;
-  width:3px;
-  border-radius:3px;
-  background:var(--record-state-color,rgba(0,0,0,.1))
-}
-.record.state-empty{background:var(--state-empty-bg);border-color:var(--state-empty-border);color:var(--state-empty-text)}
-.record.state-loaded{background:var(--state-loaded-bg);border-color:var(--state-loaded-border);color:var(--state-loaded-text)}
-.record.state-broken{background:var(--state-broken-bg);border-color:var(--state-broken-border);color:var(--state-broken-text)}
-
-.rowline{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:8px
-}
-.rowline .mat{
-  font-weight:600;
-  max-width:46%;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis
-}
-.rowline .est{opacity:.85}
-.rowline .ts{opacity:.65;font-size:12px}
-
-.record-header{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:6px
-}
-.record-matricula{font-weight:500;font-size:17px}
-.record-estado{font-weight:500;opacity:.85}
-.record-time{font-size:13px;opacity:.65;margin-top:2px}
-.record-content{line-height:1.45;margin-top:6px;margin-bottom:14px}
-.record-actions{text-align:right;margin-top:6px}
-.record .actions{
-  display:flex;
-  justify-content:flex-end;
-  gap:8px;
-  margin-top:6px
-}
-.record .actions .action-btn{
-  padding:6px 10px;
-  font-size:12px;
-  border-radius:10px;
-  border:1px solid rgba(0,0,0,.08);
-  background:#F7F8FA
-}
-
-.steps,.step-circles{
-  display:flex;
-  justify-content:center;
-  gap:12px;
-  margin-top:18px;
-  margin-bottom:16px;
-  padding-top:18px;
-  position:relative
-}
-.steps .dot,.step-circle{
-  width:12px;
-  height:12px;
-  border-radius:50%;
-  background:#D0D3D8;
-  opacity:.6;
-  transition:all .28s var(--ease-snap);
-  animation:dotEnter .38s ease-out forwards
-}
-.steps .dot.active,.step-circle.active{
-  background:var(--accent);
-  transform:scale(1.35);
-  opacity:1;
-  animation:popDot .28s var(--ease-snap)
-}
-.steps .dot.done,.step-circle.done{background:#6CAEFF;opacity:.9}
-
-@keyframes recordEntry{0%{opacity:0;transform:translateY(8px)}100%{opacity:1;transform:translateY(0)}}
-@keyframes popDot{0%{transform:scale(.85)}55%{transform:scale(1.42)}100%{transform:scale(1.35)}}
-@keyframes dotEnter{0%{opacity:0;transform:translateY(8px)}100%{opacity:1;transform:translateY(0)}}
-
-.step-title{
-  display:block;
-  text-align:left;
-  font-weight:600;
-  margin-top:14px;
-  margin-bottom:8px;
-  position:relative
-}
-.step-title.active:after{
-  content:"";
-  position:absolute;
-  left:0;
-  right:0;
-  bottom:-2px;
-  height:2px;
-  background:var(--accent);
-  border-radius:2px
-}
-.step-title.inactive{opacity:.45}
-.step-sub{
-  font-size:14px;
-  color:#7A7F85;
-  margin-bottom:18px
-}
-.step-panel{
-  opacity:0;
-  transform:translateY(6px);
-  transition:opacity .20s var(--ease-soft),transform .20s var(--ease-soft);
-  padding-top:20px
-}
-.step-panel.visible{
-  opacity:1;
-  transform:translateY(0);
-  padding-top:12px
-}
-.btn-back{
-  margin-top:32px!important;
-  margin-bottom:10px!important;
-  position:relative;
-  z-index:10;
-  display:block
-}
-
-.state-button.selected{
-  box-shadow:0 0 0 2px rgba(10,132,255,.35);
-  background:rgba(10,132,255,.08)
-}
-.state-empty{background:var(--state-empty-bg);border-color:var(--state-empty-border);color:var(--state-empty-text)}
-.state-loaded{background:var(--state-loaded-bg);border-color:var(--state-loaded-border);color:var(--state-loaded-text)}
-.state-broken{background:var(--state-broken-bg);border-color:var(--state-broken-border);color:var(--state-broken-text)}
-
-.toast{
-  position:fixed;
-  left:50%;
-  top:16px;
-  transform:translateX(-50%) translateY(-16px);
-  background:rgba(52,199,89,.96);
-  color:#fff;
-  padding:10px 14px;
-  border-radius:12px;
-  box-shadow:0 10px 28px rgba(0,0,0,.18);
-  opacity:0;
-  z-index:50;
-  border:1px solid rgba(255,255,255,.6)
-}
-.toast.show{animation:toastIn 1.8s var(--ease-soft)}
-@keyframes toastIn{
-  0%{opacity:0;transform:translateX(-50%) translateY(-16px)}
-  12%{opacity:1;transform:translateX(-50%) translateY(0)}
-  88%{opacity:1}
-  100%{opacity:0;transform:translateX(-50%) translateY(-16px)}
-}
-
-.modal{
-  position:fixed;
-  inset:0;
-  display:none;
-  align-items:center;
-  justify-content:center;
-  z-index:30;
-  background:rgba(0,0,0,.18)
-}
-.modal.open{display:flex}
-.modal-card{
-  width:min(96vw,560px);
-  background:#fff;
-  border:1px solid rgba(0,0,0,.06);
-  border-radius:20px;
-  box-shadow:var(--shadow-2);
-  padding:16px;
-  display:flex;
-  flex-direction:column;
-  gap:10px
-}
-.modal-title{font-weight:500;font-size:18px}
-.modal-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.modal-actions{display:flex;gap:10px;justify-content:flex-end}
-
-#dynamicIsland{
-  position:fixed;
-  top:12px;
-  left:50%;
-  transform:translateX(-50%) scale(.96);
-  opacity:0;
-  min-width:120px;
-  text-align:center;
-  padding:10px 18px;
-  background:linear-gradient(145deg,rgba(255,255,255,.82),rgba(245,246,250,.96));
-  backdrop-filter:blur(22px);
-  -webkit-backdrop-filter:blur(22px);
-  border-radius:18px;
-  border:1px solid rgba(255,255,255,.6);
-  box-shadow:0 10px 28px rgba(0,0,0,.08),inset 0 1px 3px rgba(255,255,255,.7);
-  font-weight:600;
-  color:#1c1f24;
-  letter-spacing:.01em;
-  z-index:9999;
-  isolation:isolate;
-  overflow:hidden
-}
-#dynamicIsland.di-show{opacity:1;transform:translateX(-50%) scale(1);animation:diMorph .35s var(--ease-snap) both}
-#dynamicIsland.di-hide{animation:diShrink .32s ease both}
-#dynamicIsland:after{
-  content:"";
-  position:absolute;
-  left:10px;
-  right:10px;
-  bottom:6px;
-  height:3px;
-  background:rgba(180,188,194,.45);
-  border-radius:3px
-}
-#dynamicIsland .bar{
-  position:absolute;
-  left:10px;
-  bottom:6px;
-  height:3px;
-  width:0%;
-  background:var(--accent);
-  border-radius:3px;
-  transition:width .2s ease
-}
-@keyframes diMorph{
-  0%{transform:translateX(-50%) scale(.94);opacity:0}
-  60%{transform:translateX(-50%) scale(1.02);opacity:1}
-  100%{transform:translateX(-50%) scale(1);opacity:1}
-}
-@keyframes diShrink{
-  0%{transform:translateX(-50%) scale(1);opacity:1}
-  100%{transform:translateX(-50%) scale(.96);opacity:0}
-}
-
-#clearEffect{
-  position:fixed;
-  inset:0;
-  pointer-events:none;
-  display:none;
-  z-index:3000
-}
-.particle{
-  position:absolute;
-  width:8px;
-  height:8px;
-  border-radius:50%;
-  background:rgba(255,255,255,.9);
-  box-shadow:0 0 14px rgba(255,255,255,.9);
-  animation:particleOut .6s ease-out forwards
-}
-@keyframes particleOut{
-  to{transform:translate(var(--dx),var(--dy)) scale(0);opacity:0}
-}
-.flash{
-  position:absolute;
-  inset:0;
-  background:radial-gradient(circle at center,rgba(255,255,255,.9),transparent 70%);
-  animation:flashOut .5s ease-out forwards
-}
-@keyframes flashOut{from{opacity:1}to{opacity:0}}
-
-@media (max-width:600px){
-  .app{padding-left:12px;padding-right:12px}
-  .pills{grid-template-columns:1fr;gap:10px}
-  .pill{padding:14px 16px}
-  .record{padding:8px 10px}
-  .record .meta{display:flex;flex-direction:column;gap:2px}
-  .record .meta .item,.record .content{font-size:12.5px!important}
-  .record .actions{display:flex;justify-content:flex-end;gap:8px;margin-top:6px}
-  .record .actions button{padding:6px 10px!important;font-size:12px!important}
-  .segment button{padding:6px 10px!important;font-size:13px!important}
-  .card{padding:14px!important}
-  .btn-primary,.btn-secondary{font-size:14px!important;padding:10px!important}
-  .modal-row{grid-template-columns:1fr}
-}
-
-@media (min-width:600px) and (max-width:900px){
-  .pills{grid-template-columns:repeat(2,1fr)}
-  .record .content{font-size:14px}
-}
-
-@media (min-width:900px){
-  .record{padding:12px 14px}
+@media(max-width:340px){
+ .app{padding-left:8px;padding-right:8px}.topbar{width:calc(100% + 16px);margin-left:-8px;padding-left:8px;padding-right:8px}
+ .live{display:none}.hero h2{font-size:26px}.card{padding:11px}.bottom{left:8px;right:8px}.nav{min-height:48px}
 }
 </style>
-</head>
-<body>
-<div id="dynamicIsland">XPO listo<div class="bar"></div></div>
-<div id="clearEffect"></div>
-<div class="toast" id="toast">Guardado correctamente</div>
-
+</head><body>
 <div class="app">
-  <header class="header">
-    <div class="brand">
-      <div class="chip">Registro</div>
-      <div>
-        <div class="logo-line"><span class="logo-xpo">XPO</span><span class="logo-log">Log</span></div>
-        <p class="headline">Registro de Plataformas</p>
-      </div>
-      <div class="chip">v1</div>
-    </div>
-  </header>
+<header class="topbar">
+ <div class="brand"><div class="logo">XPO</div><div><h1>Control de plataformas</h1><div class="subtitle">Centro operativo · tiempo real</div></div></div>
+ <div class="live"><i class="dot"></i><span id="clock">En directo</span></div>
+</header>
 
-  <section class="card" id="flowCard">
-    <div class="card-header">
-      <div class="title-lg">Nueva entrada</div>
-      <div class="chevron">›</div>
-    </div>
+<main>
+<section id="homeView" class="view active">
+ <div class="hero"><div class="eyebrow">Resumen de hoy</div><h2>Todo bajo control.</h2><p>Consulta el estado del patio de un vistazo.</p></div>
+ <div class="card">
+  <div class="stats">
+   <div class="stat blue"><b id="total">0</b><span>TOTAL</span></div>
+   <div class="stat green"><b id="loaded">0</b><span>CARGADAS</span></div>
+   <div class="stat orange"><b id="empty">0</b><span>VACÍAS</span></div>
+   <div class="stat red"><b id="bad">0</b><span>AVERIADAS</span></div>
+  </div>
+ </div>
+ <div class="card">
+  <div class="section-head"><h3>Actividad reciente</h3><button class="link" id="seeAll">Ver todo</button></div>
+  <div id="recent"></div>
+ </div>
+ <div class="quick-grid">
+  <button class="quick-action primary" id="quickAdd"><span class="qa-icon">＋</span><span><b>Registrar</b><small>Nueva plataforma</small></span><span class="qa-arrow">›</span></button>
+  <button class="quick-action alert" id="quickIssues"><span class="qa-icon">⚠</span><span><b>Averías</b><small id="quickIssueText">Sin incidencias</small></span><span class="qa-arrow">›</span></button>
+</div>
+</section>
 
-    <div class="card-content">
-      <div class="screen active" id="screen1">
-        <div class="steps">
-          <span class="dot active"></span><span class="dot"></span><span class="dot"></span>
-        </div>
-        <div class="step-title">Selecciona estado</div>
-        <div class="row states">
-          <button class="btn state-button selected" data-state="loaded">CARGADA</button>
-          <button class="btn state-button" data-state="empty">VACÍA</button>
-          <button class="btn state-button" data-state="broken">AVERIADA</button>
-        </div>
-        <div class="step-sub">Elige el estado de la plataforma antes de registrar la matrícula.</div>
-        <div class="row">
-          <button class="btn btn-primary" id="nextBtn">Continuar</button>
-        </div>
-      </div>
+<section id="registerView" class="view">
+ <div class="card form-card">
+  <div class="section-head"><h3>Nuevo registro</h3><span class="eyebrow" id="stepLabel">PASO 1 DE 3</span></div>
+  <div class="stepper">
+   <div class="step-dot active" data-step="1"><span>1</span><small>Matrícula</small></div><div class="step-line"><i></i></div>
+   <div class="step-dot" data-step="2"><span>2</span><small>Estado</small></div><div class="step-line"><i></i></div>
+   <div class="step-dot" data-step="3"><span>3</span><small>Registrar</small></div>
+  </div>
 
-      <div class="screen" id="screen2">
-        <div class="steps">
-          <span class="dot done"></span><span class="dot active"></span><span class="dot"></span>
-        </div>
-        <div class="step-title">Datos del registro</div>
-        <input class="input" id="matricula" placeholder="Matrícula" />
-        <textarea class="textarea" id="detalle" placeholder="Observaciones"></textarea>
-        <div class="row">
-          <button class="btn btn-secondary" id="backBtn">Volver</button>
-          <button class="btn btn-primary" id="saveBtn">Guardar</button>
-        </div>
-      </div>
+  <div class="step-panel active" data-panel="1">
+   <div class="kicker">IDENTIFICACIÓN</div><h3>Introduce la matrícula</h3><p class="help">Escribe la matrícula de la plataforma para continuar.</p>
+   <label class="label">Matrícula</label><input id="plate" placeholder="1234 ABC" maxlength="12" autocomplete="off" inputmode="text">
+   <button class="primary" id="next1" style="margin-top:11px">Continuar&nbsp; ›</button>
+  </div>
 
-      <div class="screen" id="screen3">
-        <div class="steps">
-          <span class="dot done"></span><span class="dot done"></span><span class="dot active"></span>
-        </div>
-        <div class="step-title">Confirmación</div>
-        <div class="pill" style="width:100%"><div class="pill-inner"><span class="label">Último estado</span><span class="val" id="finalState">CARGADA</span></div></div>
-        <div class="pill" style="width:100%"><div class="pill-inner"><span class="label">Matrícula</span><span class="val" id="finalMat">—</span></div></div>
-        <div class="row">
-          <button class="btn btn-secondary" id="newBtn">Nuevo registro</button>
-        </div>
-      </div>
-    </div>
-  </section>
+  <div class="step-panel" data-panel="2">
+   <div class="kicker">CLASIFICACIÓN</div><h3>Selecciona el estado</h3><p class="help">Indica cómo se encuentra actualmente la plataforma.</p>
+   <div class="selected"><span>Matrícula</span><strong id="platePreview">—</strong></div>
+   <div class="status-hint" id="statusHint">Selecciona una opción para continuar</div><div class="statuses">
+    <button class="status" data-s="CARGADA"><b>✓</b><span>CARGADA</span><small>Con mercancía</small></button>
+    <button class="status" data-s="VACÍA"><b>○</b><span>VACÍA</span><small>Sin mercancía</small></button>
+    <button class="status" data-s="AVERIADA"><b>!</b><span>AVERIADA</span><small>Requiere revisión</small></button>
+   </div>
+   <div id="issueExtra" class="issue-extra"><label class="label">Tipo de avería</label><select id="issueType"><option>Golpe / daño exterior</option><option>Puerta / cierre</option><option>Rueda / neumático</option><option>Luces / señalización</option><option>Otra incidencia</option></select></div>
+   <div style="margin-top:13px"><label class="label">Observaciones <em>opcional</em></label><textarea id="notes" placeholder="Añade detalles..."></textarea></div>
+   <div class="step-actions"><button class="secondary" id="back2">Atrás</button><button class="primary" id="next2">Continuar&nbsp; ›</button></div>
+  </div>
 
-  <section class="panel">
-    <div class="pills">
-      <div class="pill"><div class="pill-inner"><span class="label">Cargadas</span><span class="val">18</span></div></div>
-      <div class="pill"><div class="pill-inner"><span class="label">Vacías</span><span class="val">7</span></div></div>
-      <div class="pill"><div class="pill-inner"><span class="label">Averiadas</span><span class="val">3</span></div></div>
-    </div>
-  </section>
+  <div class="step-panel" data-panel="3">
+   <div class="success">✓</div><div class="kicker">LISTO PARA REGISTRAR</div><h3>Confirma la plataforma</h3><p class="help">Revisa los datos antes de guardarlos.</p>
+   <div class="confirmation">
+    <div><span>Matrícula</span><strong id="confirmPlate">—</strong></div>
+    <div><span>Estado</span><strong id="confirmStatus">—</strong></div>
+    <div><span>Avería</span><strong id="confirmIssue">—</strong></div>
+    <div><span>Observaciones</span><strong id="confirmNotes">Sin observaciones</strong></div>
+   </div>
+   <button class="primary green" id="add">Registrar plataforma</button>
+   <button class="secondary full" id="back3">Modificar datos</button>
+  </div>
+ </div>
+</section>
 
-  <section class="compact">
-    <div class="compact-header">
-      <div class="segment">
-        <button class="active" data-tab="TODAS">TODAS <span class="badge">28</span></button>
-        <button data-tab="CARGADA">CARGADA <span class="badge">18</span></button>
-        <button data-tab="VACÍA">VACÍA <span class="badge">7</span></button>
-        <button data-tab="AVERIADA">AVERIADA <span class="badge">3</span></button>
-      </div>
-    </div>
+<section id="recordsView" class="view">
+ <div class="hero"><div class="eyebrow">Historial</div><h2>Registros.</h2><p>Busca y consulta cualquier plataforma.</p></div>
+ <div class="card">
+  <div class="search-row"><input id="search" placeholder="Buscar matrícula..."><select id="filter"><option>TODAS</option><option>CARGADA</option><option>VACÍA</option><option>AVERIADA</option></select></div>
+  <div id="recordsList" style="margin-top:9px"></div>
+ </div>
+ <div class="card" style="display:grid;grid-template-columns:1fr 1fr;gap:7px"><button class="secondary" id="pdf">Generar PDF</button><button class="danger" id="clear">Limpiar registros</button></div>
+</section>
 
-    <div style="padding:12px;">
-      <div class="record state-loaded">
-        <div class="record-header"><div class="record-matricula">1234-ABC</div><div class="record-estado">CARGADA</div></div>
-        <div class="record-time">Hoy · 18:02</div>
-        <div class="record-content">Plataforma lista para salida. Sin incidencias.</div>
-        <div class="actions"><button class="action-btn">Editar</button><button class="action-btn">Eliminar</button></div>
-      </div>
-
-      <div class="record state-empty">
-        <div class="record-header"><div class="record-matricula">8721-KLM</div><div class="record-estado">VACÍA</div></div>
-        <div class="record-time">Hoy · 17:41</div>
-        <div class="record-content">Esperando asignación de mercancía.</div>
-        <div class="actions"><button class="action-btn">Editar</button><button class="action-btn">Eliminar</button></div>
-      </div>
-
-      <div class="record state-broken">
-        <div class="record-header"><div class="record-matricula">4480-ZXY</div><div class="record-estado">AVERIADA</div></div>
-        <div class="record-time">Hoy · 16:55</div>
-        <div class="record-content">Revisión mecánica pendiente.</div>
-        <div class="actions"><button class="action-btn">Editar</button><button class="action-btn">Eliminar</button></div>
-      </div>
-    </div>
-  </section>
+<section id="issuesView" class="view">
+ <div class="hero"><div class="eyebrow">Atención</div><h2>Averías.</h2><p>Plataformas que requieren revisión.</p></div>
+ <div class="card">
+  <div class="section-head"><h3 id="issueTitle">Incidencias pendientes</h3><button class="link" id="claim">Reclamar todas</button></div>
+  <div id="issuesList"></div>
+ </div>
+</section>
+</main>
 </div>
 
+<nav class="bottom">
+ <button class="nav active" data-view="homeView"><span class="nav-icon">⌂</span><span>Inicio</span></button>
+ <button class="nav" data-view="registerView"><span class="nav-add">＋</span><span>Registrar</span></button>
+ <button class="nav" data-view="issuesView"><span class="nav-icon">⚠</span><span>Averías</span><em id="navIssueCount">0</em></button>
+ <button class="nav" data-view="recordsView"><span class="nav-icon">☷</span><span>Registros</span></button>
+</nav>
+
+<div class="sheet-backdrop" id="backdrop"></div>
+<aside class="sheet" id="sheet"><div class="grab"></div><h3 id="sheetTitle">Plataforma</h3><p id="sheetSubtitle"></p><div id="sheetBody"></div><button class="primary" id="closeSheet" style="margin-top:14px">Cerrar</button></aside>
+<div class="toast" id="toast"></div>
+
+
 <script>
-const stateButtons=[...document.querySelectorAll('.state-button')];
-const screens=[...document.querySelectorAll('.screen')];
-const stateMap={loaded:'CARGADA',empty:'VACÍA',broken:'AVERIADA'};
-let currentState='loaded';
-const toast=document.getElementById('toast');
-const island=document.getElementById('dynamicIsland');
-const bar=island.querySelector('.bar');
+const KEY='xpo_ios_steps_platforms';
+let records=[];
+try{
+  const raw=JSON.parse(localStorage.getItem(KEY)||'[]');
+  records=Array.isArray(raw)?raw:[];
+}catch(e){records=[]}
+let selected='', currentStep=1;
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
 
-function showScreen(i){screens.forEach((s,idx)=>s.classList.toggle('active',idx===i))}
+function save(){localStorage.setItem(KEY,JSON.stringify(records));renderAll()}
+function msg(t){$('toast').textContent=t;$('toast').classList.add('show');setTimeout(()=>$('toast').classList.remove('show'),1700)}
+function statusIcon(s){return s==='AVERIADA'?'!':s==='VACÍA'?'○':'✓'}
+function statusClass(s){return s==='AVERIADA'?'bad':s==='VACÍA'?'empty':''}
 
-stateButtons.forEach(b=>b.onclick=()=>{
-  stateButtons.forEach(x=>x.classList.remove('selected'));
-  b.classList.add('selected');
-  currentState=b.dataset.state;
-  island.childNodes[0].textContent=`${stateMap[currentState]} seleccionada`;
-  island.classList.add('di-show');
-  clearTimeout(window._islandT);
-  window._islandT=setTimeout(()=>island.classList.remove('di-show'),1200);
+function showView(id){
+  document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id===id));
+  document.querySelectorAll('.nav').forEach(n=>n.classList.toggle('active',n.dataset.view===id));
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function resetRegistration(){
+  currentStep=1;selected='';
+  $('plate').value='';$('notes').value='';
+  $('issueExtra').classList.remove('show');
+  $('statusHint').textContent='Selecciona una opción para continuar';
+  $('statusHint').classList.remove('selected');
+  document.querySelectorAll('.status').forEach(x=>x.classList.remove('active'));
+  showStep(1);
+}
+function showStep(n){
+  currentStep=n;$('stepLabel').textContent=`PASO ${n} DE 3`;
+  document.querySelectorAll('.step-panel').forEach(p=>p.classList.toggle('active',+p.dataset.panel===n));
+  document.querySelectorAll('.step-dot').forEach(d=>{
+    const x=+d.dataset.step;
+    d.classList.toggle('active',x===n);
+    d.classList.toggle('done',x<n);
+  });
+  document.querySelectorAll('.step-line i').forEach((x,i)=>x.style.width=i<n-1?'100%':'0');
+  if(n===2)$('platePreview').textContent=$('plate').value.trim().toUpperCase();
+  if(n===3){
+    $('confirmPlate').textContent=$('plate').value.trim().toUpperCase();
+    $('confirmStatus').textContent=selected||'—';
+    $('confirmIssue').textContent=selected==='AVERIADA'?$('issueType').value:'No aplica';
+    $('confirmNotes').textContent=$('notes').value.trim()||'Sin observaciones';
+  }
+}
+function validPlate(){
+  const p=$('plate').value.trim().toUpperCase().replace(/\s+/g,' ');
+  $('plate').value=p;
+  if(!p){msg('Introduce una matrícula');$('plate').focus();return false}
+  return true;
+}
+
+document.querySelectorAll('.nav').forEach(n=>n.onclick=()=>{
+  if(n.dataset.view==='registerView')resetRegistration();
+  showView(n.dataset.view);
+});
+$('quickAdd').onclick=()=>{resetRegistration();showView('registerView')};
+$('quickIssues').onclick=()=>showView('issuesView');
+$('seeAll').onclick=()=>showView('recordsView');
+
+$('next1').onclick=()=>{if(validPlate())showStep(2)};
+$('back2').onclick=()=>showStep(1);
+$('next2').onclick=()=>{
+  if(!selected){
+    msg('Selecciona un estado para continuar');
+    document.querySelector('.statuses').animate(
+      [{transform:'translateX(0)'},{transform:'translateX(-5px)'},{transform:'translateX(5px)'},{transform:'translateX(0)'}],
+      {duration:280}
+    );
+    return;
+  }
+  showStep(3);
+};
+$('back3').onclick=()=>showStep(2);
+$('plate').onkeydown=e=>{if(e.key==='Enter')$('next1').click()};
+
+document.querySelectorAll('.status').forEach(b=>b.onclick=()=>{
+  selected=b.dataset.s;
+  document.querySelectorAll('.status').forEach(x=>x.classList.remove('active'));
+  b.classList.add('active');
+  $('statusHint').textContent='Estado seleccionado · '+selected;
+  $('statusHint').classList.add('selected');
+  $('issueExtra').classList.toggle('show',selected==='AVERIADA');
 });
 
-document.getElementById('nextBtn').onclick=()=>showScreen(1);
-document.getElementById('backBtn').onclick=()=>showScreen(0);
-
-document.getElementById('saveBtn').onclick=()=>{
-  document.getElementById('finalState').textContent=stateMap[currentState];
-  document.getElementById('finalMat').textContent=document.getElementById('matricula').value||'—';
-  showScreen(2);
-  toast.classList.remove('show');
-  void toast.offsetWidth;
-  toast.classList.add('show');
+$('add').onclick=()=>{
+  if(!validPlate()||!selected)return;
+  const now=new Date();
+  records.unshift({
+    id:(crypto.randomUUID?crypto.randomUUID():String(Date.now()+Math.random())),
+    plate:$('plate').value.trim().toUpperCase(),
+    status:selected,
+    issue:selected==='AVERIADA'?$('issueType').value:'',
+    notes:$('notes').value.trim(),
+    time:now.toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'}),
+    date:now.toISOString()
+  });
+  resetRegistration();
+  save();
+  msg('✓ Plataforma registrada');
+  setTimeout(()=>showView('homeView'),300);
 };
 
-document.getElementById('newBtn').onclick=()=>{
-  document.getElementById('matricula').value='';
-  document.getElementById('detalle').value='';
-  showScreen(0);
+function recordHTML(r,compact=false){
+  return `<div class="${compact?'activity':'record'}" data-id="${esc(r.id)}">
+    ${compact
+      ? `<div class="activity-icon ${statusClass(r.status)}">${statusIcon(r.status)}</div>`
+      : `<div class="record-badge ${statusClass(r.status)}">${statusIcon(r.status)}</div>`}
+    <div class="${compact?'activity-main':'record-main'}">
+      <strong>${esc(r.plate)}</strong>
+      <small>${esc(r.status)}${r.issue?' · '+esc(r.issue):''}${r.notes?' · '+esc(r.notes):''}</small>
+    </div>
+    ${compact
+      ? `<span class="activity-time">${esc(r.time)}</span>`
+      : `<div class="record-actions"><button class="mini" onclick="openDetail('${esc(r.id)}')">Detalle</button><button class="mini delete" onclick="del('${esc(r.id)}')">×</button></div>`}
+  </div>`;
+}
+
+function renderAll(){
+  const loaded=records.filter(r=>r.status==='CARGADA').length;
+  const empty=records.filter(r=>r.status==='VACÍA').length;
+  const bad=records.filter(r=>r.status==='AVERIADA').length;
+  $('total').textContent=records.length;$('loaded').textContent=loaded;$('empty').textContent=empty;$('bad').textContent=bad;
+  const badge=$('navIssueCount');
+  if(badge){badge.textContent=bad;badge.classList.toggle('show',bad>0)}
+  const qit=$('quickIssueText');
+  if(qit)qit.textContent=bad?`${bad} pendiente${bad===1?'':'s'}`:'Sin incidencias';
+  const recent=records.slice(0,5);
+  $('recent').innerHTML=recent.length?recent.map(r=>recordHTML(r,true)).join(''):'<div class="empty-state">Todavía no hay actividad.<br>Registra la primera plataforma.</div>';
+  renderRecords();renderIssues();
+}
+function renderRecords(){
+  const q=$('search').value.trim().toUpperCase(),f=$('filter').value;
+  const arr=records.filter(r=>(f==='TODAS'||r.status===f)&&(!q||r.plate.includes(q)));
+  $('recordsList').innerHTML=arr.length?arr.map(recordHTML).join(''):'<div class="empty-state">No hay registros que coincidan.</div>';
+}
+function renderIssues(){
+  const arr=records.filter(r=>r.status==='AVERIADA');
+  $('issueTitle').textContent=`${arr.length} incidencia${arr.length===1?'':'s'} pendiente${arr.length===1?'':'s'}`;
+  $('issuesList').innerHTML=arr.length?arr.map(r=>`<div class="record" data-id="${esc(r.id)}">
+    <div class="record-badge bad">!</div>
+    <div class="record-main"><strong>${esc(r.plate)}</strong><small>${esc(r.issue||'Avería')} · ${esc(r.time)}${r.notes?' · '+esc(r.notes):''}</small></div>
+    <div class="record-actions"><button class="mini" onclick="openDetail('${esc(r.id)}')">Detalle</button><button class="mini delete" onclick="resolveIssue('${esc(r.id)}')">Resolver</button></div>
+  </div>`).join(''):'<div class="empty-state">✓ No hay averías pendientes.<br>El patio está limpio.</div>';
+}
+
+$('search').oninput=renderRecords;$('filter').onchange=renderRecords;
+
+function del(id){
+  if(confirm('¿Eliminar este registro?')){
+    records=records.filter(r=>String(r.id)!==String(id));
+    save();msg('Registro eliminado');
+  }
+}
+function resolveIssue(id){openDetail(id)}
+function changeState(id){
+  const r=records.find(x=>String(x.id)===String(id));if(!r)return;
+  closeSheet();showView('registerView');
+  setTimeout(()=>{
+    $('plate').value=r.plate;showStep(2);selected='';
+    document.querySelectorAll('.status').forEach(x=>x.classList.remove('active'));
+    $('platePreview').textContent=r.plate;
+  },80);
+}
+function resolveIssueNow(id){
+  const r=records.find(x=>String(x.id)===String(id));if(!r)return;
+  r.status='CARGADA';r.issue='';r.notes=(r.notes?r.notes+' · ':'')+'Avería resuelta';
+  r.time=new Date().toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'});
+  save();closeSheet();msg('✓ Avería resuelta');
+}
+function openDetail(id){
+  const r=records.find(x=>String(x.id)===String(id));if(!r)return;
+  $('sheetTitle').textContent=r.plate;
+  $('sheetSubtitle').textContent=`Registrada a las ${r.time}`;
+  $('sheetBody').innerHTML=`
+    <div class="sheet-row"><span>Estado</span><strong>${esc(r.status)}</strong></div>
+    <div class="sheet-row"><span>Avería</span><strong>${esc(r.issue||'No aplica')}</strong></div>
+    <div class="sheet-row"><span>Hora</span><strong>${esc(r.time)}</strong></div>
+    <div class="sheet-row"><span>Observaciones</span><strong>${esc(r.notes||'Sin observaciones')}</strong></div>
+    <div class="sheet-actions">
+      <button class="secondary" onclick="changeState('${esc(r.id)}')">Cambiar estado</button>
+      ${r.status==='AVERIADA'
+        ? `<button class="primary" onclick="resolveIssueNow('${esc(r.id)}')">Resolver avería</button>`
+        : `<button class="danger" onclick="del('${esc(r.id)}');closeSheet()">Eliminar</button>`}
+    </div>`;
+  $('backdrop').classList.add('open');$('sheet').classList.add('open');
+}
+function closeSheet(){$('backdrop').classList.remove('open');$('sheet').classList.remove('open')}
+$('closeSheet').onclick=closeSheet;$('backdrop').onclick=closeSheet;
+
+$('claim').onclick=()=>{
+  const a=records.filter(r=>r.status==='AVERIADA');
+  if(!a.length)return msg('No hay averías pendientes');
+  const text='RECLAMACIÓN DE AVERÍAS\n\n'+a.map(r=>`${r.plate} · ${r.issue||'Avería'} · ${r.notes||'Sin observaciones'}`).join('\n');
+  if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(text).then(()=>msg('Averías copiadas')).catch(()=>msg('Averías preparadas'));
+  else msg('Averías preparadas');
 };
+
+$('clear').onclick=()=>{
+  if(records.length&&confirm('¿Eliminar todos los registros?')){records=[];save();msg('Registros eliminados')}
+};
+
+$('pdf').onclick=()=>{
+  const w=window.open('','_blank');if(!w)return msg('Permite ventanas emergentes');
+  const rows=records.map(r=>`<tr><td>${esc(r.plate)}</td><td>${esc(r.status)}</td><td>${esc(r.issue||'')}</td><td>${esc(r.time)}</td><td>${esc(r.notes||'')}</td></tr>`).join('');
+  const doc=`<!doctype html><html><head><title>XPO · Registro</title><style>body{font-family:Arial;padding:35px}table{width:100%;border-collapse:collapse}td,th{border:1px solid #ccc;padding:9px;text-align:left}th{background:#eee}</style></head><body><h1>XPO Logistics · Registro de Plataformas</h1><p>${new Date().toLocaleString('es-ES')} · Total ${records.length}</p><table><tr><th>Matrícula</th><th>Estado</th><th>Avería</th><th>Hora</th><th>Observaciones</th></tr>${rows||'<tr><td colspan="5">Sin registros</td></tr>'}</table><script>window.print()<\/script></body></html>`;
+  w.document.open();w.document.write(doc);w.document.close();
+};
+
+function tick(){$('clock').textContent=new Date().toLocaleString('es-ES',{weekday:'short',day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'})}
+tick();setInterval(tick,30000);renderAll();
+
+document.addEventListener('DOMContentLoaded',()=>{
+  document.querySelectorAll('button').forEach(b=>{
+    b.addEventListener('pointerdown',()=>b.classList.add('pressing'));
+    const up=()=>b.classList.remove('pressing');
+    b.addEventListener('pointerup',up);b.addEventListener('pointercancel',up);b.addEventListener('pointerleave',up);
+  });
+});
+
 </script>
 </body>
 </html>
