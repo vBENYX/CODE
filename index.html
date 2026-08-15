@@ -2,445 +2,306 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <meta name="theme-color" content="#f3f5f9">
 <title>XPO · Control de Plataformas</title>
 
 
 <style>
 :root{
-  --bg:#f4f5f9;--surface:rgba(255,255,255,.84);--surface2:#fff;
-  --line:rgba(15,23,42,.075);--text:#111827;--muted:#667085;
-  --blue:#007aff;--green:#16a56b;--orange:#f59e0b;--red:#ff3b30;
-  --shadow:0 12px 35px rgba(16,24,40,.075)
+ --bg:#f5f5f7;--paper:#fff;--ink:#1d1d1f;--secondary:#6e6e73;
+ --blue:#0071e3;--green:#34c759;--orange:#ff9500;--red:#ff3b30;
+ --hair:#d2d2d7;--spring:cubic-bezier(.2,.8,.2,1)
 }
 *{box-sizing:border-box}
-html,body{width:100%;min-width:0;margin:0;padding:0;background:var(--bg)}
+html{background:var(--bg)}
 body{
-  color:var(--text);
-  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text","Helvetica Neue",Helvetica,Arial,sans-serif;
-  font-feature-settings:"kern" 1,"liga" 1;
-  overflow-x:hidden;
-  -webkit-font-smoothing:antialiased;
+ margin:0;background:var(--bg);color:var(--ink);
+ font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text","Helvetica Neue",Arial,sans-serif;
+ -webkit-font-smoothing:antialiased;font-synthesis:none;overflow-x:hidden;touch-action:pan-y
 }
-button,input,textarea,select{font:inherit}
-button{touch-action:manipulation}
-.app{
-  width:100%;
-  max-width:520px;
-  margin:0 auto;
-  padding:0 10px calc(env(safe-area-inset-bottom) + 94px);
+button,input,textarea,select{font:inherit}button{-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+.app{width:100%;max-width:620px;margin:auto;padding:0 16px calc(env(safe-area-inset-bottom) + 112px)}
+/* NAV BAR */
+.header{
+ height:54px;margin:0 -16px;padding:7px 16px;position:sticky;top:0;z-index:40;
+ display:flex;align-items:center;background:rgba(245,245,247,.78);
+ border-bottom:1px solid rgba(0,0,0,.045);backdrop-filter:blur(22px) saturate(160%);-webkit-backdrop-filter:blur(22px) saturate(160%)
 }
-.topbar{
-  width:calc(100% + 20px);
-  margin-left:-10px;
-  position:sticky;top:0;z-index:30;
-  display:flex;align-items:center;gap:10px;
-  padding:calc(env(safe-area-inset-top) + 9px) 10px 10px;
-  background:rgba(244,245,249,.88);
-  border-bottom:1px solid rgba(15,23,42,.045);
-  backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px)
-}
-.brand{display:flex;align-items:center;gap:9px;min-width:0}
-.logo{width:41px;height:41px;flex:0 0 41px;border-radius:13px;display:grid;place-items:center;background:linear-gradient(145deg,#ff7844,#ff4b30);color:#fff;font-size:12px;font-weight:900;box-shadow:0 8px 18px rgba(255,80,50,.23)}
-h1{margin:0;font-size:18px;line-height:1.05;letter-spacing:-.045em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.subtitle{margin-top:3px;font-size:9px;color:var(--muted);white-space:nowrap}
-.live{margin-left:auto;flex:0 0 auto;display:flex;align-items:center;gap:5px;padding:7px 9px;border-radius:999px;background:#fff;border:1px solid var(--line);font-size:8px;font-weight:800;box-shadow:0 4px 12px rgba(16,24,40,.05)}
-.dot{width:6px;height:6px;border-radius:50%;background:#18c77a;box-shadow:0 0 0 3px #18c77a1c}
-.view{display:none;width:100%;animation:appear .28s ease}.view.active{display:block}
-@keyframes appear{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
-.hero{width:100%;padding:18px 2px 12px}.eyebrow,.kicker{font-size:9px;letter-spacing:.09em;font-weight:850;color:var(--blue);text-transform:uppercase}
-.hero h2{margin:3px 0 4px;font-size:29px;line-height:1;letter-spacing:-.06em;font-weight:780}
-.hero p{margin:0;color:var(--muted);font-size:11px;line-height:1.4}
-.card{
-  width:100%;margin:0 0 10px;padding:13px;
-  border-radius:21px;border:1px solid rgba(255,255,255,.95);
-  background:var(--surface);box-shadow:var(--shadow);
-  backdrop-filter:blur(25px) saturate(160%);-webkit-backdrop-filter:blur(25px) saturate(160%)
-}
-.stats{display:grid;grid-template-columns:1fr 1fr;gap:7px;width:100%}
-.stat{min-width:0;padding:12px;border-radius:16px;background:rgba(255,255,255,.62);border:1px solid var(--line)}
-.stat b{display:block;font-size:25px;line-height:1;letter-spacing:-.055em;font-variant-numeric:tabular-nums}
-.stat span{display:block;margin-top:5px;color:var(--muted);font-size:8px;font-weight:850;letter-spacing:.04em}
-.stat.blue b{color:var(--blue)}.stat.green b{color:var(--green)}.stat.orange b{color:#c47a00}.stat.red b{color:var(--red)}
-.section-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:7px}
-.section-head h3{margin:0;font-size:14px;letter-spacing:-.025em;font-weight:780}
-.link{border:0;background:#007aff0b;color:var(--blue);min-height:32px;padding:6px 9px;border-radius:10px;font-size:9px;font-weight:800}
-.activity,.record{display:flex;align-items:center;gap:9px;width:100%;min-width:0;padding:10px 1px;border-bottom:1px solid var(--line)}
-.activity:last-child,.record:last-child{border-bottom:0}
-.activity-icon,.record-badge{width:35px;height:35px;flex:0 0 35px;border-radius:11px;display:grid;place-items:center;font-size:12px;font-weight:900;background:#007aff10;color:var(--blue)}
-.activity-icon.bad,.record-badge.bad{background:#ff3b3010;color:var(--red)}
-.activity-icon.empty,.record-badge.empty{background:#f59e0b12;color:#a16207}
-.activity-main,.record-main{min-width:0;flex:1}.activity-main strong,.record-main strong{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:11px}.activity-main small,.record-main small{display:block;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--muted);font-size:8px}.activity-time{flex:0 0 auto;color:var(--muted);font-size:8px}
-.quick-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;width:100%;margin-top:1px}
-.quick-action{width:100%;min-width:0;min-height:63px;display:flex;align-items:center;gap:8px;padding:9px;border:0;border-radius:17px;cursor:pointer}
-.quick-action.primary{margin:0;background:linear-gradient(180deg,#0a84ff,#007aff);color:#fff;box-shadow:0 9px 20px #007aff25}
-.quick-action.alert{background:#ff3b300b;color:#b42318;border:1px solid #ff3b3017}
-.qa-icon{width:31px;height:31px;flex:0 0 31px;border-radius:10px;display:grid;place-items:center;background:#ffffff26;font-size:17px}
-.alert .qa-icon{background:#ff3b3010}.quick-action b{display:block;font-size:10px;text-align:left}.quick-action small{display:block;margin-top:2px;font-size:7px;opacity:.72;text-align:left}.qa-arrow{margin-left:auto;font-size:18px;opacity:.65}
-.form-card{padding:14px}
-.stepper{display:grid;grid-template-columns:auto 1fr auto 1fr auto;align-items:center;gap:5px;width:100%;margin:2px 0 20px}
-.step-dot{display:flex;flex-direction:column;align-items:center;gap:3px;min-width:45px;color:#98a2b3}.step-dot span{width:26px;height:26px;display:grid;place-items:center;border-radius:50%;background:#66708512;font-size:9px;font-weight:850;transition:.3s}.step-dot small{font-size:7px;font-weight:750;white-space:nowrap}.step-dot.active{color:var(--blue)}.step-dot.active span{background:var(--blue);color:#fff;box-shadow:0 5px 13px #007aff30;transform:scale(1.04)}.step-dot.done span{background:var(--green);color:#fff}.step-line{height:2px;overflow:hidden;border-radius:9px;background:#66708512}.step-line i{display:block;height:100%;width:0;background:var(--blue);transition:.4s}
-.step-panel{display:none;animation:step .35s ease}.step-panel.active{display:block}@keyframes step{from{opacity:0;transform:translateX(10px)}to{opacity:1;transform:none}}
-.step-panel h3{margin:4px 0;font-size:24px;line-height:1.03;letter-spacing:-.055em;font-weight:780}.help{margin:0 0 16px;color:var(--muted);font-size:11px;line-height:1.4}
-.label{display:block;margin:0 0 6px;color:var(--muted);font-size:8px;font-weight:850;letter-spacing:.06em;text-transform:uppercase}
-input,textarea,select{width:100%;min-width:0;border:1px solid var(--line);outline:0;background:#f9fafc;color:var(--text);border-radius:15px}
-input{min-height:52px;padding:13px;font-size:20px;font-weight:750;letter-spacing:.035em}textarea{min-height:72px;padding:12px;font-size:11px;resize:vertical}select{min-height:46px;padding:11px;font-size:11px}
-input:focus,textarea:focus,select:focus{border-color:#007aff45;box-shadow:0 0 0 4px #007aff0c}
-.primary,.secondary,.danger{width:100%;min-height:48px;border-radius:15px;font-size:11px;font-weight:850;cursor:pointer;transition:transform .15s,box-shadow .2s}
-.primary{border:0;background:linear-gradient(180deg,#0a84ff,#007aff);color:#fff;box-shadow:0 8px 19px #007aff28}.primary.green{background:linear-gradient(180deg,#19b877,#16a56b);box-shadow:0 8px 19px #16a56b28}
-.secondary{background:#fff;border:1px solid var(--line);color:var(--text);box-shadow:0 4px 12px #10182808}.danger{background:#ff3b300a;border:1px solid #ff3b3014;color:var(--red)}
-.primary:active,.secondary:active,.danger:active,.quick-action:active,.status:active,.nav:active,.mini:active{transform:scale(.97)}
-.status-hint{margin:0 0 7px 1px;color:var(--muted);font-size:9px}.status-hint.selected{color:var(--blue);font-weight:750}
-.statuses{display:grid;grid-template-columns:1fr;gap:6px}.status{position:relative;display:grid;grid-template-columns:32px 1fr auto;align-items:center;width:100%;min-height:57px;padding:8px 10px;border:1px solid var(--line);border-radius:16px;background:#ffffff70;color:var(--muted);text-align:left;overflow:hidden;cursor:pointer}.status b{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:#66708512;font-size:11px}.status span{font-size:10px;font-weight:850;color:var(--text)}.status small{font-size:8px;color:var(--muted)}.status.active{box-shadow:0 7px 18px #1018280a}.status[data-s=CARGADA].active{background:#16a56b0c;border-color:#16a56b4d;color:var(--green)}.status[data-s=CARGADA].active b{background:var(--green);color:#fff}.status[data-s="VACÍA"].active{background:#f59e0b0c;border-color:#f59e0b4d;color:#a16207}.status[data-s="VACÍA"].active b{background:var(--orange);color:#fff}.status[data-s=AVERIADA].active{background:#ff3b300b;border-color:#ff3b304d;color:var(--red)}.status[data-s=AVERIADA].active b{background:var(--red);color:#fff}
-.selected{width:100%;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:11px 12px;margin-bottom:9px;border-radius:14px;background:#007aff09;border:1px solid #007aff12}.selected span{font-size:8px;color:var(--muted)}.selected strong{font-size:14px;letter-spacing:.04em}
-.issue-extra{display:none;margin-top:9px}.issue-extra.show{display:block}.step-actions{display:grid;grid-template-columns:86px 1fr;gap:7px;margin-top:9px}.confirmation{width:100%;margin:14px 0;border:1px solid var(--line);border-radius:16px;overflow:hidden;background:#ffffff54}.confirmation div{display:flex;justify-content:space-between;gap:8px;padding:11px 12px;border-bottom:1px solid var(--line)}.confirmation div:last-child{border-bottom:0}.confirmation span{font-size:8px;color:var(--muted)}.confirmation strong{max-width:62%;font-size:9px;text-align:right;word-break:break-word}.success{width:52px;height:52px;border-radius:50%;display:grid;place-items:center;margin-bottom:12px;background:var(--green);color:#fff;font-size:23px;font-weight:850;box-shadow:0 11px 25px #16a56b25}.full{margin-top:7px}
-.search-row{display:grid;grid-template-columns:minmax(0,1fr) 102px;gap:6px;width:100%;position:relative}.search-row:before{content:"⌕";position:absolute;left:12px;top:10px;z-index:1;color:#98a2b3;font-size:16px}.search-row input{min-height:44px;padding-left:32px;font-size:11px}.search-row select{min-height:44px}
-.record-actions{display:flex;gap:4px;flex:0 0 auto}.mini{border:1px solid var(--line);background:#fff;border-radius:9px;padding:7px 7px;font-size:8px;font-weight:800;color:var(--text)}.mini.delete{color:var(--red);background:#ff3b300a}
-.empty-state{text-align:center;padding:30px 8px;color:var(--muted);font-size:10px;line-height:1.6}
-.bottom{
-  position:fixed;z-index:40;left:10px;right:10px;bottom:calc(env(safe-area-inset-bottom) + 8px);
-  width:auto;max-width:500px;margin:auto;
-  display:grid;grid-template-columns:repeat(4,1fr);gap:3px;
-  padding:5px;border:1px solid rgba(255,255,255,.96);border-radius:22px;
-  background:rgba(255,255,255,.88);box-shadow:0 15px 45px rgba(16,24,40,.15);
-  backdrop-filter:blur(28px) saturate(180%);-webkit-backdrop-filter:blur(28px) saturate(180%)
-}
-.nav{position:relative;min-width:0;min-height:50px;border:0;background:transparent;color:#7c8797;border-radius:17px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:7px;font-weight:850;cursor:pointer}
-.nav-icon,.nav-add{width:25px;height:25px;border-radius:9px;display:grid;place-items:center;font-size:16px;line-height:1;transition:.2s}.nav-add{background:var(--blue);color:#fff;box-shadow:0 5px 12px #007aff25;font-size:19px}.nav.active{color:var(--blue);background:#007aff0a}.nav.active .nav-icon{background:var(--blue);color:#fff;box-shadow:0 5px 12px #007aff20}.nav em{position:absolute;display:none;top:3px;right:calc(50% - 22px);min-width:15px;height:15px;padding:0 3px;border-radius:999px;background:var(--red);color:#fff;border:2px solid #fff;font-size:7px;font-style:normal;line-height:11px}.nav em.show{display:grid;place-items:center}
-.sheet-backdrop{position:fixed;inset:0;z-index:50;background:#0004;opacity:0;pointer-events:none;transition:.2s}.sheet-backdrop.open{opacity:1;pointer-events:auto}.sheet{position:fixed;z-index:51;left:0;right:0;bottom:0;width:100%;max-width:520px;margin:auto;padding:8px 13px calc(env(safe-area-inset-bottom) + 16px);background:#fff;border-radius:25px 25px 0 0;box-shadow:0 -18px 55px #10182825;transform:translateY(100%);transition:.4s cubic-bezier(.2,.8,.2,1)}.sheet.open{transform:translateY(0)}.grab{width:34px;height:4px;margin:2px auto 13px;border-radius:99px;background:#98a2b355}.sheet h3{margin:0 0 3px;font-size:20px;letter-spacing:-.04em}.sheet p{margin:0 0 11px;color:var(--muted);font-size:10px}.sheet-row{display:flex;justify-content:space-between;gap:8px;padding:11px 0;border-bottom:1px solid var(--line);font-size:10px}.sheet-row span{color:var(--muted)}.sheet-row strong{max-width:60%;text-align:right;word-break:break-word}.sheet-actions{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:11px}
-.toast{position:fixed;z-index:70;left:50%;bottom:calc(env(safe-area-inset-bottom) + 76px);transform:translate(-50%,12px);padding:10px 14px;border-radius:999px;background:#111827;color:#fff;font-size:9px;font-weight:850;box-shadow:0 10px 28px #0003;opacity:0;pointer-events:none;transition:.2s;white-space:nowrap}.toast.show{opacity:1;transform:translate(-50%,0)}
-@media(min-width:521px){
- .app{padding-left:14px;padding-right:14px}.topbar{width:calc(100% + 28px);margin-left:-14px;padding-left:14px;padding-right:14px}
-}
-@media(max-width:340px){
- .app{padding-left:8px;padding-right:8px}.topbar{width:calc(100% + 16px);margin-left:-8px;padding-left:8px;padding-right:8px}
- .live{display:none}.hero h2{font-size:26px}.card{padding:11px}.bottom{left:8px;right:8px}.nav{min-height:48px}
-}
+.logo{width:30px;height:30px;border-radius:9px;background:var(--ink);color:#fff;display:grid;place-items:center;font-size:7px;font-weight:900}
+.header-copy{margin-left:8px}.header-copy b{font-size:14px;line-height:1;font-weight:750;letter-spacing:-.035em}.header-copy span{display:block;margin-top:3px;font-size:6.5px;color:var(--secondary);font-weight:600}
+.header-status{margin-left:auto;color:var(--secondary);font-size:6.5px;font-weight:700;display:flex;align-items:center;gap:5px}.pulse{width:5px;height:5px;border-radius:50%;background:var(--green)}
+/* EDITORIAL HERO */
+.hero{padding:31px 2px 21px}.hero .eyebrow{font-size:6.5px;color:var(--blue);font-weight:800;letter-spacing:.12em;text-transform:uppercase}
+.hero h1{margin:7px 0 7px;font-size:44px;line-height:.86;letter-spacing:-.095em;font-weight:800}.hero p{margin:0;color:var(--secondary);font-size:9.5px;line-height:1.45;max-width:355px}
+/* VIEW TRANSITION */
+.view{display:none}.view.active{display:block;animation:view .42s var(--spring)}@keyframes view{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.section{margin-bottom:20px}.section-title{display:flex;align-items:center;justify-content:space-between;margin:0 2px 7px}.section-title h2{margin:0;font-size:11px;font-weight:760;letter-spacing:-.01em}.section-title button{padding:4px 6px;color:var(--blue);background:transparent;font-size:7.5px;font-weight:750}
+/* METRIC STRIP */
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:5px}.metric{min-width:0;background:var(--paper);border:1px solid rgba(0,0,0,.045);border-radius:13px;padding:11px 8px;box-shadow:0 3px 13px rgba(0,0,0,.028)}.metric strong{font-size:21px;line-height:1;letter-spacing:-.06em;font-weight:760}.metric span{display:block;margin-top:5px;color:var(--secondary);font-size:6px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.metric.blue strong{color:var(--blue)}.metric.green strong{color:var(--green)}.metric.orange strong{color:var(--orange)}.metric.red strong{color:var(--red)}
+/* ACTIONS */
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:7px}.action{min-height:67px;display:flex;align-items:center;gap:9px;padding:9px 10px;border-radius:16px;background:#fff;border:1px solid rgba(0,0,0,.05);box-shadow:0 4px 15px rgba(0,0,0,.03);text-align:left;color:var(--ink);transition:transform .25s var(--spring)}.action:active{transform:scale(.965)}.action.primary{background:var(--blue);color:#fff;border-color:transparent;box-shadow:0 8px 20px rgba(0,113,227,.18)}.action-icon{width:30px;height:30px;flex:0 0 30px;border-radius:9px;background:#f1f1f3;display:grid;place-items:center;font-size:14px}.primary .action-icon{background:#ffffff24}.action b{display:block;font-size:8.5px;font-weight:780}.action small{display:block;margin-top:3px;color:var(--secondary);font-size:6.5px}.primary small{color:#ffffffb8}.arrow{margin-left:auto;font-size:16px;color:#a1a1a6}
+/* LISTS */
+.activity-card,.record-list{padding:4px 12px;background:#fff;border:1px solid rgba(0,0,0,.05);border-radius:17px;box-shadow:0 5px 18px rgba(0,0,0,.03)}.activity,.record{display:flex;align-items:center;gap:9px;min-width:0;padding:9px 0;border-bottom:1px solid #e9e9ec}.activity:last-child,.record:last-child{border-bottom:0}.badge{width:32px;height:32px;flex:0 0 32px;border-radius:10px;display:grid;place-items:center;background:#eef6ff;color:var(--blue);font-size:9px;font-weight:900}.badge.g{background:#edf9f0;color:var(--green)}.badge.o{background:#fff5e6;color:#b86d00}.badge.r{background:#fff0ef;color:var(--red)}.activity-main,.record-main{min-width:0;flex:1}.activity-main b,.record-main b{display:block;font-size:8.5px;font-weight:730;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.activity-main span,.record-main span{display:block;margin-top:3px;color:var(--secondary);font-size:6.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.activity time{color:var(--secondary);font-size:6.5px}
+/* REGISTER SHEET */
+.panel{padding:17px;border-radius:22px;background:#fff;border:1px solid rgba(0,0,0,.055);box-shadow:0 8px 26px rgba(0,0,0,.045)}
+.steps{display:flex;align-items:center;margin-bottom:22px}.step{display:flex;align-items:center;gap:5px;color:#8e8e93;font-size:6.5px;font-weight:730;white-space:nowrap}.step i{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;background:#ededf0;font-style:normal;font-size:7px;font-weight:800}.step.active{color:var(--blue)}.step.active i{background:var(--blue);color:#fff;box-shadow:0 4px 10px rgba(0,113,227,.2)}.step.done i{background:var(--green);color:#fff}.connector{height:1px;flex:1;margin:0 7px;background:#dedee2}
+.screen{display:none}.screen.active{display:block;animation:screen .38s var(--spring)}@keyframes screen{from{opacity:0;transform:translateX(10px)}to{opacity:1;transform:none}}.screen h2{margin:0 0 5px;font-size:28px;line-height:.94;letter-spacing:-.07em;font-weight:800}.screen>p{margin:0 0 18px;color:var(--secondary);font-size:8.5px;line-height:1.45}.label{display:block;margin-bottom:6px;color:var(--secondary);font-size:6.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+input,textarea,select{width:100%;border:1px solid var(--hair);background:#f7f7f9;color:var(--ink);border-radius:13px;outline:0}input{height:54px;padding:11px;font-size:20px;font-weight:760;letter-spacing:.04em}textarea{min-height:72px;padding:10px;font-size:8.5px;resize:vertical}input:focus,textarea:focus,select:focus{background:#fff;border-color:#7db1ef;box-shadow:0 0 0 3px rgba(0,113,227,.09)}
+.states{display:grid;gap:6px}.state{display:grid;grid-template-columns:30px 1fr 17px;align-items:center;gap:8px;min-height:59px;padding:8px 9px;background:#f8f8fa;border:1px solid #e1e1e5;border-radius:15px;text-align:left;transition:.25s var(--spring)}.state-icon{width:27px;height:27px;border-radius:9px;background:#ededf0;display:grid;place-items:center;font-size:10px}.state b{display:block;font-size:8.5px}.state small{display:block;margin-top:2px;color:var(--secondary);font-size:6.5px}.check{width:16px;height:16px;border-radius:50%;border:1px solid #d0d0d5}.state.active{transform:scale(1.01)}.state.active .check{background:currentColor;border-color:currentColor;box-shadow:inset 0 0 0 4px #fff}.state[data-state=CARGADA].active{color:var(--green);background:#f0faf3;border-color:#b4e4c3}.state[data-state="VACÍA"].active{color:#b66d00;background:#fff8eb;border-color:#f0d39d}.state[data-state=AVERIADA].active{color:var(--red);background:#fff1ef;border-color:#efc0bc}
+.issue-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px}.issue{min-height:44px;padding:8px;border:1px solid #e1e1e5;border-radius:12px;background:#f8f8fa;text-align:left}.issue b{display:block;font-size:7.5px}.issue small{display:block;margin-top:2px;color:var(--secondary);font-size:6px}.issue.active{background:#fff1ef;border-color:#efc0bc}.actions-row{display:grid;grid-template-columns:86px 1fr;gap:6px;margin-top:11px}.btn{min-height:47px;border-radius:13px;font-size:8px;font-weight:800}.btn.secondary{background:#eeeef0;color:var(--ink)}.btn.primary{background:var(--blue);color:#fff;box-shadow:0 7px 16px rgba(0,113,227,.18)}.btn.green{background:var(--green);color:#fff}.selected{display:flex;justify-content:space-between;align-items:center;padding:9px 10px;margin-bottom:8px;border-radius:12px;background:#f2f7ff;border:1px solid #dbe8fa}.selected span{font-size:6.5px;color:var(--secondary)}.selected b{font-size:12px}.confirm{margin:12px 0;border:1px solid #e1e1e5;border-radius:13px;overflow:hidden;background:#f8f8fa}.confirm div{display:flex;justify-content:space-between;padding:9px 10px;border-bottom:1px solid #e6e6e9}.confirm div:last-child{border:0}.confirm span{color:var(--secondary);font-size:6.5px}.confirm b{font-size:7.5px}.success{width:48px;height:48px;border-radius:14px;background:var(--green);color:#fff;display:grid;place-items:center;font-size:21px}
+/* FILTERS */
+.filters{display:grid;grid-template-columns:1fr 105px;gap:6px;margin-bottom:9px}.filters input{height:42px;font-size:8px}.filters select{height:42px;padding:0 8px;font-size:8px}.mini{padding:6px 8px;border-radius:9px;background:#efeff1;font-size:6.5px;font-weight:800}.mini.delete{background:#fff0ef;color:var(--red)}.record-actions{display:flex}
+/* LIQUID GLASS DOCK */
+.safe{position:fixed;z-index:80;left:0;right:0;bottom:0;height:93px;pointer-events:none;background:linear-gradient(to bottom,rgba(245,245,247,0),rgba(245,245,247,.93) 48%,#f5f5f7 78%)}
+.dock{position:fixed;z-index:90;left:50%;bottom:calc(env(safe-area-inset-bottom) + 8px);transform:translateX(-50%);width:calc(100% - 24px);max-width:588px;height:63px;padding:4px;display:grid;grid-template-columns:repeat(4,1fr);gap:4px;border:1px solid rgba(255,255,255,.96);border-radius:21px;background:rgba(255,255,255,.7);box-shadow:0 17px 46px rgba(0,0,0,.13),inset 0 1px 0 #fff;backdrop-filter:blur(28px) saturate(180%);-webkit-backdrop-filter:blur(28px) saturate(180%)}.dock-btn{position:relative;min-width:0;height:53px;border-radius:16px;background:transparent;color:#8e8e93;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:6px;font-weight:800}.dock-icon{width:29px;height:29px;border-radius:9px;display:grid;place-items:center;font-size:16px}.dock-btn.active{color:var(--blue);background:rgba(255,255,255,.72);box-shadow:inset 0 1px 0 #fff,0 4px 12px rgba(0,0,0,.045)}.dock-btn.active .dock-icon{background:var(--blue);color:#fff;box-shadow:0 5px 12px rgba(0,113,227,.2)}.dock-btn.add .dock-icon{background:var(--ink);color:#fff;font-size:18px;box-shadow:0 6px 14px rgba(0,0,0,.17)}.dock-badge{display:none;position:absolute;top:0;right:calc(50% - 21px);min-width:15px;height:15px;border-radius:99px;background:var(--red);color:#fff;border:2px solid #fff;font-size:6px;place-items:center}.dock-badge.show{display:grid}
+/* SHEET */
+.backdrop{position:fixed;inset:0;z-index:100;background:rgba(0,0,0,.24);opacity:0;visibility:hidden;pointer-events:none;transition:.25s}.backdrop.open{opacity:1;visibility:visible;pointer-events:auto}.sheet{position:fixed;z-index:110;left:50%;bottom:0;width:min(100%,620px);padding:7px 14px calc(env(safe-area-inset-bottom) + 16px);transform:translate(-50%,110%);visibility:hidden;background:rgba(255,255,255,.94);border:1px solid #fff;border-bottom:0;border-radius:26px 26px 0 0;box-shadow:0 -20px 60px rgba(0,0,0,.15);backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px);transition:.45s var(--spring)}.sheet.open{transform:translate(-50%,0);visibility:visible}.grab{width:32px;height:4px;border-radius:99px;background:#8e8e9340;margin:2px auto 12px}.sheet h2{margin:0 0 3px;font-size:19px;letter-spacing:-.045em}.sheet p{margin:0 0 10px;color:var(--secondary);font-size:8px}.sheet-row{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #e7e7e9;font-size:8px}.sheet-row span{color:var(--secondary)}.sheet-actions{margin-top:10px}
+.toast{position:fixed;z-index:130;left:50%;bottom:calc(env(safe-area-inset-bottom) + 76px);transform:translate(-50%,10px) scale(.96);padding:8px 12px;border-radius:99px;background:rgba(29,29,31,.94);color:#fff;font-size:7.5px;font-weight:800;opacity:0;pointer-events:none;transition:.3s var(--spring);white-space:nowrap}.toast.show{opacity:1;transform:translate(-50%,0) scale(1)}
+@media(max-width:380px){.app{padding-left:10px;padding-right:10px}.header{margin-left:-10px;margin-right:-10px;padding-left:10px;padding-right:10px}.hero h1{font-size:35px}.metrics{grid-template-columns:1fr 1fr}.actions{grid-template-columns:1fr}.dock{width:calc(100% - 18px)}}
 </style>
-</head><body>
+<body>
 <div class="app">
-<header class="topbar">
- <div class="brand"><div class="logo">XPO</div><div><h1>Control de plataformas</h1><div class="subtitle">Centro operativo · tiempo real</div></div></div>
- <div class="live"><i class="dot"></i><span id="clock">En directo</span></div>
-</header>
+  <header class="header">
+    <div class="logo">XPO</div>
+    <div class="header-copy"><b>Logistics</b><span>Registro de plataformas</span></div>
+    <div class="header-status"><i class="pulse"></i> En directo</div>
+  </header>
 
-<main>
-<section id="homeView" class="view active">
- <div class="hero"><div class="eyebrow">Resumen de hoy</div><h2>Todo bajo control.</h2><p>Consulta el estado del patio de un vistazo.</p></div>
- <div class="card">
-  <div class="stats">
-   <div class="stat blue"><b id="total">0</b><span>TOTAL</span></div>
-   <div class="stat green"><b id="loaded">0</b><span>CARGADAS</span></div>
-   <div class="stat orange"><b id="empty">0</b><span>VACÍAS</span></div>
-   <div class="stat red"><b id="bad">0</b><span>AVERIADAS</span></div>
-  </div>
- </div>
- <div class="card">
-  <div class="section-head"><h3>Actividad reciente</h3><button class="link" id="seeAll">Ver todo</button></div>
-  <div id="recent"></div>
- </div>
- <div class="quick-grid">
-  <button class="quick-action primary" id="quickAdd"><span class="qa-icon">＋</span><span><b>Registrar</b><small>Nueva plataforma</small></span><span class="qa-arrow">›</span></button>
-  <button class="quick-action alert" id="quickIssues"><span class="qa-icon">⚠</span><span><b>Averías</b><small id="quickIssueText">Sin incidencias</small></span><span class="qa-arrow">›</span></button>
+  <main>
+    <section class="view active" data-view="home">
+      <div class="hero">
+        <div class="eyebrow">Operaciones</div>
+        <h1>Plataformas.</h1>
+        <p>Registra entradas de forma rápida, clara y sin pasos innecesarios.</p>
+      </div>
+
+      <section class="section">
+        <div class="section-title"><h2>Resumen</h2><button id="clear">Limpiar</button></div>
+        <div class="metrics">
+          <div class="metric blue"><strong id="nAll">0</strong><span>Total</span></div>
+          <div class="metric green"><strong id="nLoaded">0</strong><span>Cargadas</span></div>
+          <div class="metric orange"><strong id="nEmpty">0</strong><span>Vacías</span></div>
+          <div class="metric red"><strong id="nBad">0</strong><span>Averiadas</span></div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-title"><h2>Acciones</h2></div>
+        <div class="actions">
+          <button class="action primary" data-go-register>
+            <span class="action-icon">＋</span>
+            <span><b>Registrar plataforma</b><small>Nueva entrada</small></span>
+            <span class="arrow">›</span>
+          </button>
+          <button class="action" data-go-register>
+            <span class="action-icon">⚠</span>
+            <span><b>Registrar avería</b><small>Incidencia</small></span>
+            <span class="arrow">›</span>
+          </button>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-title"><h2>Actividad reciente</h2><button data-view="records">Ver todo</button></div>
+        <div class="activity-card" id="recent"></div>
+      </section>
+    </section>
+
+    <section class="view" data-view="register">
+      <div class="hero">
+        <div class="eyebrow">Nuevo registro</div>
+        <h1>Registrar.</h1>
+        <p>Completa los tres pasos. El estado permanece sin seleccionar hasta que lo indiques.</p>
+      </div>
+
+      <section class="panel">
+        <div class="steps">
+          <div class="step active"><i>1</i><span>Matrícula</span></div>
+          <div class="connector"></div>
+          <div class="step"><i>2</i><span>Estado</span></div>
+          <div class="connector"></div>
+          <div class="step"><i>3</i><span>Registrar</span></div>
+        </div>
+
+        <div class="screen active" data-step="1">
+          <h2>Matrícula</h2>
+          <p>Introduce la matrícula de la plataforma.</p>
+          <label class="label" for="plate">Matrícula</label>
+          <input id="plate" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="Ej. 1234 ABC">
+          <div class="actions-row">
+            <span></span><button id="next1" class="btn primary">Continuar</button>
+          </div>
+        </div>
+
+        <div class="screen" data-step="2">
+          <h2>Estado</h2>
+          <p>Selecciona una opción. Ninguna está activa inicialmente.</p>
+          <div id="stateHint" style="margin-bottom:8px;color:var(--muted);font-size:8px">Selecciona un estado</div>
+          <div class="states">
+            <button class="state" data-state="CARGADA"><span class="state-icon">✓</span><span><b>Cargada</b><small>Plataforma con mercancía</small></span><i class="check"></i></button>
+            <button class="state" data-state="VACÍA"><span class="state-icon">○</span><span><b>Vacía</b><small>Sin mercancía</small></span><i class="check"></i></button>
+            <button class="state" data-state="AVERIADA"><span class="state-icon">!</span><span><b>Averiada</b><small>Requiere atención</small></span><i class="check"></i></button>
+          </div>
+          <div id="issueBox" style="display:none">
+            <label class="label" style="margin-top:14px">Tipo de avería</label>
+            <div class="issue-grid">
+              <button class="issue" data-issue="Rueda"><b>Rueda</b><small>Rodadura o eje</small></button>
+              <button class="issue" data-issue="Estructura"><b>Estructura</b><small>Golpe o deformación</small></button>
+              <button class="issue" data-issue="Plataforma"><b>Plataforma</b><small>Base o superficie</small></button>
+              <button class="issue" data-issue="Otro"><b>Otro</b><small>Otra incidencia</small></button>
+            </div>
+          </div>
+          <div class="actions-row">
+            <button id="back2" class="btn secondary">Atrás</button>
+            <button id="next2" class="btn primary">Continuar</button>
+          </div>
+        </div>
+
+        <div class="screen" data-step="3">
+          <h2>Confirmar</h2>
+          <p>Comprueba los datos antes de guardar el registro.</p>
+          <div class="confirm">
+            <div><span>Matrícula</span><b id="confirmPlate">Sin matrícula</b></div>
+            <div><span>Estado</span><b id="confirmState">Sin estado</b></div>
+            <div><span>Avería</span><b id="confirmIssue">No aplica</b></div>
+          </div>
+          <label class="label" for="note">Observación</label>
+          <textarea id="note" placeholder="Opcional"></textarea>
+          <div class="actions-row">
+            <button id="back3" class="btn secondary">Atrás</button>
+            <button id="register" class="btn green">Registrar</button>
+          </div>
+          <div id="success" style="display:none;margin:14px auto 0" class="success">✓</div>
+          <div id="successMsg" style="text-align:center;margin-top:6px;color:var(--muted);font-size:8px"></div>
+        </div>
+      </section>
+    </section>
+
+    <section class="view" data-view="records">
+      <div class="hero">
+        <div class="eyebrow">Historial</div>
+        <h1>Registros.</h1>
+        <p>Consulta las plataformas registradas y filtra por estado.</p>
+      </div>
+      <section class="section">
+        <div class="filters">
+          <input id="search" placeholder="Buscar matrícula" autocomplete="off">
+          <select id="filter">
+            <option value="TODAS">Todas</option>
+            <option value="CARGADA">Cargadas</option>
+            <option value="VACÍA">Vacías</option>
+            <option value="AVERIADA">Averiadas</option>
+          </select>
+        </div>
+        <div class="record-list" id="recordList"></div>
+      </section>
+    </section>
+
+    <section class="view" data-view="more">
+      <div class="hero">
+        <div class="eyebrow">XPO Logistics</div>
+        <h1>Más.</h1>
+        <p>Herramientas y opciones de la aplicación.</p>
+      </div>
+      <section class="activity-card">
+        <div class="activity"><div class="badge">PDF</div><div class="activity-main"><b>Generar PDF</b><span>Resumen de los registros actuales</span></div><button class="mini" id="pdfBtn">Abrir</button></div>
+        <div class="activity"><div class="badge">i</div><div class="activity-main"><b>Datos locales</b><span>Los registros se guardan en este dispositivo</span></div></div>
+      </section>
+    </section>
+  </main>
 </div>
-</section>
 
-<section id="registerView" class="view">
- <div class="card form-card">
-  <div class="section-head"><h3>Nuevo registro</h3><span class="eyebrow" id="stepLabel">PASO 1 DE 3</span></div>
-  <div class="stepper">
-   <div class="step-dot active" data-step="1"><span>1</span><small>Matrícula</small></div><div class="step-line"><i></i></div>
-   <div class="step-dot" data-step="2"><span>2</span><small>Estado</small></div><div class="step-line"><i></i></div>
-   <div class="step-dot" data-step="3"><span>3</span><small>Registrar</small></div>
-  </div>
-
-  <div class="step-panel active" data-panel="1">
-   <div class="kicker">IDENTIFICACIÓN</div><h3>Introduce la matrícula</h3><p class="help">Escribe la matrícula de la plataforma para continuar.</p>
-   <label class="label">Matrícula</label><input id="plate" placeholder="1234 ABC" maxlength="12" autocomplete="off" inputmode="text">
-   <button class="primary" id="next1" style="margin-top:11px">Continuar&nbsp; ›</button>
-  </div>
-
-  <div class="step-panel" data-panel="2">
-   <div class="kicker">CLASIFICACIÓN</div><h3>Selecciona el estado</h3><p class="help">Indica cómo se encuentra actualmente la plataforma.</p>
-   <div class="selected"><span>Matrícula</span><strong id="platePreview">—</strong></div>
-   <div class="status-hint" id="statusHint">Selecciona una opción para continuar</div><div class="statuses">
-    <button class="status" data-s="CARGADA"><b>✓</b><span>CARGADA</span><small>Con mercancía</small></button>
-    <button class="status" data-s="VACÍA"><b>○</b><span>VACÍA</span><small>Sin mercancía</small></button>
-    <button class="status" data-s="AVERIADA"><b>!</b><span>AVERIADA</span><small>Requiere revisión</small></button>
-   </div>
-   <div id="issueExtra" class="issue-extra"><label class="label">Tipo de avería</label><select id="issueType"><option>Golpe / daño exterior</option><option>Puerta / cierre</option><option>Rueda / neumático</option><option>Luces / señalización</option><option>Otra incidencia</option></select></div>
-   <div style="margin-top:13px"><label class="label">Observaciones <em>opcional</em></label><textarea id="notes" placeholder="Añade detalles..."></textarea></div>
-   <div class="step-actions"><button class="secondary" id="back2">Atrás</button><button class="primary" id="next2">Continuar&nbsp; ›</button></div>
-  </div>
-
-  <div class="step-panel" data-panel="3">
-   <div class="success">✓</div><div class="kicker">LISTO PARA REGISTRAR</div><h3>Confirma la plataforma</h3><p class="help">Revisa los datos antes de guardarlos.</p>
-   <div class="confirmation">
-    <div><span>Matrícula</span><strong id="confirmPlate">—</strong></div>
-    <div><span>Estado</span><strong id="confirmStatus">—</strong></div>
-    <div><span>Avería</span><strong id="confirmIssue">—</strong></div>
-    <div><span>Observaciones</span><strong id="confirmNotes">Sin observaciones</strong></div>
-   </div>
-   <button class="primary green" id="add">Registrar plataforma</button>
-   <button class="secondary full" id="back3">Modificar datos</button>
-  </div>
- </div>
-</section>
-
-<section id="recordsView" class="view">
- <div class="hero"><div class="eyebrow">Historial</div><h2>Registros.</h2><p>Busca y consulta cualquier plataforma.</p></div>
- <div class="card">
-  <div class="search-row"><input id="search" placeholder="Buscar matrícula..."><select id="filter"><option>TODAS</option><option>CARGADA</option><option>VACÍA</option><option>AVERIADA</option></select></div>
-  <div id="recordsList" style="margin-top:9px"></div>
- </div>
- <div class="card" style="display:grid;grid-template-columns:1fr 1fr;gap:7px"><button class="secondary" id="pdf">Generar PDF</button><button class="danger" id="clear">Limpiar registros</button></div>
-</section>
-
-<section id="issuesView" class="view">
- <div class="hero"><div class="eyebrow">Atención</div><h2>Averías.</h2><p>Plataformas que requieren revisión.</p></div>
- <div class="card">
-  <div class="section-head"><h3 id="issueTitle">Incidencias pendientes</h3><button class="link" id="claim">Reclamar todas</button></div>
-  <div id="issuesList"></div>
- </div>
-</section>
-</main>
-</div>
-
-<nav class="bottom">
- <button class="nav active" data-view="homeView"><span class="nav-icon">⌂</span><span>Inicio</span></button>
- <button class="nav" data-view="registerView"><span class="nav-add">＋</span><span>Registrar</span></button>
- <button class="nav" data-view="issuesView"><span class="nav-icon">⚠</span><span>Averías</span><em id="navIssueCount">0</em></button>
- <button class="nav" data-view="recordsView"><span class="nav-icon">☷</span><span>Registros</span></button>
+<div class="safe"></div>
+<nav class="dock" aria-label="Navegación">
+  <button class="dock-btn active" data-view="home"><span class="dock-icon">⌂</span><span>Inicio</span></button>
+  <button class="dock-btn" data-view="records"><span class="dock-icon">≡</span><span>Registros</span></button>
+  <button class="dock-btn add" data-go-register><span class="dock-icon">＋</span><span>Registrar</span></button>
+  <button class="dock-btn" data-view="more"><span class="dock-icon">•••</span><span>Más</span></button>
 </nav>
 
-<div class="sheet-backdrop" id="backdrop"></div>
-<aside class="sheet" id="sheet"><div class="grab"></div><h3 id="sheetTitle">Plataforma</h3><p id="sheetSubtitle"></p><div id="sheetBody"></div><button class="primary" id="closeSheet" style="margin-top:14px">Cerrar</button></aside>
-<div class="toast" id="toast"></div>
-
+<div id="backdrop" class="backdrop"></div>
+<div id="sheet" class="sheet" aria-hidden="true">
+  <div class="grab"></div>
+  <h2>Plataforma</h2>
+  <p>Detalle del registro seleccionado.</p>
+  <div class="sheet-row"><span>Matrícula</span><b id="sheetPlate">—</b></div>
+  <div class="sheet-row"><span>Estado</span><b id="sheetState">—</b></div>
+  <div class="sheet-actions"><button class="btn secondary" id="closeSheet">Cerrar</button></div>
+</div>
+<div id="toast" class="toast"></div>
 
 <script>
-const KEY='xpo_ios_steps_platforms';
-let records=[];
-try{
-  const raw=JSON.parse(localStorage.getItem(KEY)||'[]');
-  records=Array.isArray(raw)?raw:[];
-}catch(e){records=[]}
-let selected='', currentStep=1;
-const $=id=>document.getElementById(id);
-const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
+
+const KEY='xpo_registros_v15';
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+let records=JSON.parse(localStorage.getItem(KEY)||'[]');
+let step=1, selectedState='', selectedIssue='';
 
 function save(){localStorage.setItem(KEY,JSON.stringify(records));renderAll()}
-function msg(t){$('toast').textContent=t;$('toast').classList.add('show');setTimeout(()=>$('toast').classList.remove('show'),1700)}
-function statusIcon(s){return s==='AVERIADA'?'!':s==='VACÍA'?'○':'✓'}
-function statusClass(s){return s==='AVERIADA'?'bad':s==='VACÍA'?'empty':''}
-
-function showView(id){
-  document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id===id));
-  document.querySelectorAll('.nav').forEach(n=>n.classList.toggle('active',n.dataset.view===id));
-  window.scrollTo({top:0,behavior:'smooth'});
+function toast(msg){const t=$('#toast');t.textContent=msg;t.classList.add('show');clearTimeout(window._toast);window._toast=setTimeout(()=>t.classList.remove('show'),1700)}
+function fmt(d){return new Date(d).toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'})}
+function setView(name){
+ $$('.view').forEach(v=>v.classList.toggle('active',v.dataset.view===name));
+ $$('.dock-btn').forEach(b=>b.classList.toggle('active',b.dataset.view===name));
+ window.scrollTo({top:0,behavior:'smooth'});
 }
-function resetRegistration(){
-  currentStep=1;selected='';
-  $('plate').value='';$('notes').value='';
-  $('issueExtra').classList.remove('show');
-  $('statusHint').textContent='Selecciona una opción para continuar';
-  $('statusHint').classList.remove('selected');
-  document.querySelectorAll('.status').forEach(x=>x.classList.remove('active'));
-  showStep(1);
+function goStep(n){
+ step=n;
+ $$('.screen').forEach(x=>x.classList.toggle('active',+x.dataset.step===n));
+ $$('.step').forEach((x,i)=>x.classList.toggle('active',i+1===n));
+ $$('.step').forEach((x,i)=>x.classList.toggle('done',i+1<n));
+ $$('.connector').forEach((x,i)=>x.style.background=i<n-1?'var(--blue)':'#e2e3e6');
+ const mat=$('#plate')?.value.trim()||'';
+ $('#confirmPlate') && ($('#confirmPlate').textContent=mat||'Sin matrícula');
+ $('#confirmState') && ($('#confirmState').textContent=selectedState||'Sin estado');
+ $('#confirmIssue') && ($('#confirmIssue').textContent=selectedIssue||'No aplica');
 }
-function showStep(n){
-  currentStep=n;$('stepLabel').textContent=`PASO ${n} DE 3`;
-  document.querySelectorAll('.step-panel').forEach(p=>p.classList.toggle('active',+p.dataset.panel===n));
-  document.querySelectorAll('.step-dot').forEach(d=>{
-    const x=+d.dataset.step;
-    d.classList.toggle('active',x===n);
-    d.classList.toggle('done',x<n);
-  });
-  document.querySelectorAll('.step-line i').forEach((x,i)=>x.style.width=i<n-1?'100%':'0');
-  if(n===2)$('platePreview').textContent=$('plate').value.trim().toUpperCase();
-  if(n===3){
-    $('confirmPlate').textContent=$('plate').value.trim().toUpperCase();
-    $('confirmStatus').textContent=selected||'—';
-    $('confirmIssue').textContent=selected==='AVERIADA'?$('issueType').value:'No aplica';
-    $('confirmNotes').textContent=$('notes').value.trim()||'Sin observaciones';
-  }
-}
-function validPlate(){
-  const p=$('plate').value.trim().toUpperCase().replace(/\s+/g,' ');
-  $('plate').value=p;
-  if(!p){msg('Introduce una matrícula');$('plate').focus();return false}
-  return true;
-}
-
-document.querySelectorAll('.nav').forEach(n=>n.onclick=()=>{
-  if(n.dataset.view==='registerView')resetRegistration();
-  showView(n.dataset.view);
-});
-$('quickAdd').onclick=()=>{resetRegistration();showView('registerView')};
-$('quickIssues').onclick=()=>showView('issuesView');
-$('seeAll').onclick=()=>showView('recordsView');
-
-$('next1').onclick=()=>{if(validPlate())showStep(2)};
-$('back2').onclick=()=>showStep(1);
-$('next2').onclick=()=>{
-  if(!selected){
-    msg('Selecciona un estado para continuar');
-    document.querySelector('.statuses').animate(
-      [{transform:'translateX(0)'},{transform:'translateX(-5px)'},{transform:'translateX(5px)'},{transform:'translateX(0)'}],
-      {duration:280}
-    );
-    return;
-  }
-  showStep(3);
-};
-$('back3').onclick=()=>showStep(2);
-$('plate').onkeydown=e=>{if(e.key==='Enter')$('next1').click()};
-
-document.querySelectorAll('.status').forEach(b=>b.onclick=()=>{
-  selected=b.dataset.s;
-  document.querySelectorAll('.status').forEach(x=>x.classList.remove('active'));
-  b.classList.add('active');
-  $('statusHint').textContent='Estado seleccionado · '+selected;
-  $('statusHint').classList.add('selected');
-  $('issueExtra').classList.toggle('show',selected==='AVERIADA');
-});
-
-$('add').onclick=()=>{
-  if(!validPlate()||!selected)return;
-  const now=new Date();
-  records.unshift({
-    id:(crypto.randomUUID?crypto.randomUUID():String(Date.now()+Math.random())),
-    plate:$('plate').value.trim().toUpperCase(),
-    status:selected,
-    issue:selected==='AVERIADA'?$('issueType').value:'',
-    notes:$('notes').value.trim(),
-    time:now.toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'}),
-    date:now.toISOString()
-  });
-  resetRegistration();
-  save();
-  msg('✓ Plataforma registrada');
-  setTimeout(()=>showView('homeView'),300);
-};
-
-function recordHTML(r,compact=false){
-  return `<div class="${compact?'activity':'record'}" data-id="${esc(r.id)}">
-    ${compact
-      ? `<div class="activity-icon ${statusClass(r.status)}">${statusIcon(r.status)}</div>`
-      : `<div class="record-badge ${statusClass(r.status)}">${statusIcon(r.status)}</div>`}
-    <div class="${compact?'activity-main':'record-main'}">
-      <strong>${esc(r.plate)}</strong>
-      <small>${esc(r.status)}${r.issue?' · '+esc(r.issue):''}${r.notes?' · '+esc(r.notes):''}</small>
-    </div>
-    ${compact
-      ? `<span class="activity-time">${esc(r.time)}</span>`
-      : `<div class="record-actions"><button class="mini" onclick="openDetail('${esc(r.id)}')">Detalle</button><button class="mini delete" onclick="del('${esc(r.id)}')">×</button></div>`}
-  </div>`;
-}
-
-function renderAll(){
-  const loaded=records.filter(r=>r.status==='CARGADA').length;
-  const empty=records.filter(r=>r.status==='VACÍA').length;
-  const bad=records.filter(r=>r.status==='AVERIADA').length;
-  $('total').textContent=records.length;$('loaded').textContent=loaded;$('empty').textContent=empty;$('bad').textContent=bad;
-  const badge=$('navIssueCount');
-  if(badge){badge.textContent=bad;badge.classList.toggle('show',bad>0)}
-  const qit=$('quickIssueText');
-  if(qit)qit.textContent=bad?`${bad} pendiente${bad===1?'':'s'}`:'Sin incidencias';
-  const recent=records.slice(0,5);
-  $('recent').innerHTML=recent.length?recent.map(r=>recordHTML(r,true)).join(''):'<div class="empty-state">Todavía no hay actividad.<br>Registra la primera plataforma.</div>';
-  renderRecords();renderIssues();
+function renderHome(){
+ const c={CARGADA:0,'VACÍA':0,AVERIADA:0};records.forEach(r=>c[r.estado]=(c[r.estado]||0)+1);
+ $('#nAll').textContent=records.length;$('#nLoaded').textContent=c.CARGADA;$('#nEmpty').textContent=c['VACÍA'];$('#nBad').textContent=c.AVERIADA;
+ const recent=records.slice(-4).reverse();const box=$('#recent');box.innerHTML=recent.length?recent.map(r=>`<div class="activity"><div class="badge ${r.estado==='CARGADA'?'g':r.estado==='VACÍA'?'o':'r'}">${r.estado==='CARGADA'?'✓':r.estado==='VACÍA'?'○':'!'}</div><div class="activity-main"><b>${esc(r.matricula)}</b><span>${esc(r.estado)}${r.averia?' · '+esc(r.averia):''}</span></div><time>${fmt(r.fecha)}</time></div>`).join(''):'<div style="padding:25px;text-align:center;color:var(--muted);font-size:9px">Todavía no hay registros</div>';
 }
 function renderRecords(){
-  const q=$('search').value.trim().toUpperCase(),f=$('filter').value;
-  const arr=records.filter(r=>(f==='TODAS'||r.status===f)&&(!q||r.plate.includes(q)));
-  $('recordsList').innerHTML=arr.length?arr.map(recordHTML).join(''):'<div class="empty-state">No hay registros que coincidan.</div>';
+ const q=($('#search')?.value||'').toLowerCase(), f=$('#filter')?.value||'TODAS';
+ const list=records.filter(r=>(f==='TODAS'||r.estado===f)&&r.matricula.toLowerCase().includes(q)).slice().reverse();
+ $('#recordList').innerHTML=list.length?list.map((r,i)=>`<div class="record"><div class="badge ${r.estado==='CARGADA'?'g':r.estado==='VACÍA'?'o':'r'}">${r.estado==='CARGADA'?'✓':r.estado==='VACÍA'?'○':'!'}</div><div class="record-main"><b>${esc(r.matricula)}</b><span>${esc(r.estado)} · ${fmt(r.fecha)}${r.averia?' · '+esc(r.averia):''}</span></div><div class="record-actions"><button class="mini delete" data-delete="${r.fecha}">Eliminar</button></div></div>`).join(''):'<div style="padding:30px;text-align:center;color:var(--muted);font-size:9px">Sin resultados</div>';
 }
-function renderIssues(){
-  const arr=records.filter(r=>r.status==='AVERIADA');
-  $('issueTitle').textContent=`${arr.length} incidencia${arr.length===1?'':'s'} pendiente${arr.length===1?'':'s'}`;
-  $('issuesList').innerHTML=arr.length?arr.map(r=>`<div class="record" data-id="${esc(r.id)}">
-    <div class="record-badge bad">!</div>
-    <div class="record-main"><strong>${esc(r.plate)}</strong><small>${esc(r.issue||'Avería')} · ${esc(r.time)}${r.notes?' · '+esc(r.notes):''}</small></div>
-    <div class="record-actions"><button class="mini" onclick="openDetail('${esc(r.id)}')">Detalle</button><button class="mini delete" onclick="resolveIssue('${esc(r.id)}')">Resolver</button></div>
-  </div>`).join(''):'<div class="empty-state">✓ No hay averías pendientes.<br>El patio está limpio.</div>';
-}
+function renderAll(){renderHome();renderRecords()}
+function esc(x){return String(x).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+function resetForm(){step=1;selectedState='';selectedIssue='';$('#plate').value='';$('#note').value='';$$('.state').forEach(x=>x.classList.remove('active'));$$('.issue').forEach(x=>x.classList.remove('active'));$('#issueBox').style.display='none';goStep(1)}
+function startRegister(){resetForm();setView('register');setTimeout(()=>$('#plate').focus(),250)}
 
-$('search').oninput=renderRecords;$('filter').onchange=renderRecords;
-
-function del(id){
-  if(confirm('¿Eliminar este registro?')){
-    records=records.filter(r=>String(r.id)!==String(id));
-    save();msg('Registro eliminado');
-  }
-}
-function resolveIssue(id){openDetail(id)}
-function changeState(id){
-  const r=records.find(x=>String(x.id)===String(id));if(!r)return;
-  closeSheet();showView('registerView');
-  setTimeout(()=>{
-    $('plate').value=r.plate;showStep(2);selected='';
-    document.querySelectorAll('.status').forEach(x=>x.classList.remove('active'));
-    $('platePreview').textContent=r.plate;
-  },80);
-}
-function resolveIssueNow(id){
-  const r=records.find(x=>String(x.id)===String(id));if(!r)return;
-  r.status='CARGADA';r.issue='';r.notes=(r.notes?r.notes+' · ':'')+'Avería resuelta';
-  r.time=new Date().toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'});
-  save();closeSheet();msg('✓ Avería resuelta');
-}
-function openDetail(id){
-  const r=records.find(x=>String(x.id)===String(id));if(!r)return;
-  $('sheetTitle').textContent=r.plate;
-  $('sheetSubtitle').textContent=`Registrada a las ${r.time}`;
-  $('sheetBody').innerHTML=`
-    <div class="sheet-row"><span>Estado</span><strong>${esc(r.status)}</strong></div>
-    <div class="sheet-row"><span>Avería</span><strong>${esc(r.issue||'No aplica')}</strong></div>
-    <div class="sheet-row"><span>Hora</span><strong>${esc(r.time)}</strong></div>
-    <div class="sheet-row"><span>Observaciones</span><strong>${esc(r.notes||'Sin observaciones')}</strong></div>
-    <div class="sheet-actions">
-      <button class="secondary" onclick="changeState('${esc(r.id)}')">Cambiar estado</button>
-      ${r.status==='AVERIADA'
-        ? `<button class="primary" onclick="resolveIssueNow('${esc(r.id)}')">Resolver avería</button>`
-        : `<button class="danger" onclick="del('${esc(r.id)}');closeSheet()">Eliminar</button>`}
-    </div>`;
-  $('backdrop').classList.add('open');$('sheet').classList.add('open');
-}
-function closeSheet(){$('backdrop').classList.remove('open');$('sheet').classList.remove('open')}
-$('closeSheet').onclick=closeSheet;$('backdrop').onclick=closeSheet;
-
-$('claim').onclick=()=>{
-  const a=records.filter(r=>r.status==='AVERIADA');
-  if(!a.length)return msg('No hay averías pendientes');
-  const text='RECLAMACIÓN DE AVERÍAS\n\n'+a.map(r=>`${r.plate} · ${r.issue||'Avería'} · ${r.notes||'Sin observaciones'}`).join('\n');
-  if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(text).then(()=>msg('Averías copiadas')).catch(()=>msg('Averías preparadas'));
-  else msg('Averías preparadas');
-};
-
-$('clear').onclick=()=>{
-  if(records.length&&confirm('¿Eliminar todos los registros?')){records=[];save();msg('Registros eliminados')}
-};
-
-$('pdf').onclick=()=>{
-  const w=window.open('','_blank');if(!w)return msg('Permite ventanas emergentes');
-  const rows=records.map(r=>`<tr><td>${esc(r.plate)}</td><td>${esc(r.status)}</td><td>${esc(r.issue||'')}</td><td>${esc(r.time)}</td><td>${esc(r.notes||'')}</td></tr>`).join('');
-  const doc=`<!doctype html><html><head><title>XPO · Registro</title><style>body{font-family:Arial;padding:35px}table{width:100%;border-collapse:collapse}td,th{border:1px solid #ccc;padding:9px;text-align:left}th{background:#eee}</style></head><body><h1>XPO Logistics · Registro de Plataformas</h1><p>${new Date().toLocaleString('es-ES')} · Total ${records.length}</p><table><tr><th>Matrícula</th><th>Estado</th><th>Avería</th><th>Hora</th><th>Observaciones</th></tr>${rows||'<tr><td colspan="5">Sin registros</td></tr>'}</table><script>window.print()<\/script></body></html>`;
-  w.document.open();w.document.write(doc);w.document.close();
-};
-
-function tick(){$('clock').textContent=new Date().toLocaleString('es-ES',{weekday:'short',day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'})}
-tick();setInterval(tick,30000);renderAll();
-
-document.addEventListener('DOMContentLoaded',()=>{
-  document.querySelectorAll('button').forEach(b=>{
-    b.addEventListener('pointerdown',()=>b.classList.add('pressing'));
-    const up=()=>b.classList.remove('pressing');
-    b.addEventListener('pointerup',up);b.addEventListener('pointercancel',up);b.addEventListener('pointerleave',up);
-  });
+document.addEventListener('click',e=>{
+ const v=e.target.closest('.dock-btn');if(v){setView(v.dataset.view);return}
+ const quick=e.target.closest('[data-go-register]');if(quick){startRegister();return}
+ const st=e.target.closest('.state');if(st){selectedState=st.dataset.state;$$('.state').forEach(x=>x.classList.remove('active'));st.classList.add('active');$('#stateHint').textContent='Estado seleccionado: '+selectedState;if(selectedState==='AVERIADA')$('#issueBox').style.display='block';else{$('#issueBox').style.display='none';selectedIssue='';$$('.issue').forEach(x=>x.classList.remove('active'))}return}
+ const issue=e.target.closest('.issue');if(issue){selectedIssue=issue.dataset.issue;$$('.issue').forEach(x=>x.classList.remove('active'));issue.classList.add('active');return}
+ const del=e.target.closest('[data-delete]');if(del){records=records.filter(r=>String(r.fecha)!==del.dataset.delete);save();toast('Registro eliminado');return}
+ if(e.target.closest('#next1')){if(!$('#plate').value.trim()){toast('Introduce una matrícula');return}goStep(2);return}
+ if(e.target.closest('#next2')){if(!selectedState){toast('Selecciona un estado');return}goStep(3);return}
+ if(e.target.closest('#back2')){goStep(1);return}
+ if(e.target.closest('#back3')){goStep(2);return}
+ if(e.target.closest('#register')){const matricula=$('#plate').value.trim().toUpperCase();if(!matricula||!selectedState){toast('Completa los datos');return}records.push({matricula,estado:selectedState,averia:selectedIssue,nota:$('#note').value.trim(),fecha:Date.now()});save();$('#success').style.display='grid';$('#successMsg').textContent='Plataforma registrada';toast('Registro guardado');setTimeout(()=>{resetForm();setView('home')},800);return}
+ if(e.target.closest('#clear')){records=[];save();toast('Registros eliminados');return}
+ if(e.target.closest('#closeSheet')){$('#sheet').classList.remove('open');$('#backdrop').classList.remove('open');return}
 });
+if($('#search')) $('#search').addEventListener('input',renderRecords);
+if($('#filter')) $('#filter').addEventListener('change',renderRecords);
+if($('#pdfBtn')) $('#pdfBtn').addEventListener('click',()=>window.print());
+document.addEventListener('touchend',(()=>{let last=0;return e=>{const n=Date.now();if(n-last<280)e.preventDefault();last=n}})(),{passive:false});
+renderAll();goStep(1);
+
+
+(function(){
+ const h=document.querySelector('.header'); let ticking=false;
+ addEventListener('scroll',()=>{
+   if(ticking)return;ticking=true;requestAnimationFrame(()=>{
+     if(h)h.style.background=scrollY>18?'rgba(245,245,247,.94)':'rgba(245,245,247,.78)';
+     ticking=false;
+   });
+ },{passive:true});
+})();
 
 </script>
 </body>
-</html>
