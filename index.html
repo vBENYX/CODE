@@ -609,12 +609,12 @@ function renderCompactList(){
  )
  : base;
  box.innerHTML = data.map(it=>`
- <div class="record" data-id="" data-estado="">
+ <div class="record" data-id="${it.id}" data-estado="${it.estado}">
  <div class="rowline">
- <div class="mat"></div>
+ <div class="mat">${it.matricula}</div>
  <div style="display:flex;gap:8px;align-items:center;">
- <div class="ts"></div>
- <div class="est"></div>
+ <div class="ts">${it.timestamp||''}</div>
+ <div class="est">${it.estado}</div>
  </div>
  </div>
  <div class="content" style="white-space:pre-wrap; display:none">${(it.contenido||'')}</div>
@@ -707,7 +707,7 @@ function chooseEstado(estado){
  if(last){
  updateAll();
  requestAnimationFrame(()=>{
- const rec = document.querySelector(`.record[data-id=""]`);
+ const rec = document.querySelector(`.record[data-id="${last.id}"]`);
  if(rec){
  rec.classList.add('highlight-dup');
  try{ rec.scrollIntoView({behavior:'smooth', block:'center'}); }catch(e){}
@@ -1048,13 +1048,13 @@ window.addEventListener('DOMContentLoaded', ()=>{
  box.style.display = 'none';
  return;
  }
- box.innerHTML = matches.map(m=>`<div style="
+ box.innerHTML = matches.map(m=>\`<div style="
  padding:10px 14px;
  cursor:pointer;
  font-size:14px;
  transition:background .2s;">
- ${m}
- </div>`).join('');
+ \${m}
+ </div>\`).join('');
  [...box.children].forEach(div=>{
  div.addEventListener('mouseover',()=>div.style.background="rgba(10,132,255,0.15)");
  div.addEventListener('mouseout',()=>div.style.background="transparent");
@@ -1150,3 +1150,4 @@ setTimeout(animateCounters, 900);
 })();
 </script>
 </body>
+</html>
