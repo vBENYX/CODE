@@ -24,303 +24,399 @@
 </style>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, viewport-fit=cover"/>
-<meta name="theme-color" content="#F5F5F7"/>
+<meta name="theme-color" content="#FBFBFD"/>
 <title>XPO — Registro de Plataformas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
+/* ========== APPLE DESIGN SYSTEM ========== */
 :root{
-  --blue:#007AFF; --blue-press:#0040DD; --blue-soft:rgba(0,122,255,.14); --blue-ring:rgba(0,122,255,.28);
-  --bg:#F5F5F7; --card:#FFFFFF; --line:rgba(0,0,0,.06); --line2:rgba(0,0,0,.10);
-  --t1:#1D1D1F; --t2:#6E6E73; --t3:#A1A1A6;
-  --r-xl:32px; --r-lg:20px; --r-md:14px; --r-pill:999px;
-  --shadow:0 24px 64px rgba(0,0,0,.14), 0 2px 8px rgba(0,0,0,.06);
-  --shadow2:0 8px 24px rgba(0,0,0,.06);
+  --blue:#0071E3; --blue-press:#0058B0; --blue-soft:rgba(0,113,227,.12); --blue-ring:rgba(0,113,227,.24);
+  --bg:#F5F5F7; --bg2:#FBFBFD; --card:#FFFFFF; 
+  --line:rgba(0,0,0,.06); --line-strong:rgba(0,0,0,.08);
+  --t1:#1D1D1F; --t2:#6E6E73; --t3:#86868B; --t4:#AEAEB2;
+  --r-xl:28px; --r-lg:20px; --r-md:12px; --r-pill:980px;
+  --shadow-card:0 4px 24px rgba(0,0,0,.04), 0 1px 2px rgba(0,0,0,.06);
+  --shadow-float:0 20px 48px rgba(0,0,0,.08), 0 4px 16px rgba(0,0,0,.06);
   --spring:cubic-bezier(.32,.72,0,1); --bounce:cubic-bezier(.34,1.56,.64,1);
-  --green:#12B76A; --green-bg:#E9F8EF; --orange:#F79009; --orange-bg:#FFF4E5;
+  --green:#1DAB45; --green-bg:#EAF8EE; --orange:#FF9F0A; --orange-bg:#FFF3E0;
+  --red:#E30613;
 }
-*{box-sizing:border-box; -webkit-touch-callout:none; -webkit-tap-highlight-color:transparent}
+*{box-sizing:border-box; -webkit-tap-highlight-color:transparent}
 html{
-  -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; -webkit-text-size-adjust:100%;
-  touch-action:manipulation; overscroll-behavior:none; -webkit-overflow-scrolling:touch;
+  -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; 
+  text-rendering:optimizeLegibility; overscroll-behavior:none;
 }
 body{
-  margin:0; font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text",Inter,system-ui;
-  background:radial-gradient(800px 400px at 50% -10%, rgba(255,255,255,1) 0%, rgba(245,245,247,0) 60%), var(--bg);
-  color:var(--t1); letter-spacing:-.011em; min-height:100vh;
-  overscroll-behavior:none; user-select:none; -webkit-user-select:none;
+  margin:0; 
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text","Helvetica Neue",Helvetica,Arial,sans-serif;
+  background:var(--bg2);
+  color:var(--t1); 
+  letter-spacing:-.022em; 
+  min-height:100vh; min-height:100dvh;
+  line-height:1.47059;
+  user-select:none; -webkit-user-select:none;
 }
-input, textarea, select{
-  user-select:text !important; -webkit-user-select:text !important; -webkit-touch-callout:default !important;
-  font-size:16px;
-}
+input,textarea,select{user-select:text !important; -webkit-user-select:text !important; font-size:17px}
 button,input,textarea,select{font:inherit}
-:focus-visible{outline:none; box-shadow:0 0 0 4px var(--blue-ring) !important; border-color:var(--blue) !important}
+:focus-visible{outline:none; box-shadow:0 0 0 4px var(--blue-ring) !important}
 
-.app{max-width:1160px; margin:0 auto; padding:10px 12px 40px}
+/* APP SHELL */
+.app{max-width:1200px; margin:0 auto; padding:0 16px 48px; padding-top:calc(16px + env(safe-area-inset-top))}
 
-/* HEADER */
-.h-wrap{position:sticky; top:10px; z-index:40; margin-bottom:14px; padding:0 2px}
+/* HEADER - Apple Nav */
+.h-wrap{position:sticky; top:12px; z-index:40; margin:0 -2px 20px; }
 .hdr{
-  display:flex; align-items:center; justify-content:space-between; gap:10px;
-  padding:12px 14px; border-radius:22px;
-  background:rgba(255,255,255,.86); backdrop-filter:blur(40px) saturate(180%); -webkit-backdrop-filter:blur(40px) saturate(180%);
-  border:1px solid rgba(255,255,255,.9); box-shadow:0 1px 0 #fff inset, 0 12px 32px rgba(0,0,0,.08);
+  display:flex; align-items:center; justify-content:space-between; gap:12px;
+  height:56px; padding:0 8px 0 14px;
+  background:rgba(255,255,255,.82);
+  backdrop-filter:blur(24px) saturate(180%); -webkit-backdrop-filter:blur(24px) saturate(180%);
+  border:1px solid rgba(255,255,255,.9);
+  box-shadow:0 1px 0 rgba(255,255,255,.9) inset, var(--shadow-card);
+  border-radius:var(--r-pill);
 }
-.brand{display:flex; align-items:center; gap:10px; min-width:0}
-.code-badge{font-size:10px; font-weight:800; letter-spacing:.14em; padding:6px 8px; border-radius:8px; background:var(--t1); color:#fff; flex-shrink:0}
-.logo{font-weight:800; font-size:19px; letter-spacing:-.03em; white-space:nowrap} .logo b{color:#E30613; font-weight:900}
+.brand{display:flex; align-items:center; gap:12px; min-width:0}
+.code-badge{
+  font-size:9.5px; font-weight:700; letter-spacing:.08em; line-height:1;
+  padding:6px 7px; border-radius:6px; background:var(--t1); color:#fff; flex-shrink:0;
+}
+.logo{font-weight:700; font-size:17px; letter-spacing:-.03em; white-space:nowrap; display:flex; align-items:baseline; gap:6px}
+.logo b{color:var(--red); font-weight:800; letter-spacing:-.04em}
+.logo span{font-weight:500; color:var(--t1); opacity:.9}
 .operario{
-  display:flex; align-items:center; gap:6px; padding:8px 12px; border-radius:99px;
-  background:rgba(0,0,0,.06); border:1px solid transparent; transition:all .25s var(--spring); flex-shrink:0;
+  display:flex; align-items:center; gap:8px; height:36px; padding:0 4px 0 12px;
+  border-radius:var(--r-pill); background:#F5F5F7; border:1px solid transparent;
+  transition:all .3s var(--spring);
 }
-.operario:focus-within{background:#fff; border-color:var(--blue); box-shadow:0 0 0 4px var(--blue-ring)}
-.operario input{border:none; background:transparent; width:108px; font-size:13px; font-weight:600; outline:none}
-.operario input::placeholder{color:var(--t3); font-weight:500}
+.operario:focus-within{background:#fff; border-color:var(--line-strong); box-shadow:0 0 0 4px var(--blue-soft)}
+.operario .ico-person{width:28px; height:28px; border-radius:50%; background:#fff; display:grid; place-items:center; box-shadow:0 1px 3px rgba(0,0,0,.08); color:var(--t2)}
+.operario input{border:none; background:transparent; width:122px; font-size:14px; font-weight:500; outline:none; letter-spacing:-.01em}
+.operario input::placeholder{color:var(--t3); font-weight:400}
 
-/* SHEET */
-.sheet{max-width:720px; margin:0 auto 14px; background:var(--card); border:1px solid var(--line); border-radius:var(--r-xl); box-shadow:var(--shadow); overflow:hidden; position:relative}
-.sheet::before{content:""; position:absolute; inset:0; border-radius:inherit; pointer-events:none; background:linear-gradient(180deg, rgba(255,255,255,.9) 0%, rgba(255,255,255,0) 18%); z-index:1}
-.sheet-head{position:relative; z-index:2; display:flex; align-items:center; justify-content:space-between; padding:14px 16px; border-bottom:1px solid var(--line)}
-.sheet-title{font-weight:600; font-size:14px}
-.dot-mini{width:26px; height:26px; border-radius:50%; background:var(--bg); display:grid; place-items:center; color:var(--t2); font-size:12px}
-.screens{position:relative; min-height:176px; z-index:2}
+/* MAIN SHEET - Apple Card */
+.sheet{
+  max-width:640px; margin:0 auto 20px; 
+  background:var(--card); 
+  border:1px solid var(--line); 
+  border-radius:var(--r-xl); 
+  box-shadow:var(--shadow-float); 
+  overflow:hidden; position:relative;
+}
+.sheet::after{
+  content:""; position:absolute; inset:0; border-radius:inherit; pointer-events:none;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.9);
+}
+.sheet-head{
+  position:relative; z-index:2; 
+  display:flex; align-items:center; justify-content:space-between; 
+  height:52px; padding:0 18px; 
+  border-bottom:1px solid var(--line);
+  background:rgba(251,251,253,.8);
+  backdrop-filter:blur(10px);
+}
+.sheet-title{font-weight:600; font-size:13px; letter-spacing:.02em; color:var(--t2); text-transform:uppercase}
+.nav-arrow{width:28px; height:28px; border-radius:50%; background:#F5F5F7; display:grid; place-items:center; color:var(--t3); font-size:14px; border:none}
+
+.screens{position:relative; min-height:210px; z-index:2; background:var(--card)}
 .screen{
-  position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:14px;
-  padding:22px 16px; opacity:0; transform:translateX(20px) scale(.98); filter:blur(6px);
-  pointer-events:none; transition:all .55s var(--spring);
+  position:absolute; inset:0; 
+  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:18px;
+  padding:28px 24px 24px; 
+  opacity:0; transform:translateY(8px) scale(.98); filter:blur(4px);
+  pointer-events:none; transition:all .5s var(--spring);
 }
 .screen.active{opacity:1; transform:none; filter:none; pointer-events:auto; position:relative}
-.input-wrap{width:100%; max-width:440px}
+
+/* INPUTS - Apple */
+.input-wrap{width:100%; max-width:420px}
 .input-apple{
-  width:100%; padding:14px 16px; border-radius:var(--r-md); border:1.5px solid var(--line2);
-  background:#F2F2F7; font-size:16px; font-weight:500; transition:all .28s var(--spring);
+  width:100%; height:54px; padding:0 16px; 
+  border-radius:var(--r-md); 
+  border:1px solid var(--line-strong);
+  background:#F5F5F7; 
+  font-size:17px; font-weight:400; letter-spacing:-.022em;
+  transition:all .28s var(--spring);
+  appearance:none;
 }
+.input-apple::placeholder{color:var(--t3)}
 .input-apple:focus{background:#fff; border-color:var(--blue); box-shadow:0 0 0 4px var(--blue-soft)}
-.textarea-apple{width:100%; padding:14px 16px; border-radius:var(--r-md); border:1.5px solid var(--line2); background:#F2F2F7; font-size:16px; min-height:88px; resize:none; transition:all .28s var(--spring)}
+.textarea-apple{
+  width:100%; padding:14px 16px; border-radius:var(--r-md); 
+  border:1px solid var(--line-strong); background:#F5F5F7; 
+  font-size:17px; line-height:1.4; min-height:96px; resize:none; 
+  transition:all .28s var(--spring);
+}
 .textarea-apple:focus{background:#fff; border-color:var(--blue); box-shadow:0 0 0 4px var(--blue-soft)}
+
+/* BUTTONS - Apple Pill */
 .btn{
-  appearance:none; border:none; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; gap:8px;
-  padding:12px 20px; border-radius:99px; font-size:15px; font-weight:600; letter-spacing:-.01em;
-  transition:transform .18s var(--spring), background .2s, box-shadow .2s; user-select:none; min-height:48px; touch-action:manipulation;
+  appearance:none; border:none; cursor:pointer; 
+  display:inline-flex; align-items:center; justify-content:center; gap:8px;
+  height:44px; padding:0 22px; border-radius:var(--r-pill); 
+  font-size:15px; font-weight:500; letter-spacing:-.01em;
+  transition:transform .18s var(--spring), background .2s, box-shadow .2s, opacity .2s;
+  user-select:none; min-width:44px; touch-action:manipulation; white-space:nowrap;
 }
-.btn:active{transform:scale(.96)}
-.btn-primary{background:var(--blue); color:#fff; box-shadow:0 10px 20px rgba(0,122,255,.28)}
-.btn-secondary{background:#EFEFF0; color:var(--t1)} .btn-ghost{background:transparent; color:var(--blue)}
+.btn:active{transform:scale(.97)}
+.btn-primary{background:var(--blue); color:#fff; box-shadow:0 1px 2px rgba(0,0,0,.08)}
+.btn-primary:hover{background:#0077ED} .btn-primary:active{background:var(--blue-press)}
+.btn-secondary{background:#E8E8ED; color:var(--t1)} .btn-secondary:hover{background:#E1E1E6}
+.btn-ghost{background:transparent; color:var(--blue); font-weight:400}
 .btn-pdf{
-  background:#111113; color:#fff; box-shadow:0 10px 24px rgba(0,0,0,.18); position:relative; overflow:hidden;
+  background:var(--t1); color:#fff; height:44px; box-shadow:0 1px 2px rgba(0,0,0,.12);
 }
-.btn-pdf:hover{background:#1D1D1F; box-shadow:0 14px 30px rgba(0,0,0,.22)}
-.btn-pdf:active{background:#000}
+.btn-pdf:hover{background:#2C2C2E}
 .btn-danger-hold{
-  position:relative; overflow:hidden; background:#F2F2F7; color:var(--t1); border:1px solid var(--line);
+  position:relative; overflow:hidden; background:#F5F5F7; color:var(--t1); border:1px solid var(--line);
 }
 .btn-danger-hold .hold-bg{
-  position:absolute; left:0; top:0; bottom:0; width:0%; background:linear-gradient(90deg, #FF3B30, #FF6B62);
-  transition:width .08s linear; z-index:0; border-radius:inherit;
+  position:absolute; left:0; top:0; bottom:0; width:0%; background:#FF3B30;
+  transition:width .08s linear; z-index:0;
 }
 .btn-danger-hold.holding{color:#fff; border-color:transparent}
 .btn-danger-hold.holding .hold-text{color:#fff}
 .hold-content{position:relative; z-index:1; display:flex; align-items:center; gap:8px}
 
-/* ESTADOS - iconos Apple mejorados */
+/* ESTADOS - Apple Segmented + Cards */
 .states{
-  display:flex; gap:8px; width:100%; max-width:520px; padding:4px; border-radius:20px; background:#EFEFF0;
+  display:grid; grid-template-columns:repeat(3,1fr); gap:10px; width:100%; max-width:480px;
 }
 .state{
-  flex:1; position:relative; display:flex; flex-direction:column; align-items:center; gap:5px;
-  padding:12px 4px 10px; border-radius:14px; background:transparent; border:1.5px solid transparent;
-  cursor:pointer; transition:all .32s var(--spring); min-height:80px;
+  position:relative; display:flex; flex-direction:column; align-items:center; gap:10px;
+  padding:18px 10px 14px; border-radius:var(--r-lg); 
+  background:#F5F5F7; border:1px solid transparent;
+  cursor:pointer; transition:all .32s var(--spring); min-height:118px; text-align:center;
 }
-.state:hover{background:rgba(255,255,255,.55)}
-.state.selected{background:#fff; border-color:rgba(0,0,0,.06); box-shadow:0 6px 18px rgba(0,0,0,.08); transform:translateY(-1px)}
+.state:hover{background:#EFEFF2; transform:translateY(-1px)}
+.state.selected{
+  background:#fff; border-color:var(--line-strong); 
+  box-shadow:0 8px 20px rgba(0,0,0,.06), 0 1px 3px rgba(0,0,0,.06); 
+  transform:translateY(-2px);
+}
 .state .ico{
-  width:36px; height:36px; border-radius:12px; display:grid; place-items:center;
-  transition:transform .32s var(--bounce), background .2s; position:relative;
+  width:44px; height:44px; border-radius:14px; display:grid; place-items:center;
+  transition:transform .32s var(--bounce), background .2s; 
 }
-.state.selected .ico{transform:scale(1.08)}
+.state.selected .ico{transform:scale(1.06)}
 .state[data-est="CARGADA"] .ico{background:var(--green-bg); color:var(--green)}
-.state[data-est="VACÍA"] .ico{background:#EAF2FF; color:var(--blue)}
+.state[data-est="VACÍA"] .ico{background:#E8F0FE; color:var(--blue)}
 .state[data-est="AVERIADA"] .ico{background:var(--orange-bg); color:var(--orange)}
-.state .lb{font-size:11px; font-weight:700; letter-spacing:.03em; text-align:center; line-height:1.1}
-.state .sl{font-size:9px; color:var(--t3); font-weight:500; text-align:center; line-height:1.1}
+.state .lb{font-size:12px; font-weight:600; letter-spacing:.04em; line-height:1.1; color:var(--t1)}
+.state .sl{font-size:11px; color:var(--t3); font-weight:400; line-height:1.1; margin-top:-6px}
 .state.selected::after{
-  content:""; position:absolute; top:6px; right:6px; width:18px; height:18px; border-radius:50%;
-  background:var(--blue); color:#fff; font-size:10px; display:grid; place-items:center; font-weight:700;
+  content:""; position:absolute; top:10px; right:10px; width:20px; height:20px; border-radius:50%;
+  background:var(--blue); 
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' fill='none'%3E%3Cpath d='M2.5 6L5 8.5L9.5 3.5' stroke='white' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
-  background-repeat:no-repeat; background-position:center; background-size:10px;
-  animation:popIn .35s var(--bounce) both;
+  background-repeat:no-repeat; background-position:center; background-size:11px;
+  animation:popIn .35s var(--bounce) both; box-shadow:0 2px 6px rgba(0,113,227,.3);
 }
 @keyframes popIn{0%{transform:scale(0)} 100%{transform:scale(1)}}
-.page{display:flex; justify-content:center; gap:6px; padding:12px 0 14px; border-top:1px solid var(--line); background:rgba(245,245,247,.6)}
-.pd{width:20px; height:6px; border-radius:99px; background:rgba(0,0,0,.12); transition:all .4s var(--spring)}
-.pd.active{width:26px; background:var(--t1)} .pd.done{background:rgba(0,0,0,.2)}
+
+/* PAGE CONTROL - iOS style */
+.page{display:flex; justify-content:center; align-items:center; gap:8px; height:48px; border-top:1px solid var(--line); background:rgba(251,251,253,.8)}
+.pd{width:6px; height:6px; border-radius:50%; background:rgba(0,0,0,.14); transition:all .4s var(--spring)}
+.pd.active{width:22px; border-radius:99px; background:var(--t1)} .pd.done{background:rgba(0,0,0,.22)}
 
 /* ACTIONS */
-.actions{display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin:12px auto 18px; max-width:720px}
+.actions{display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin:8px auto 28px; max-width:640px}
 
-/* SUMMARY */
-.summary{max-width:720px; margin:0 auto 16px}
-.sum-head{display:flex; align-items:baseline; justify-content:space-between; margin:0 4px 10px}
-.sum-title{font-size:11px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--t2)}
-.sum-date{font-size:11px; color:var(--t3)}
-.chart-card{background:#fff; border:1px solid var(--line); border-radius:20px; padding:14px; box-shadow:var(--shadow2); margin-bottom:10px}
-.chart-track{height:10px; border-radius:99px; background:#EFEFF0; display:flex; overflow:hidden; gap:2px; padding:2px}
+/* SUMMARY - Apple Widgets */
+.summary{max-width:640px; margin:0 auto 20px}
+.sum-head{display:flex; align-items:baseline; justify-content:space-between; margin:0 4px 12px}
+.sum-title{font-size:12px; font-weight:600; letter-spacing:.06em; text-transform:uppercase; color:var(--t2)}
+.sum-date{font-size:12px; color:var(--t3); font-weight:400}
+.chart-card{background:var(--card); border:1px solid var(--line); border-radius:var(--r-lg); padding:16px; box-shadow:var(--shadow-card); margin-bottom:12px}
+.chart-track{height:8px; border-radius:99px; background:#F5F5F7; display:flex; overflow:hidden; gap:2px; padding:2px}
 .seg{height:100%; border-radius:99px; transition:width 1s var(--spring)} .seg.c{background:var(--green)} .seg.v{background:var(--blue)} .seg.a{background:var(--orange)}
-.chart-legend{display:flex; gap:12px; flex-wrap:wrap; margin-top:10px; font-size:11px; color:var(--t2)}
+.chart-legend{display:flex; gap:14px; flex-wrap:wrap; margin-top:12px; font-size:12px; color:var(--t2)}
 .legend{display:flex; align-items:center; gap:6px} .legend i{width:8px; height:8px; border-radius:50%; display:inline-block}
 .widgets{display:grid; grid-template-columns:repeat(4,1fr); gap:10px}
-.w{background:#fff; border:1px solid var(--line); border-radius:20px; padding:12px 12px 10px; box-shadow:var(--shadow2); transition:transform .25s var(--spring)}
-.w:hover{transform:translateY(-2px)} .w-top{display:flex; align-items:center; justify-content:space-between; margin-bottom:6px}
-.w-ico{width:26px; height:26px; border-radius:50%; display:grid; place-items:center; font-size:12px}
-.w[data-k="CARGADA"] .w-ico{background:var(--green-bg); color:var(--green)} .w[data-k="VACÍA"] .w-ico{background:#EAF2FF; color:var(--blue)}
-.w[data-k="AVERIADA"] .w-ico{background:var(--orange-bg); color:var(--orange)} .w[data-k="TOTAL"] .w-ico{background:#EFEFF0; color:var(--t1)}
-.w-k{font-size:10px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--t3)}
-.w-v{font-size:24px; font-weight:800; letter-spacing:-.04em; line-height:1} .w-foot{margin-top:6px; font-size:11px; color:var(--t3)} .w-foot b{color:var(--t1)}
-
-/* LIST */
-.list{max-width:1160px; margin:0 auto; background:#fff; border:1px solid var(--line); border-radius:var(--r-xl); box-shadow:var(--shadow2); overflow:hidden}
-.list-head{display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:space-between; padding:12px 14px; border-bottom:1px solid var(--line); background:#FBFBFD}
-.seg-tabs{display:flex; padding:3px; border-radius:12px; background:#EFEFF0; gap:2px}
-.seg-tabs button{border:none; background:transparent; padding:6px 10px; border-radius:9px; font-size:12px; font-weight:600; color:var(--t2); white-space:nowrap; transition:all .2s var(--spring)}
-.seg-tabs button.active{background:#fff; color:var(--t1); box-shadow:0 1px 4px rgba(0,0,0,.12)}
-.search{display:flex; align-items:center; gap:6px; padding:8px 12px; border-radius:10px; background:#EFEFF0; flex:1; max-width:260px}
-.search input{border:none; background:transparent; font-size:14px; width:100%; outline:none}
-.call{display:inline-flex; align-items:center; gap:6px; padding:8px 12px; border-radius:99px; background:#EFEFF0; font-size:12px; font-weight:600; text-decoration:none; color:var(--t1); border:1px solid transparent}
-.call.has{background:rgba(255,59,48,.10); color:#FF3B30; border-color:rgba(255,59,48,.16); animation:pulseCall 1.6s infinite}
-@keyframes pulseCall{0%,100%{box-shadow:0 0 0 0 rgba(255,59,48,0)} 50%{box-shadow:0 0 0 6px rgba(255,59,48,.12)}}
-.records{display:grid; grid-template-columns:1fr; gap:1px; background:var(--line)}
-@media(min-width:700px){ .records{grid-template-columns:repeat(2,1fr)} }
-@media(min-width:1080px){ .records{grid-template-columns:repeat(3,1fr)} }
-.rec{background:#fff; padding:13px 12px 11px; display:flex; flex-direction:column; gap:8px; cursor:pointer}
-.rec-top{display:flex; justify-content:space-between; align-items:center; gap:8px}
-.mat{font-weight:750; font-size:14px} .right{display:flex; align-items:center; gap:8px} .ts{font-size:11px; color:var(--t3)}
-.pill{font-size:10px; font-weight:700; letter-spacing:.05em; padding:3px 8px; border-radius:99px; border:1px solid var(--line)}
-.pill.CARGADA{background:var(--green-bg); color:var(--green)} .pill.VACÍA{background:#EAF2FF; color:var(--blue)} .pill.AVERIADA{background:var(--orange-bg); color:var(--orange)}
-.note{font-size:13px; color:var(--t2); background:#F5F5F7; border-radius:12px; padding:10px 12px; display:none; white-space:pre-wrap}
-.rec.expanded .note{display:block; animation:noteIn .28s var(--spring) both}
-@keyframes noteIn{from{opacity:0; transform:translateY(4px)} to{opacity:1; transform:none}}
-.rec-actions{display:none; gap:8px; justify-content:flex-end} .rec.expanded .rec-actions{display:flex}
-.mini{padding:8px 14px; border-radius:99px; border:1px solid var(--line); background:#fff; font-size:12px; font-weight:600; min-height:36px}
-.empty{grid-column:1 / -1; padding:48px 20px; text-align:center; background:#fff; display:flex; flex-direction:column; align-items:center; gap:10px}
-.empty-ico{width:56px; height:56px; border-radius:50%; background:var(--bg); display:grid; place-items:center; font-size:26px}
-
-/* MODALS */
-.modal{position:fixed; inset:0; display:none; align-items:flex-end; justify-content:center; z-index:80; padding:10px}
-.modal.open{display:flex} .bg{position:absolute; inset:0; background:rgba(0,0,0,.32); backdrop-filter:blur(20px)}
-.card{position:relative; width:min(100%,520px); background:#fff; border-radius:28px; box-shadow:0 30px 80px rgba(0,0,0,.28); padding:18px; display:flex; flex-direction:column; gap:14px; animation:sheetUp .5s var(--spring) both}
-@keyframes sheetUp{from{transform:translateY(28px) scale(.98); opacity:0} to{transform:none; opacity:1}}
-.toast{position:fixed; left:50%; top:14px; transform:translateX(-50%) translateY(-10px) scale(.96); padding:11px 16px; border-radius:99px; background:rgba(29,29,31,.92); color:#fff; font-size:13px; font-weight:600; box-shadow:0 12px 30px rgba(0,0,0,.22); opacity:0; pointer-events:none; z-index:100; transition:all .45s var(--spring)}
-.toast.show{opacity:1; transform:translateX(-50%) translateY(0) scale(1)} .toast.success{background:rgba(18,183,106,.94)} .toast.error{background:rgba(255,59,48,.92)}
-.shake{animation:shake .36s var(--spring) both} @keyframes shake{0%,100%{transform:translateX(0)} 20%,60%{transform:translateX(-4px)} 40%,80%{transform:translateX(4px)}}
-
-/* MOBILE */
-@media(max-width:600px){
-  .app{padding:8px 8px calc(24px + env(safe-area-inset-bottom, 0px));}
-  .h-wrap{top:8px; margin-bottom:12px; padding:0}
-  .hdr{padding:10px 12px; border-radius:18px; gap:8px}
-  .brand{gap:8px; flex:1; min-width:0} .code-badge{padding:5px 7px; font-size:9px} .logo{font-size:16px}
-  .operario{padding:6px 10px} .operario input{width:76px; font-size:12px}
-  .sheet{border-radius:24px; margin:0 0 12px} .sheet-head{padding:12px 14px} .screens{min-height:168px}
-  .screen{padding:18px 14px; gap:12px} .input-wrap{max-width:none}
-  .btn{width:100%; min-height:52px; font-size:16px} .btn-ghost{width:auto; min-height:40px}
-  .states{gap:6px; padding:3px; border-radius:16px} .state{padding:10px 2px 8px; min-height:68px; border-radius:12px}
-  .state .ico{width:28px; height:28px} .state .lb{font-size:10.5px} .state .sl{display:none}
-  .actions{flex-direction:column; gap:10px; margin:10px 0 16px}
-  .actions .btn{width:100%; min-height:52px}
-  .widgets{grid-template-columns:repeat(2,1fr); gap:8px} .w{padding:10px 10px 8px; border-radius:18px} .w-v{font-size:22px}
-  .list{border-radius:22px} .list-head{flex-direction:column; align-items:stretch; gap:10px; padding:10px 12px}
-  .seg-tabs{overflow-x:auto; scrollbar-width:none; -webkit-overflow-scrolling:touch; flex-wrap:nowrap}
-  .seg-tabs::-webkit-scrollbar{display:none} .seg-tabs button{flex:0 0 auto}
-  .search{max-width:none; width:100%; padding:10px 12px} .call{width:100%; justify-content:center; padding:11px; min-height:44px}
-  .records{grid-template-columns:1fr} .rec{padding:14px 12px}
-  .modal{padding:0; align-items:flex-end} .card{border-radius:24px 24px 0 0; width:100%; max-width:none; padding:16px 14px calc(16px + env(safe-area-inset-bottom))}
-  .toast{top:calc(10px + env(safe-area-inset-top, 0px)); font-size:12px; max-width:90vw; text-align:center}
+.w{
+  background:var(--card); border:1px solid var(--line); border-radius:var(--r-lg); 
+  padding:14px 14px 12px; box-shadow:var(--shadow-card); 
+  transition:transform .25s var(--spring), box-shadow .25s var(--spring); position:relative; overflow:visible;
 }
-
-/* BADGES APPLE PEQUEÑOS + EFECTOS */
-.pill{
-  font-size:9px !important; padding:2px 7px !important; border-radius:7px !important;
-  font-weight:700 !important; letter-spacing:.05em; display:inline-flex; align-items:center; gap:4px;
-  line-height:1; min-height:18px; border-width:1px !important;
-}
-.pill::before{
-  content:""; width:5px; height:5px; border-radius:50%; background:currentColor; opacity:.9;
-}
-.pill.pop{animation:badgePop .38s var(--bounce) both}
-@keyframes badgePop{0%{transform:scale(1)} 45%{transform:scale(1.18)} 100%{transform:scale(1)}}
-
-.seg-tabs button{position:relative}
-.seg-tabs button .count-badge{
-  font-size:10px; font-weight:700; margin-left:5px; padding:1px 5px; border-radius:6px;
-  background:rgba(0,0,0,.08); color:var(--t2); transition:all .3s var(--spring); display:inline-block;
-}
-.seg-tabs button.active .count-badge{background:rgba(0,0,0,.10); color:var(--t1)}
-.count-badge.bump{animation:badgePop .35s var(--bounce) both; background:var(--blue) !important; color:#fff !important}
-
-.w{position:relative; overflow:visible}
-.w-v{transition:transform .3s var(--spring); display:inline-block}
+.w:hover{transform:translateY(-2px); box-shadow:0 8px 24px rgba(0,0,0,.06)}
+.w-top{display:flex; align-items:center; justify-content:space-between; margin-bottom:10px}
+.w-ico{width:28px; height:28px; border-radius:50%; display:grid; place-items:center; font-size:13px; font-weight:600}
+.w[data-k="CARGADA"] .w-ico{background:var(--green-bg); color:var(--green)} 
+.w[data-k="VACÍA"] .w-ico{background:#E8F0FE; color:var(--blue)}
+.w[data-k="AVERIADA"] .w-ico{background:var(--orange-bg); color:var(--orange)} 
+.w[data-k="TOTAL"] .w-ico{background:#F5F5F7; color:var(--t1)}
+.w-k{font-size:10px; font-weight:600; letter-spacing:.06em; text-transform:uppercase; color:var(--t3)}
+.w-v{font-size:26px; font-weight:700; letter-spacing:-.03em; line-height:1; display:inline-block; transition:transform .3s var(--spring)}
 .w-v.bump{animation:countBump .42s var(--bounce) both}
-@keyframes countBump{0%{transform:scale(1)} 35%{transform:scale(1.22)} 65%{transform:scale(.96)} 100%{transform:scale(1)}}
+.w-foot{margin-top:8px; font-size:11px; color:var(--t3)} .w-foot b{color:var(--t1); font-weight:600}
+
+/* LIST - iOS Grouped */
+.list{max-width:980px; margin:0 auto; background:var(--card); border:1px solid var(--line); border-radius:var(--r-xl); box-shadow:var(--shadow-card); overflow:hidden}
+.list-head{
+  display:flex; flex-wrap:wrap; gap:12px; align-items:center; justify-content:space-between; 
+  padding:12px 14px; border-bottom:1px solid var(--line); background:#FBFBFD;
+  position:sticky; top:0; z-index:2; backdrop-filter:blur(10px);
+}
+.seg-tabs{display:flex; padding:3px; border-radius:10px; background:#E8E8ED; gap:2px}
+.seg-tabs button{
+  border:none; background:transparent; padding:0 12px; height:28px; border-radius:7px; 
+  font-size:12.5px; font-weight:500; color:var(--t2); white-space:nowrap; 
+  transition:all .2s var(--spring); display:flex; align-items:center; gap:6px;
+}
+.seg-tabs button.active{background:#fff; color:var(--t1); box-shadow:0 1px 3px rgba(0,0,0,.12), 0 0 0 .5px rgba(0,0,0,.04)}
+.search{display:flex; align-items:center; gap:8px; height:32px; padding:0 10px; border-radius:10px; background:#E8E8ED; flex:1; max-width:260px; transition:all .2s}
+.search:focus-within{background:#fff; box-shadow:0 0 0 2px var(--blue-soft), 0 0 0 1px var(--blue) inset}
+.search input{border:none; background:transparent; font-size:14px; width:100%; outline:none; font-weight:400}
+.search input::placeholder{color:var(--t3)}
+.call{
+  display:inline-flex; align-items:center; gap:6px; height:32px; padding:0 14px; 
+  border-radius:var(--r-pill); background:#F5F5F7; border:1px solid var(--line);
+  font-size:12.5px; font-weight:500; color:var(--t1); text-decoration:none; transition:all .2s;
+}
+.call:hover{background:#E8E8ED} .call.has{background:var(--t1); color:#fff; border-color:var(--t1)}
+.records{divide-y:1px solid var(--line)}
+.rec{
+  padding:14px 18px; display:flex; flex-direction:column; gap:8px;
+  border-bottom:.5px solid var(--line); transition:background .2s; cursor:pointer;
+}
+.rec:last-child{border-bottom:none}
+.rec:hover{background:#FBFBFD}
+.rec-top{display:flex; align-items:center; justify-content:space-between; gap:12px}
+.mat{font-size:15px; font-weight:600; letter-spacing:-.02em; color:var(--t1)}
+.right{display:flex; align-items:center; gap:10px}
+.ts{font-size:11px; color:var(--t3); font-variant-numeric:tabular-nums}
+.pill{
+  font-size:10px; font-weight:600; letter-spacing:.04em; padding:4px 8px; border-radius:99px; line-height:1;
+  border:.5px solid transparent;
+}
+.pill.CARGADA{background:var(--green-bg); color:var(--green); border-color:rgba(29,171,69,.12)}
+.pill.VACÍA{background:#E8F0FE; color:var(--blue); border-color:rgba(0,113,227,.12)}
+.pill.AVERIADA{background:var(--orange-bg); color:var(--orange); border-color:rgba(255,159,10,.14)}
+.note{font-size:13px; color:var(--t2); line-height:1.35; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden}
+.rec-actions{display:flex; gap:8px; margin-top:2px; opacity:0; transform:translateY(2px); transition:all .2s var(--spring); pointer-events:none}
+.rec:hover .rec-actions, .rec.expanded .rec-actions{opacity:1; transform:none; pointer-events:auto}
+.mini{
+  border:none; background:#F5F5F7; height:28px; padding:0 12px; border-radius:99px; 
+  font-size:12px; font-weight:500; color:var(--t2); cursor:pointer; transition:all .2s;
+}
+.mini:hover{background:#E8E8ED; color:var(--t1)}
+.empty{padding:48px 20px; text-align:center; display:flex; flex-direction:column; align-items:center; gap:8px}
+.empty-ico{width:56px; height:56px; border-radius:50%; background:#F5F5F7; display:grid; place-items:center; font-size:24px; color:var(--t3)}
+.count-badge{
+  font-size:10px; font-weight:600; min-width:18px; height:18px; padding:0 5px; 
+  border-radius:99px; display:inline-grid; place-items:center;
+  background:rgba(0,0,0,.08); color:var(--t2); transition:all .3s var(--spring);
+}
+.seg-tabs button.active .count-badge{background:rgba(0,0,0,.08); color:var(--t1)}
+.count-badge.bump{animation:badgePop .35s var(--bounce) both; background:var(--blue) !important; color:#fff !important}
+@keyframes badgePop{0%{transform:scale(.6)} 60%{transform:scale(1.2)} 100%{transform:scale(1)}}
+@keyframes countBump{0%{transform:scale(1)} 35%{transform:scale(1.18)} 65%{transform:scale(.96)} 100%{transform:scale(1)}}
 .float-plus{
-  position:absolute; top:6px; right:8px; background:var(--blue); color:#fff;
-  font-size:10px; font-weight:800; padding:2px 6px; border-radius:99px;
+  position:absolute; top:8px; right:10px; background:var(--blue); color:#fff;
+  font-size:10px; font-weight:700; padding:2px 6px; border-radius:99px;
   pointer-events:none; z-index:2; animation:floatUp .9s var(--spring) forwards;
-  box-shadow:0 4px 10px rgba(0,122,255,.3);
+  box-shadow:0 4px 10px rgba(0,113,227,.25);
 }
 .float-plus.green{background:var(--green)} .float-plus.orange{background:var(--orange)}
 @keyframes floatUp{0%{opacity:0; transform:translateY(10px) scale(.8)} 18%{opacity:1; transform:translateY(0) scale(1)} 100%{opacity:0; transform:translateY(-20px) scale(.9)}}
 
-/* OPERARIO MODAL */
-#operarioModal .card{max-width:360px; text-align:center}
-#operarioModal .op-icon{width:52px; height:52px; border-radius:50%; background:#EAF2FF; display:grid; place-items:center; margin:0 auto; font-size:24px}
+/* TOAST - Apple */
+.toast{
+  position:fixed; left:50%; bottom:24px; bottom:calc(24px + env(safe-area-inset-bottom));
+  transform:translateX(-50%) translateY(12px) scale(.96);
+  background:rgba(29,29,31,.88); backdrop-filter:blur(20px) saturate(180%);
+  color:#fff; font-size:13.5px; font-weight:500; letter-spacing:-.01em;
+  padding:10px 16px; border-radius:99px; 
+  box-shadow:0 8px 24px rgba(0,0,0,.16), 0 0 0 .5px rgba(255,255,255,.1) inset;
+  opacity:0; pointer-events:none; transition:all .4s var(--spring); z-index:100;
+  display:flex; align-items:center; gap:8px; max-width:90vw;
+}
+.toast.show{opacity:1; transform:translateX(-50%) translateY(0) scale(1)}
+.toast.success{background:rgba(29,29,31,.88)} .toast.error{background:rgba(255,59,48,.92)}
 
+/* MODAL - Apple */
+.modal{position:fixed; inset:0; display:none; place-items:center; padding:20px; z-index:60}
+.modal.open{display:grid}
+.modal .bg{position:absolute; inset:0; background:rgba(0,0,0,.28); backdrop-filter:blur(16px) saturate(140%); -webkit-backdrop-filter:blur(16px) saturate(140%); animation:fadeIn .3s var(--spring) both}
+.modal .card{
+  position:relative; width:100%; max-width:400px; 
+  background:rgba(255,255,255,.92); backdrop-filter:blur(40px) saturate(180%);
+  border:1px solid rgba(255,255,255,.8); border-radius:24px; 
+  box-shadow:0 24px 64px rgba(0,0,0,.18), 0 0 0 .5px rgba(0,0,0,.04) inset, 0 1px 0 #fff inset;
+  padding:20px; display:flex; flex-direction:column; gap:14px;
+  animation:sheetIn .5s var(--spring) both;
+}
+@keyframes fadeIn{from{opacity:0} to{opacity:1}}
+@keyframes sheetIn{from{opacity:0; transform:translateY(20px) scale(.96)} to{opacity:1; transform:none}}
+@keyframes shake{0%,100%{transform:translateX(0)} 20%,60%{transform:translateX(-5px)} 40%,80%{transform:translateX(5px)}}
+.shake{animation:shake .4s var(--spring)}
+
+/* OPERARIO MODAL */
+#operarioModal .card{max-width:360px; text-align:center; padding:28px 24px 22px}
+#operarioModal .op-icon{width:64px; height:64px; border-radius:50%; background:linear-gradient(180deg, #E8F0FE 0%, #D6E4FF 100%); display:grid; place-items:center; margin:0 auto; box-shadow:0 4px 12px rgba(0,113,227,.12) inset}
+#inactivityModal .card{max-width:400px; text-align:center; padding:28px 22px}
+
+/* RESPONSIVE */
+@media (max-width:640px){
+  .app{padding:0 12px 32px; padding-top:calc(12px + env(safe-area-inset-top))}
+  .hdr{height:52px} .sheet{border-radius:22px} .states{grid-template-columns:repeat(3,1fr); gap:8px}
+  .state{padding:14px 8px 12px; min-height:106px} .widgets{grid-template-columns:repeat(2,1fr)}
+  .list{border-radius:20px} .operario input{width:96px}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none !important; transition:none !important}}
 </style>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
 <div id="toast" class="toast">Guardado</div>
 <div class="app">
   <div class="h-wrap"><header class="hdr">
-    <div class="brand"><span class="code-badge">CODE</span><div class="logo"><b>XPO</b>&nbsp;LOGISTICS</div></div>
-    <label class="operario"><span>👤</span><input id="operarioInput" placeholder="Operario" maxlength="20" autocomplete="off"/></label>
+    <div class="brand">
+      <span class="code-badge">CODE</span>
+      <div class="logo"><b>XPO</b><span>LOGISTICS</span></div>
+    </div>
+    <label class="operario" aria-label="Operario">
+      <span class="ico-person">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      </span>
+      <input id="operarioInput" placeholder="Operario" maxlength="20" autocomplete="off" spellcheck="false"/>
+    </label>
   </header></div>
 
   <section class="sheet" id="flowCard">
-    <div class="sheet-head"><div class="dot-mini">‹</div><div class="sheet-title" id="flowTitle">Matrícula</div><div class="dot-mini">›</div></div>
+    <div class="sheet-head">
+      <button class="nav-arrow" aria-hidden="true">‹</button>
+      <div class="sheet-title" id="flowTitle">Matrícula</div>
+      <button class="nav-arrow" aria-hidden="true">›</button>
+    </div>
     <div class="screens">
       <div class="screen active" id="s1">
-        <div class="input-wrap"><input id="matriculaInput" class="input-apple" placeholder="Matrícula — 1234 BCD" maxlength="20" autocomplete="off" autocapitalize="characters" enterkeyhint="next"/></div>
-        <button class="btn btn-primary" id="toS2" style="width:100%; max-width:440px">Continuar →</button>
-        <div style="font-size:11px; color:var(--t3); text-align:center">VACÍA guarda directo • Bloqueo de zoom activo</div>
+        <div class="input-wrap">
+          <input id="matriculaInput" class="input-apple" placeholder="Matrícula — 1234 BCD" maxlength="20" autocomplete="off" autocapitalize="characters" enterkeyhint="next" spellcheck="false"/>
+        </div>
+        <button class="btn btn-primary" id="toS2" style="width:100%; max-width:420px; height:50px; font-size:16px; font-weight:600">Continuar</button>
+        <div style="font-size:11px; color:var(--t3); text-align:center; letter-spacing:.01em">VACÍA guarda directo • Toque háptico activo</div>
       </div>
       <div class="screen" id="s2">
-        <div style="font-size:13px; color:var(--t2)">Matrícula <b id="matriculaDisplay" style="color:var(--t1)">—</b></div>
+        <div style="font-size:13px; color:var(--t2)">Matrícula <b id="matriculaDisplay" style="color:var(--t1); font-weight:600">—</b></div>
         <div class="states" id="statesRow">
           <div class="state" data-est="CARGADA" id="btnCargada">
             <div class="ico">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M3 7.5a2.5 2.5 0 0 1 2.5-2.5h9A2.5 2.5 0 0 1 17 7.5v6a2.5 2.5 0 0 1-2.5 2.5H5.5A2.5 2.5 0 0 1 3 13.5v-6Z"/>
-                <path d="M17 9h2.5a1.5 1.5 0 0 1 1.5 1.5v3a1.5 1.5 0 0 1-1.5 1.5H17"/>
-                <circle cx="7" cy="18" r="1.5" fill="currentColor" stroke="none"/><circle cx="17" cy="18" r="1.5" fill="currentColor" stroke="none"/>
-                <path d="M8 12l2 2 4-4" stroke-width="2"/>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h11"/><path d="M15 18H9"/><path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/><path d="M8 12l1.5 1.5L12 11" stroke-width="1.8"/>
               </svg>
             </div>
             <div class="lb">CARGADA</div><div class="sl">Con carga</div>
           </div>
           <div class="state" data-est="VACÍA" id="btnVacia">
             <div class="ico">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M3 7.5a2.5 2.5 0 0 1 2.5-2.5h9A2.5 2.5 0 0 1 17 7.5v6a2.5 2.5 0 0 1-2.5 2.5H5.5A2.5 2.5 0 0 1 3 13.5v-6Z"/>
-                <path d="M17 9h2.5a1.5 1.5 0 0 1 1.5 1.5v3a1.5 1.5 0 0 1-1.5 1.5H17"/>
-                <circle cx="7" cy="18" r="1.5" fill="currentColor" stroke="none"/><circle cx="17" cy="18" r="1.5" fill="currentColor" stroke="none"/>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h11"/><path d="M15 18H9"/><path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/>
               </svg>
             </div>
             <div class="lb">VACÍA</div><div class="sl">Directo</div>
           </div>
           <div class="state" data-est="AVERIADA" id="btnAveriada">
             <div class="ico">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M12 3L2.5 20.5A1 1 0 0 0 3.4 22h17.2a1 1 0 0 0 .9-1.5L12 3Z"/>
-                <path d="M12 9v6"/><circle cx="12" cy="18" r="1" fill="currentColor" stroke="none"/>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
               </svg>
             </div>
             <div class="lb">AVERIADA</div><div class="sl">Aviso</div>
@@ -329,9 +425,9 @@ button,input,textarea,select{font:inherit}
         <button class="btn btn-ghost" id="back1">← Volver</button>
       </div>
       <div class="screen" id="s3">
-        <div style="font-size:13px; color:var(--t2)"><b id="matriculaDisplay2">—</b> · <b id="estadoDisplay">—</b></div>
+        <div style="font-size:13px; color:var(--t2); text-align:center"><b id="matriculaDisplay2" style="color:var(--t1)">—</b> · <b id="estadoDisplay" style="color:var(--t1)">—</b></div>
         <div class="input-wrap"><textarea id="contenidoInput" class="textarea-apple" placeholder="Describe el contenido o avería…"></textarea></div>
-        <div style="display:flex; gap:10px; width:100%; max-width:440px"><button class="btn btn-secondary" style="flex:1" id="back2">Volver</button><button class="btn btn-primary" style="flex:1" id="btnRegistrar">Registrar</button></div>
+        <div style="display:flex; gap:10px; width:100%; max-width:420px"><button class="btn btn-secondary" style="flex:1" id="back2">Volver</button><button class="btn btn-primary" style="flex:1" id="btnRegistrar">Registrar</button></div>
       </div>
     </div>
     <div class="page"><div class="pd active" id="d1"></div><div class="pd" id="d2"></div><div class="pd" id="d3"></div></div>
@@ -339,14 +435,14 @@ button,input,textarea,select{font:inherit}
 
   <div class="actions">
     <button class="btn btn-pdf" id="genPdf">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
       Generar PDF
     </button>
     <button class="btn btn-danger-hold" id="clearAll">
       <div class="hold-bg" id="holdBg"></div>
       <div class="hold-content">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
-        <span id="holdText" class="hold-text">Mantén para borrar</span>
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+        <span id="holdText" class="hold-text" style="font-size:14px; font-weight:500">Mantén para borrar</span>
       </div>
     </button>
   </div>
@@ -358,10 +454,10 @@ button,input,textarea,select{font:inherit}
       <div class="chart-legend" id="chartLegend"></div>
     </div>
     <div class="widgets">
-      <div class="w" data-k="CARGADA"><div class="w-top"><div class="w-ico">✓</div><div class="w-k">Cargadas</div></div><div class="w-v" id="cargadasCount">0</div><div class="w-foot"><b id="pCargadas">0%</b></div></div>
-      <div class="w" data-k="VACÍA"><div class="w-top"><div class="w-ico">◍</div><div class="w-k">Vacías</div></div><div class="w-v" id="vaciasCount">0</div><div class="w-foot"><b id="pVacias">0%</b></div></div>
-      <div class="w" data-k="AVERIADA"><div class="w-top"><div class="w-ico">!</div><div class="w-k">Averiadas</div></div><div class="w-v" id="averiadasCount">0</div><div class="w-foot"><b id="pAveriadas">0%</b></div></div>
-      <div class="w" data-k="TOTAL"><div class="w-top"><div class="w-ico">≡</div><div class="w-k">Total</div></div><div class="w-v" id="totalCount">0</div><div class="w-foot"><span id="totalSub">0 plataformas</span></div></div>
+      <div class="w" data-k="CARGADA"><div class="w-top"><div class="w-ico">✓</div></div><div class="w-k">Cargadas</div><div class="w-v" id="cargadasCount">0</div><div class="w-foot"><b id="pCargadas">0%</b></div></div>
+      <div class="w" data-k="VACÍA"><div class="w-top"><div class="w-ico">◌</div></div><div class="w-k">Vacías</div><div class="w-v" id="vaciasCount">0</div><div class="w-foot"><b id="pVacias">0%</b></div></div>
+      <div class="w" data-k="AVERIADA"><div class="w-top"><div class="w-ico">!</div></div><div class="w-k">Averiadas</div><div class="w-v" id="averiadasCount">0</div><div class="w-foot"><b id="pAveriadas">0%</b></div></div>
+      <div class="w" data-k="TOTAL"><div class="w-top"><div class="w-ico">≡</div></div><div class="w-k">Total</div><div class="w-v" id="totalCount">0</div><div class="w-foot"><span id="totalSub">0 plataformas</span></div></div>
     </div>
   </section>
 
@@ -373,37 +469,44 @@ button,input,textarea,select{font:inherit}
         <button data-tab="VACÍA">Vacías <span id="bVacias" class="count-badge">0</span></button>
         <button data-tab="AVERIADA">Averiadas <span id="bAveriadas" class="count-badge">0</span></button>
       </div>
-      <div style="display:flex; gap:8px; flex:1; justify-content:flex-end; flex-wrap:wrap">
-        <label class="search"><span>🔍</span><input id="searchInput" type="search" placeholder="Buscar matrícula" autocomplete="off"/></label>
-        <a href="tel:942355219" class="call" id="callBtn">📞 Reclamar <span id="callBadge" style="display:none">•</span></a>
+      <div style="display:flex; gap:8px; flex:1; justify-content:flex-end; flex-wrap:wrap; align-items:center">
+        <label class="search" aria-label="Buscar">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#86868B" stroke-width="2"><circle cx="11" cy="11" r="6"/><path d="M21 21l-4.3-4.3"/></svg>
+          <input id="searchInput" type="search" placeholder="Buscar" autocomplete="off" spellcheck="false"/>
+        </label>
+        <a href="tel:942355219" class="call" id="callBtn">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 5 12.07 19.79 19.79 0 0 1 1.93 3.44 2 2 0 0 1 3.91 1.24h3a2 2 0 0 1 2 1.72c.12.9.33 1.77.63 2.61a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l2.23-2a2 2 0 0 1 2.11-.45c.84.3 1.71.51 2.61.63A2 2 0 0 1 22 16.92z"/></svg>
+          Reclamar <span id="callBadge" style="display:none">•</span>
+        </a>
       </div>
     </div>
     <div class="records" id="recordsContainer"></div>
   </section>
 </div>
 
-
 <div class="modal" id="operarioModal"><div class="bg"></div><div class="card" role="dialog" aria-modal="true">
-  <div class="op-icon">👤</div>
-  <div style="font-weight:800; font-size:18px; letter-spacing:-.02em">¿Quién registra?</div>
-  <div style="font-size:13px; color:var(--t2); line-height:1.4">Necesitamos tu nombre para el PDF.<br/>Se guardará para la próxima vez.</div>
-  <input id="operarioModalInput" class="input-apple" placeholder="Tu nombre — ej. Valentín" maxlength="24" autocomplete="off" style="text-align:center; font-weight:600"/>
-  <div style="display:flex; gap:10px; margin-top:2px"><button class="btn btn-secondary" style="flex:1" id="operarioSkip">Omitir</button><button class="btn btn-primary" style="flex:1" id="operarioSave">Continuar →</button></div>
+  <div class="op-icon">
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#0071E3" stroke-width="1.7"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+  </div>
+  <div style="font-weight:700; font-size:20px; letter-spacing:-.02em; line-height:1.2">¿Quién registra?</div>
+  <div style="font-size:14px; color:var(--t2); line-height:1.4">Tu nombre aparecerá en el PDF. Se guardará para la próxima vez.</div>
+  <input id="operarioModalInput" class="input-apple" placeholder="Tu nombre" maxlength="24" autocomplete="off" style="text-align:center; font-weight:500; height:50px; border-radius:12px"/>
+  <div style="display:flex; gap:10px; margin-top:4px"><button class="btn btn-secondary" style="flex:1; height:44px" id="operarioSkip">Omitir</button><button class="btn btn-primary" style="flex:1; height:44px" id="operarioSave">Continuar</button></div>
 </div></div>
 
 <div class="modal" id="editModal"><div class="bg"></div><div class="card" role="dialog" aria-modal="true">
-  <div style="font-weight:700; font-size:18px">Editar registro</div>
-  <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px"><input id="editMatricula" class="input-apple"/><select id="editEstado" class="input-apple"><option value="CARGADA">CARGADA</option><option value="VACÍA">VACÍA</option><option value="AVERIADA">AVERIADA</option></select></div>
+  <div style="font-weight:700; font-size:19px; letter-spacing:-.02em">Editar registro</div>
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px"><input id="editMatricula" class="input-apple" style="height:46px"/><select id="editEstado" class="input-apple" style="height:46px"><option value="CARGADA">CARGADA</option><option value="VACÍA">VACÍA</option><option value="AVERIADA">AVERIADA</option></select></div>
   <textarea id="editContenido" class="textarea-apple" placeholder="Contenido"></textarea>
   <div style="display:flex; gap:10px; justify-content:flex-end"><button class="btn btn-secondary" id="editCancel">Cancelar</button><button class="btn btn-primary" id="editSave">Guardar</button></div>
 </div></div>
 
 <div class="modal" id="inactivityModal"><div class="bg"></div><div class="card" style="max-width:400px; text-align:center">
-  <div style="width:56px; height:56px; border-radius:50%; background:#FFF4E5; display:grid; place-items:center; margin:0 auto; font-size:26px">⏰</div>
-  <div style="font-weight:800; font-size:18px; letter-spacing:-.02em">¿Nueva tanda?</div>
-  <div style="font-size:13px; color:var(--t2); line-height:1.4">Llevas más de <b>5 horas</b> sin registrar. Para evitar mezclar turnos, te recomendamos limpiar los registros anteriores antes de empezar.</div>
-  <div style="display:flex; gap:10px; margin-top:4px"><button class="btn btn-secondary" style="flex:1" id="inactKeep">Seguir con actuales</button><button class="btn btn-danger-hold" style="flex:1; background:#111113; color:#fff; border:none" id="inactClear">Limpiar y empezar</button></div>
-  <div style="font-size:10px; color:var(--t3)">Este aviso aparece cada 5h sin registros</div>
+  <div style="width:64px; height:64px; border-radius:50%; background:#FFF3E0; display:grid; place-items:center; margin:0 auto; font-size:28px">⏰</div>
+  <div style="font-weight:700; font-size:20px; letter-spacing:-.02em">¿Nueva tanda?</div>
+  <div style="font-size:14px; color:var(--t2); line-height:1.45">Llevas más de <b style="color:var(--t1)">5 horas</b> sin registrar. Para evitar mezclar turnos, te recomendamos limpiar los registros anteriores.</div>
+  <div style="display:flex; gap:10px; margin-top:6px"><button class="btn btn-secondary" style="flex:1" id="inactKeep">Seguir</button><button class="btn btn-pdf" style="flex:1" id="inactClear">Limpiar y empezar</button></div>
+  <div style="font-size:11px; color:var(--t3)">Aviso cada 5h sin registros</div>
 </div></div>
 
 <script>
@@ -466,6 +569,7 @@ function pickEst(est){
   if(est==='VACÍA'){
     const rec={id:Date.now()+Math.random(), matricula:curMat, estado:'VACÍA', contenido:'', timestamp:hour(), iso:new Date().toISOString()};
     data.push(rec); save(); saveLastReg();
+    triggerBadgeEffect('VACÍA');
     $('matriculaInput').value=''; curMat=''; curEst=''; document.querySelectorAll('.state').forEach(c=>c.classList.remove('selected'));
     try{ localStorage.removeItem(DRAFT); }catch{}
     render(); toast('Vacía guardada ✓','success'); showStep(1); return;
@@ -478,13 +582,13 @@ function register(){
   const cont=($('contenidoInput').value||'').trim();
   const rec={id:Date.now()+Math.random(), matricula:curMat, estado:curEst, contenido:cont, timestamp:hour(), iso:new Date().toISOString()};
   data.push(rec); save(); saveLastReg();
+  triggerBadgeEffect(curEst);
   $('matriculaInput').value=''; $('contenidoInput').value=''; curMat=''; curEst='';
   document.querySelectorAll('.state').forEach(c=>c.classList.remove('selected'));
   try{ localStorage.removeItem(DRAFT); }catch{}
   render(); toast('Registrado ✓','success'); showStep(1);
 }
 function animateCount(el,to){ const from=parseInt(el.textContent)||0; if(from===to) return; const t0=performance.now(), dur=480; const step=t=>{ const p=Math.min(1,(t-t0)/dur); const e=1-Math.pow(1-p,3); el.textContent=Math.round(from+(to-from)*e); if(p<1) requestAnimationFrame(step); }; requestAnimationFrame(step); }
-
 
 function triggerBadgeEffect(tipo){
   const map = { 'CARGADA':'CARGADA', 'VACÍA':'VACÍA', 'AVERIADA':'AVERIADA' };
@@ -496,10 +600,8 @@ function triggerBadgeEffect(tipo){
     const plus=document.createElement('div'); plus.className='float-plus'+(key==='CARGADA'?' green':key==='AVERIADA'?' orange':'');
     plus.textContent='+1'; widget.appendChild(plus); setTimeout(()=>plus.remove(), 900);
   }
-  // badge en segmented
   const segBtn = document.querySelector(`.seg-tabs [data-tab="${key}"] .count-badge`);
   if(segBtn){ segBtn.classList.remove('bump'); void segBtn.offsetWidth; segBtn.classList.add('bump'); setTimeout(()=>segBtn.classList.remove('bump'), 400); }
-  // badge total también
   const totalBtn = document.querySelector(`.seg-tabs [data-tab="TODAS"] .count-badge`);
   if(totalBtn){ totalBtn.classList.remove('bump'); void totalBtn.offsetWidth; totalBtn.classList.add('bump'); setTimeout(()=>totalBtn.classList.remove('bump'), 400); }
 }
@@ -523,7 +625,7 @@ function render(){
   box.innerHTML='';
   if(!filtered.length){
     const em=document.createElement('div'); em.className='empty';
-    em.innerHTML=`<div class="empty-ico">📦</div><div style="font-weight:600">No hay registros</div><div style="font-size:12px; color:var(--t3)">${q?`Sin resultados para "${q}"`:'Toca arriba para registrar'}</div>`;
+    em.innerHTML=`<div class="empty-ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg></div><div style="font-weight:600; font-size:15px">No hay registros</div><div style="font-size:13px; color:var(--t3)">${q?`Sin resultados para "${q}"`:'Toca arriba para registrar'}</div>`;
     box.appendChild(em); return;
   }
   const frag=document.createDocumentFragment();
@@ -544,7 +646,7 @@ function render(){
   box.appendChild(frag);
 }
 
-// HOLD TO DELETE LOGIC
+// HOLD TO DELETE
 let holdTimer=null, holdProgress=0, holdActive=false;
 function resetHold(){
   holdProgress=0; holdActive=false;
@@ -561,11 +663,10 @@ function startHold(){
   $('holdText').textContent='Sigue manteniendo...';
   if(navigator.vibrate) navigator.vibrate(20);
   holdTimer=setInterval(()=>{
-    holdProgress+=2.2; // ~1100ms para 100%
+    holdProgress+=2.2;
     if(holdProgress>=100){
       holdProgress=100; $('holdBg').style.width='100%';
       clearInterval(holdTimer); holdTimer=null;
-      // ejecutar borrado
       data=[]; save(); render();
       try{ localStorage.removeItem(DRAFT); localStorage.removeItem(LAST_REG_KEY); }catch{}
       toast('Registros borrados ✓','success');
@@ -583,7 +684,6 @@ function cancelHold(){
   toast('Cancelado','default');
 }
 
-// INACTIVIDAD 5 HORAS
 const INACT_MS = 5*60*60*1000;
 let inactTimeout=null;
 function showInactivityModal(){
@@ -604,7 +704,6 @@ function scheduleInactivityCheck(){
   if(remaining<=0){ showInactivityModal(); }
   else { inactTimeout=setTimeout(showInactivityModal, remaining); }
 }
-// check cada minuto por si el tab estuvo inactivo
 setInterval(()=>{
   const lastStr=localStorage.getItem(LAST_REG_KEY);
   if(!lastStr) return;
@@ -613,7 +712,6 @@ setInterval(()=>{
   }
 }, 60000);
 
-// PDF ORIGINAL EXACTO
 function generatePDF_ORIGINAL(){
   if(!data.length){ toast('No hay datos','error'); return; }
   if(typeof window.jspdf==='undefined'){ toast('Cargando PDF…'); setTimeout(generatePDF_ORIGINAL,500); return; }
@@ -716,7 +814,6 @@ function generatePDF_ORIGINAL(){
 }
 
 document.addEventListener('DOMContentLoaded', ()=>{
-  // operario modal handlers
   const closeOperario=()=>{$('operarioModal').classList.remove('open'); pendingAfterOperario=null;};
   const saveOperario=()=>{
     const v=$('operarioModalInput').value.trim();
@@ -766,15 +863,12 @@ document.addEventListener('DOMContentLoaded', ()=>{
   });
   $('editModal').addEventListener('click', e=>{ if(e.target.classList.contains('bg')) e.currentTarget.classList.remove('open'); });
 
-  // HOLD BUTTON LOGIC
   const clearBtn=$('clearAll');
   clearBtn.addEventListener('pointerdown', e=>{ e.preventDefault(); startHold(); });
   ['pointerup','pointercancel','pointerleave','blur'].forEach(ev=> clearBtn.addEventListener(ev, cancelHold));
-  // también táctil
   clearBtn.addEventListener('touchstart', e=>{ e.preventDefault(); startHold(); }, {passive:false});
   clearBtn.addEventListener('touchend', e=>{ e.preventDefault(); cancelHold(); }, {passive:false});
 
-  // Inactivity modal actions
   $('inactKeep').addEventListener('click', ()=>{
     $('inactivityModal').classList.remove('open'); saveLastReg(); scheduleInactivityCheck(); toast('Continuamos con los actuales','default');
   });
@@ -785,12 +879,10 @@ document.addEventListener('DOMContentLoaded', ()=>{
   });
   $('inactivityModal').addEventListener('click', e=>{ if(e.target.classList.contains('bg')){ $('inactivityModal').classList.remove('open'); saveLastReg(); scheduleInactivityCheck(); } });
 
-  document.addEventListener('keydown', e=>{ if(e.key==='Escape'){ $('editModal').classList.remove('open'); $('inactivityModal').classList.remove('open'); } });
+  document.addEventListener('keydown', e=>{ if(e.key==='Escape'){ $('editModal').classList.remove('open'); $('inactivityModal').classList.remove('open'); $('operarioModal').classList.remove('open'); } });
   window.addEventListener('scroll', ()=>{ document.body.classList.toggle('scrolled', window.scrollY>10); }, {passive:true});
 
-  // Iniciar chequeo inactividad
   scheduleInactivityCheck();
-  // Si no hay registro previo, guardar ahora como referencia
   if(!localStorage.getItem(LAST_REG_KEY) && data.length===0){
     saveLastReg();
   }
