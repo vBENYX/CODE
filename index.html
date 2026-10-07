@@ -792,7 +792,7 @@ function generatePDF_ORIGINAL(){
   }
   const exportDateForName=new Date().toLocaleDateString('es-ES',{day:'2-digit',month:'2-digit',year:'numeric'}).replace(/\//g,'-');
   doc.save('reporte_plataformas_'+exportDateForName+'.pdf');
-}
+
   toast('PDF generado ✓','success');
 }
 document.addEventListener('DOMContentLoaded', ()=>{
