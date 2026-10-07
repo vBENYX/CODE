@@ -23,421 +23,341 @@
 }
 </style>
 <meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=yes"/>
 <meta name="theme-color" content="#F5F5F7"/>
 <title>XPO — Registro de Plataformas</title>
 <style>
 :root{
-  --blue:#007AFF;
-  --blue-pressed:#0051D5;
-  --blue-soft:rgba(0,122,255,.12);
-  --blue-ring:rgba(0,122,255,.28);
-  --bg:#F5F5F7;
-  --bg-2:#EEF0F4;
-  --panel:rgba(255,255,255,.78);
-  --panel-solid:#FFFFFF;
-  --line:rgba(0,0,0,.06);
-  --line-2:rgba(0,0,0,.10);
-  --text:#1D1D1F;
-  --text-2:#6E6E73;
-  --text-3:#86868B;
-  --radius-xl:32px;
-  --radius-lg:22px;
-  --radius-md:16px;
-  --radius-pill:999px;
-  --shadow-float:0 20px 60px rgba(0,0,0,.12), 0 4px 16px rgba(0,0,0,.06);
-  --shadow-card:0 12px 32px rgba(0,0,0,.08), 0 2px 8px rgba(0,0,0,.04);
-  --shadow-pressed:0 2px 8px rgba(0,0,0,.06);
-  --spring: cubic-bezier(.32,.72,0,1);
-  --spring-bounce: cubic-bezier(.34,1.56,.64,1);
-  --green:#1D9D6E;
-  --green-bg:#E8F5EE;
-  --blue-state:#007AFF;
-  --blue-state-bg:#E8F1FF;
-  --orange:#D06B00;
-  --orange-bg:#FFF2E0;
+  --blue:#007AFF; --blue-press:#0040DD; --blue-soft:rgba(0,122,255,.14); --blue-ring:rgba(0,122,255,.28);
+  --bg:#F5F5F7; --card:#FFFFFF; --line:rgba(0,0,0,.06); --line2:rgba(0,0,0,.10);
+  --t1:#1D1D1F; --t2:#6E6E73; --t3:#A1A1A6;
+  --r-xl:32px; --r-lg:20px; --r-md:14px; --r-pill:999px;
+  --shadow:0 24px 64px rgba(0,0,0,.14), 0 2px 8px rgba(0,0,0,.06);
+  --shadow2:0 8px 24px rgba(0,0,0,.06);
+  --spring:cubic-bezier(.32,.72,0,1); --bounce:cubic-bezier(.34,1.56,.64,1);
+  --green:#12B76A; --green-bg:#E9F8EF; --orange:#F79009; --orange-bg:#FFF4E5;
 }
 *{box-sizing:border-box}
-html{-webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; scroll-behavior:smooth}
+html{-webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; -webkit-text-size-adjust:100%; scroll-behavior:smooth}
 body{
-  margin:0;
-  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text",Inter,system-ui,sans-serif;
-  background:var(--bg);
-  color:var(--text);
-  line-height:1.5;
-  letter-spacing:-.011em;
+  margin:0; font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text",Inter,system-ui;
+  background:
+    radial-gradient(800px 400px at 50% -10%, rgba(255,255,255,1) 0%, rgba(245,245,247,0) 60%),
+    var(--bg);
+  color:var(--t1); letter-spacing:-.011em; min-height:100vh;
+  overscroll-behavior-y:none;
 }
 button,input,textarea,select{font:inherit; -webkit-tap-highlight-color:transparent}
+input,textarea{font-size:16px} /* evita zoom iOS */
 :focus-visible{outline:none; box-shadow:0 0 0 4px var(--blue-ring) !important; border-color:var(--blue) !important}
 
-/* App */
-.app{max-width:1120px; margin:0 auto; padding:12px 12px 48px}
+.app{max-width:1160px; margin:0 auto; padding:10px 12px 40px}
 
-/* Header - Apple Liquid Island */
-.header-wrap{position:sticky; top:12px; z-index:40; padding:0 4px; margin-bottom:18px}
-.header{
-  display:flex; flex-direction:column; align-items:center; gap:2px;
-  padding:14px 18px 12px;
-  border-radius:24px;
-  background:rgba(255,255,255,.72);
-  backdrop-filter:blur(40px) saturate(180%);
-  -webkit-backdrop-filter:blur(40px) saturate(180%);
-  border:1px solid rgba(255,255,255,.8);
-  box-shadow:0 1px 0 rgba(255,255,255,.9) inset, 0 10px 30px rgba(0,0,0,.08);
-  transition:all .4s var(--spring);
+/* HEADER */
+.h-wrap{position:sticky; top:10px; z-index:40; margin-bottom:14px; padding:0 2px}
+.hdr{
+  display:flex; align-items:center; justify-content:space-between; gap:10px;
+  padding:12px 14px; border-radius:22px;
+  background:rgba(255,255,255,.86); backdrop-filter:blur(40px) saturate(180%); -webkit-backdrop-filter:blur(40px) saturate(180%);
+  border:1px solid rgba(255,255,255,.9); box-shadow:0 1px 0 #fff inset, 0 12px 32px rgba(0,0,0,.08);
 }
-body.scrolled .header{transform:scale(.98); box-shadow:0 1px 0 rgba(255,255,255,.9) inset, 0 16px 40px rgba(0,0,0,.12)}
-.brand{display:flex; align-items:center; gap:10px}
-.badge-code{
-  font-size:10px; font-weight:800; letter-spacing:.14em; line-height:1;
-  padding:6px 8px; border-radius:8px; background:var(--text); color:white;
+.brand{display:flex; align-items:center; gap:10px; min-width:0}
+.code-badge{font-size:10px; font-weight:800; letter-spacing:.14em; padding:6px 8px; border-radius:8px; background:var(--t1); color:#fff; flex-shrink:0}
+.logo{font-weight:800; font-size:19px; letter-spacing:-.03em; white-space:nowrap; overflow:hidden; text-overflow:ellipsis} .logo b{color:#E30613; font-weight:900}
+.sub{font-size:10px; letter-spacing:.18em; text-transform:uppercase; font-weight:600; color:var(--t3); display:none}
+.operario{
+  display:flex; align-items:center; gap:6px; padding:8px 12px; border-radius:99px;
+  background:rgba(0,0,0,.06); border:1px solid transparent; transition:all .25s var(--spring); flex-shrink:0;
 }
-.logo{font-weight:800; font-size:22px; letter-spacing:-.03em; display:flex; align-items:baseline}
-.logo .xpo{color:#E30613} .logo .log{color:var(--text)}
-.sub{font-size:11px; letter-spacing:.22em; text-transform:uppercase; font-weight:600; color:var(--text-3); margin-top:1px}
+.operario:focus-within{background:#fff; border-color:var(--blue); box-shadow:0 0 0 4px var(--blue-ring)}
+.operario input{border:none; background:transparent; width:108px; font-size:13px; font-weight:600; outline:none}
+.operario input::placeholder{color:var(--t3); font-weight:500}
 
-/* Flow - Sheet Style */
-.sheet{
-  max-width:680px; margin:0 auto 20px;
-  background:var(--panel-solid);
-  border:1px solid var(--line);
-  border-radius:var(--radius-xl);
-  box-shadow:var(--shadow-float);
-  overflow:hidden;
-}
-.sheet-head{
-  display:flex; align-items:center; justify-content:space-between;
-  padding:16px 20px 14px;
-  border-bottom:1px solid var(--line);
-}
-.sheet-head .chevron{width:28px; height:28px; border-radius:50%; background:var(--bg); display:grid; place-items:center; color:var(--text-2); font-size:14px}
-.sheet-title{font-weight:600; font-size:15px; letter-spacing:-.01em}
-.screens{position:relative; min-height:182px}
+/* SHEET */
+.sheet{max-width:720px; margin:0 auto 14px; background:var(--card); border:1px solid var(--line); border-radius:var(--r-xl); box-shadow:var(--shadow); overflow:hidden; position:relative}
+.sheet::before{content:""; position:absolute; inset:0; border-radius:inherit; pointer-events:none; background:linear-gradient(180deg, rgba(255,255,255,.9) 0%, rgba(255,255,255,0) 18%); z-index:1}
+.sheet-head{position:relative; z-index:2; display:flex; align-items:center; justify-content:space-between; padding:14px 16px; border-bottom:1px solid var(--line)}
+.sheet-title{font-weight:600; font-size:14px}
+.dot-mini{width:26px; height:26px; border-radius:50%; background:var(--bg); display:grid; place-items:center; color:var(--t2); font-size:12px}
+.screens{position:relative; min-height:176px; z-index:2}
 .screen{
-  position:absolute; inset:0;
-  display:flex; flex-direction:column; align-items:center; justify-content:center;
-  gap:16px; padding:24px 20px 22px;
-  opacity:0; transform:translateX(24px) scale(.98);
-  pointer-events:none; transition:all .5s var(--spring);
+  position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:14px;
+  padding:22px 16px; opacity:0; transform:translateX(20px) scale(.98); filter:blur(6px);
+  pointer-events:none; transition:all .55s var(--spring);
 }
-.screen.active{opacity:1; transform:translateX(0) scale(1); pointer-events:auto; position:relative}
-
-.input-wrap{width:100%; max-width:420px; position:relative}
-.input-apple, .textarea-apple{
-  width:100%;
-  padding:15px 16px;
-  border-radius:var(--radius-md);
-  border:1px solid var(--line-2);
-  background:#F5F5F7;
-  color:var(--text);
-  font-size:17px; font-weight:400;
-  letter-spacing:-.01em;
-  transition:all .25s var(--spring);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.8);
+.screen.active{opacity:1; transform:none; filter:none; pointer-events:auto; position:relative}
+.input-wrap{width:100%; max-width:440px}
+.input-apple{
+  width:100%; padding:14px 16px; border-radius:var(--r-md); border:1.5px solid var(--line2);
+  background:#F2F2F7; font-size:16px; font-weight:500; transition:all .28s var(--spring);
 }
-.input-apple::placeholder, .textarea-apple::placeholder{color:var(--text-3)}
-.input-apple:focus, .textarea-apple:focus{background:white; border-color:var(--blue); box-shadow:0 0 0 4px var(--blue-ring), inset 0 1px 0 rgba(255,255,255,.9)}
-.textarea-apple{min-height:96px; resize:none; line-height:1.45; font-size:16px}
-
-.btn-apple{
-  appearance:none; border:none; cursor:pointer;
-  display:inline-flex; align-items:center; justify-content:center; gap:6px;
-  padding:13px 22px; border-radius:var(--radius-pill);
-  font-size:16px; font-weight:600; letter-spacing:-.01em;
-  transition:transform .2s var(--spring), background .2s, box-shadow .2s, opacity .2s;
-  user-select:none;
+.input-apple:focus{background:#fff; border-color:var(--blue); box-shadow:0 0 0 4px var(--blue-soft)}
+.textarea-apple{width:100%; padding:14px 16px; border-radius:var(--r-md); border:1.5px solid var(--line2); background:#F2F2F7; font-size:16px; min-height:88px; resize:none; transition:all .28s var(--spring)}
+.textarea-apple:focus{background:#fff; border-color:var(--blue); box-shadow:0 0 0 4px var(--blue-soft)}
+.btn{
+  appearance:none; border:none; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; gap:6px;
+  padding:12px 20px; border-radius:99px; font-size:15px; font-weight:600; letter-spacing:-.01em;
+  transition:transform .18s var(--spring), background .2s, box-shadow .2s; user-select:none; min-height:48px; touch-action:manipulation;
 }
-.btn-apple:active{transform:scale(.96)}
-.btn-primary{background:var(--blue); color:white; box-shadow:0 8px 20px rgba(0,122,255,.28)}
-.btn-primary:hover{background:#0A84FF; box-shadow:0 10px 24px rgba(0,122,255,.34)}
-.btn-primary:active{background:var(--blue-pressed)}
-.btn-secondary{background:var(--bg); color:var(--text); border:1px solid var(--line)}
-.btn-secondary:hover{background:#E8E8ED}
-.btn-ghost{background:transparent; color:var(--blue); font-weight:500; font-size:15px}
+.btn:active{transform:scale(.96)}
+.btn-primary{background:var(--blue); color:#fff; box-shadow:0 10px 20px rgba(0,122,255,.28)}
+.btn-secondary{background:#EFEFF0; color:var(--t1)} .btn-ghost{background:transparent; color:var(--blue)}
 .btn-danger{background:rgba(255,59,48,.10); color:#FF3B30}
-.btn-danger:hover{background:rgba(255,59,48,.16)}
 
-/* State picker - iOS style cards */
-.state-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:10px; width:100%; max-width:420px}
-@media(max-width:480px){ .state-grid{grid-template-columns:1fr} }
-.state-card{
-  position:relative; padding:16px 12px; border-radius:18px;
-  background:#F5F5F7; border:1.5px solid transparent;
-  display:flex; flex-direction:column; align-items:center; gap:8px;
-  cursor:pointer; transition:all .3s var(--spring);
-  text-align:center;
+/* ESTADOS EN PARALELO - MÓVIL SIEMPRE EN FILA */
+.states{
+  display:flex; gap:8px; width:100%; max-width:520px; padding:4px; border-radius:20px; background:#EFEFF0;
 }
-.state-card:hover{transform:translateY(-1px); background:#EFEFF2}
-.state-card.selected{background:white; border-color:var(--blue); box-shadow:0 0 0 4px var(--blue-soft), 0 10px 20px rgba(0,0,0,.08); transform:translateY(-1px) scale(1.02)}
-.state-card .dot{width:10px; height:10px; border-radius:50%}
-.state-card[data-est="CARGADA"] .dot{background:var(--green)} .state-card[data-est="VACÍA"] .dot{background:var(--blue-state)} .state-card[data-est="AVERIADA"] .dot{background:var(--orange)}
-.state-card .label{font-weight:600; font-size:13px; letter-spacing:.04em}
-.state-card.selected::after{content:"✓"; position:absolute; top:8px; right:10px; font-size:12px; font-weight:700; color:var(--blue)}
+.state{
+  flex:1; position:relative; display:flex; flex-direction:column; align-items:center; gap:4px;
+  padding:12px 4px 10px; border-radius:14px; background:transparent; border:1.5px solid transparent;
+  cursor:pointer; transition:all .32s var(--spring); min-height:72px;
+}
+.state:hover{background:rgba(255,255,255,.55)}
+.state.selected{background:#fff; border-color:rgba(0,0,0,.06); box-shadow:0 6px 18px rgba(0,0,0,.08); transform:translateY(-1px)}
+.state .ico{width:28px; height:28px; border-radius:50%; display:grid; place-items:center; font-size:14px; transition:transform .32s var(--bounce)}
+.state.selected .ico{transform:scale(1.12)}
+.state[data-est="CARGADA"] .ico{background:var(--green-bg); color:var(--green)}
+.state[data-est="VACÍA"] .ico{background:#EAF2FF; color:var(--blue)}
+.state[data-est="AVERIADA"] .ico{background:var(--orange-bg); color:var(--orange)}
+.state .lb{font-size:11px; font-weight:700; letter-spacing:.03em; text-align:center; line-height:1.1}
+.state .sl{font-size:9px; color:var(--t3); font-weight:500; text-align:center; line-height:1.1}
+.state.selected::after{
+  content:"✓"; position:absolute; top:5px; right:6px; width:16px; height:16px; border-radius:50%;
+  background:var(--blue); color:#fff; font-size:10px; display:grid; place-items:center; font-weight:700;
+  animation:popIn .35s var(--bounce) both;
+}
+@keyframes popIn{0%{transform:scale(0)} 100%{transform:scale(1)}}
+.page{display:flex; justify-content:center; gap:6px; padding:12px 0 14px; border-top:1px solid var(--line); background:rgba(245,245,247,.6)}
+.pd{width:20px; height:6px; border-radius:99px; background:rgba(0,0,0,.12); transition:all .4s var(--spring)}
+.pd.active{width:26px; background:var(--t1)} .pd.done{background:rgba(0,0,0,.2)}
 
-.page-control{display:flex; justify-content:center; gap:7px; padding:14px 0 16px; border-top:1px solid var(--line); background:rgba(245,245,247,.7)}
-.page-dot{width:22px; height:6px; border-radius:99px; background:rgba(0,0,0,.14); transition:all .4s var(--spring)}
-.page-dot.active{width:28px; background:var(--text)}
-.page-dot.done{background:rgba(0,0,0,.22)}
+/* ACTIONS */
+.actions{display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin:12px auto 18px; max-width:720px}
 
-/* Actions */
-.actions{display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin:14px auto 22px; max-width:680px}
+/* SUMMARY */
+.summary{max-width:720px; margin:0 auto 16px}
+.sum-head{display:flex; align-items:baseline; justify-content:space-between; margin:0 4px 10px}
+.sum-title{font-size:11px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--t2)}
+.sum-date{font-size:11px; color:var(--t3)}
+.chart-card{background:#fff; border:1px solid var(--line); border-radius:20px; padding:14px; box-shadow:var(--shadow2); margin-bottom:10px}
+.chart-track{height:10px; border-radius:99px; background:#EFEFF0; display:flex; overflow:hidden; gap:2px; padding:2px}
+.seg{height:100%; border-radius:99px; transition:width 1s var(--spring)} .seg.c{background:var(--green)} .seg.v{background:var(--blue)} .seg.a{background:var(--orange)}
+.chart-legend{display:flex; gap:12px; flex-wrap:wrap; margin-top:10px; font-size:11px; color:var(--t2)}
+.legend{display:flex; align-items:center; gap:6px} .legend i{width:8px; height:8px; border-radius:50%; display:inline-block}
+.widgets{display:grid; grid-template-columns:repeat(4,1fr); gap:10px}
+.w{background:#fff; border:1px solid var(--line); border-radius:20px; padding:12px 12px 10px; box-shadow:var(--shadow2); transition:transform .25s var(--spring)}
+.w:hover{transform:translateY(-2px)} .w-top{display:flex; align-items:center; justify-content:space-between; margin-bottom:6px}
+.w-ico{width:26px; height:26px; border-radius:50%; display:grid; place-items:center; font-size:12px}
+.w[data-k="CARGADA"] .w-ico{background:var(--green-bg); color:var(--green)} .w[data-k="VACÍA"] .w-ico{background:#EAF2FF; color:var(--blue)}
+.w[data-k="AVERIADA"] .w-ico{background:var(--orange-bg); color:var(--orange)} .w[data-k="TOTAL"] .w-ico{background:#EFEFF0; color:var(--t1)}
+.w-k{font-size:10px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--t3)}
+.w-v{font-size:24px; font-weight:800; letter-spacing:-.04em; line-height:1} .w-foot{margin-top:6px; font-size:11px; color:var(--t3)} .w-foot b{color:var(--t1)}
 
-/* Summary - Apple widgets */
-.summary{max-width:680px; margin:0 auto 20px}
-.summary-title{font-size:13px; font-weight:600; letter-spacing:.04em; color:var(--text-2); text-transform:uppercase; margin:0 0 10px 4px}
-.widget-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:10px}
-@media(max-width:700px){ .widget-grid{grid-template-columns:repeat(2,1fr)} }
-.widget{
-  background:white; border:1px solid var(--line); border-radius:20px; padding:14px 14px 12px;
-  box-shadow:0 4px 16px rgba(0,0,0,.04); position:relative; overflow:hidden;
-  transition:transform .25s var(--spring);
-}
-.widget:hover{transform:translateY(-1px); box-shadow:0 8px 24px rgba(0,0,0,.06)}
-.widget .k{font-size:11px; font-weight:600; letter-spacing:.06em; text-transform:uppercase; color:var(--text-3); display:block; margin-bottom:6px}
-.widget .v{font-size:26px; font-weight:700; letter-spacing:-.03em; line-height:1}
-.widget[data-k="CARGADA"] .v{color:var(--green)} .widget[data-k="VACÍA"] .v{color:var(--blue-state)} .widget[data-k="AVERIADA"] .v{color:var(--orange)}
-.widget::after{content:""; position:absolute; left:0; right:0; bottom:0; height:3px; opacity:.9}
-.widget[data-k="CARGADA"]::after{background:var(--green)} .widget[data-k="VACÍA"]::after{background:var(--blue-state)} .widget[data-k="AVERIADA"]::after{background:var(--orange)} .widget[data-k="TOTAL"]::after{background:var(--text)}
-
-/* List - iOS Inset Grouped */
-.list-wrap{max-width:1120px; margin:0 auto; background:white; border:1px solid var(--line); border-radius:var(--radius-xl); box-shadow:var(--shadow-card); overflow:hidden}
-.list-head{
-  display:flex; flex-wrap:wrap; gap:12px; align-items:center; justify-content:space-between;
-  padding:14px 16px; border-bottom:1px solid var(--line); background:#FBFBFD;
-  position:sticky; top:0; z-index:2;
-}
-.segmented{
-  display:inline-flex; padding:3px; border-radius:12px; background:#EFEFF0; gap:2px;
-}
-.segmented button{
-  border:none; background:transparent; padding:6px 12px; border-radius:9px; font-size:13px; font-weight:600; color:var(--text-2);
-  transition:all .2s var(--spring);
-}
-.segmented button.active{background:white; color:var(--text); box-shadow:0 1px 4px rgba(0,0,0,.12), 0 0 0 1px rgba(0,0,0,.04)}
-.search-apple{
-  position:relative; flex:1; min-width:160px; max-width:280px;
-}
-.search-apple input{
-  width:100%; padding:8px 12px 8px 30px; border-radius:10px; border:none; background:#EFEFF0; font-size:14px;
-}
-.search-apple svg{position:absolute; left:9px; top:50%; transform:translateY(-50%); opacity:.45}
-.records{display:grid; grid-template-columns:1fr; gap:1px; background:var(--line); padding:0}
+/* LIST */
+.list{max-width:1160px; margin:0 auto; background:#fff; border:1px solid var(--line); border-radius:var(--r-xl); box-shadow:var(--shadow2); overflow:hidden}
+.list-head{display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:space-between; padding:12px 14px; border-bottom:1px solid var(--line); background:#FBFBFD}
+.seg-tabs{display:flex; padding:3px; border-radius:12px; background:#EFEFF0; gap:2px}
+.seg-tabs button{border:none; background:transparent; padding:6px 10px; border-radius:9px; font-size:12px; font-weight:600; color:var(--t2); white-space:nowrap; transition:all .2s var(--spring)}
+.seg-tabs button.active{background:#fff; color:var(--t1); box-shadow:0 1px 4px rgba(0,0,0,.12)}
+.search{display:flex; align-items:center; gap:6px; padding:8px 12px; border-radius:10px; background:#EFEFF0; flex:1; max-width:260px}
+.search input{border:none; background:transparent; font-size:14px; width:100%; outline:none}
+.call{display:inline-flex; align-items:center; gap:6px; padding:8px 12px; border-radius:99px; background:#EFEFF0; font-size:12px; font-weight:600; text-decoration:none; color:var(--t1); border:1px solid transparent}
+.call.has{background:rgba(255,59,48,.10); color:#FF3B30; border-color:rgba(255,59,48,.16); animation:pulseCall 1.6s infinite}
+@keyframes pulseCall{0%,100%{box-shadow:0 0 0 0 rgba(255,59,48,0)} 50%{box-shadow:0 0 0 6px rgba(255,59,48,.12)}}
+.records{display:grid; grid-template-columns:1fr; gap:1px; background:var(--line)}
 @media(min-width:700px){ .records{grid-template-columns:repeat(2,1fr)} }
-@media(min-width:1024px){ .records{grid-template-columns:repeat(3,1fr)} }
-.record-cell{
-  background:white; padding:14px 14px 12px; display:flex; flex-direction:column; gap:8px;
-  position:relative; cursor:pointer; transition:background .2s;
-}
-.record-cell:hover{background:#FBFBFD}
-.record-cell:active{background:#F5F5F7}
-.record-top{display:flex; justify-content:space-between; align-items:center; gap:8px}
-.mat{font-weight:700; font-size:15px; letter-spacing:-.01em}
-.meta-right{display:flex; align-items:center; gap:8px}
-.ts{font-size:12px; color:var(--text-3)}
-.pill{
-  font-size:10.5px; font-weight:700; letter-spacing:.05em; padding:3px 8px; border-radius:99px; border:1px solid var(--line);
-}
-.pill.CARGADA{background:var(--green-bg); color:var(--green); border-color:rgba(29,157,110,.18)}
-.pill.VACÍA{background:var(--blue-state-bg); color:var(--blue-state); border-color:rgba(0,122,255,.18)}
-.pill.AVERIADA{background:var(--orange-bg); color:var(--orange); border-color:rgba(208,107,0,.18)}
-.note{font-size:13px; color:var(--text-2); line-height:1.4; display:none; white-space:pre-wrap; word-break:break-word; background:#F5F5F7; border-radius:12px; padding:10px 12px; margin-top:2px}
-.record-cell.expanded .note{display:block}
-.record-actions{display:none; gap:8px; justify-content:flex-end; margin-top:4px}
-.record-cell.expanded .record-actions{display:flex}
-.mini{padding:7px 12px; border-radius:99px; border:1px solid var(--line); background:white; font-size:12.5px; font-weight:600}
-.mini:hover{background:var(--bg)}
+@media(min-width:1080px){ .records{grid-template-columns:repeat(3,1fr)} }
+.rec{background:#fff; padding:13px 12px 11px; display:flex; flex-direction:column; gap:8px; cursor:pointer}
+.rec-top{display:flex; justify-content:space-between; align-items:center; gap:8px}
+.mat{font-weight:750; font-size:14px} .right{display:flex; align-items:center; gap:8px} .ts{font-size:11px; color:var(--t3)}
+.pill{font-size:10px; font-weight:700; letter-spacing:.05em; padding:3px 8px; border-radius:99px; border:1px solid var(--line)}
+.pill.CARGADA{background:var(--green-bg); color:var(--green)} .pill.VACÍA{background:#EAF2FF; color:var(--blue)} .pill.AVERIADA{background:var(--orange-bg); color:var(--orange)}
+.note{font-size:13px; color:var(--t2); background:#F5F5F7; border-radius:12px; padding:10px 12px; display:none; white-space:pre-wrap}
+.rec.expanded .note{display:block; animation:noteIn .28s var(--spring) both}
+@keyframes noteIn{from{opacity:0; transform:translateY(4px)} to{opacity:1; transform:none}}
+.rec-actions{display:none; gap:8px; justify-content:flex-end} .rec.expanded .rec-actions{display:flex}
+.mini{padding:8px 14px; border-radius:99px; border:1px solid var(--line); background:#fff; font-size:12px; font-weight:600; min-height:36px}
+.empty{grid-column:1 / -1; padding:48px 20px; text-align:center; background:#fff; display:flex; flex-direction:column; align-items:center; gap:10px}
+.empty-ico{width:56px; height:56px; border-radius:50%; background:var(--bg); display:grid; place-items:center; font-size:26px}
 
-.empty{grid-column:1 / -1; padding:48px 20px; text-align:center; display:flex; flex-direction:column; align-items:center; gap:12px; background:white}
-.empty-ic{width:56px; height:56px; border-radius:50%; background:var(--bg); display:grid; place-items:center; font-size:24px}
+/* MODALS - bottom sheet on mobile */
+.modal{position:fixed; inset:0; display:none; align-items:flex-end; justify-content:center; z-index:80; padding:10px}
+.modal.open{display:flex} .bg{position:absolute; inset:0; background:rgba(0,0,0,.32); backdrop-filter:blur(20px)}
+.card{position:relative; width:min(100%,520px); background:#fff; border-radius:28px; box-shadow:0 30px 80px rgba(0,0,0,.28); padding:18px; display:flex; flex-direction:column; gap:14px; animation:sheetUp .5s var(--spring) both}
+@keyframes sheetUp{from{transform:translateY(28px) scale(.98); opacity:0} to{transform:none; opacity:1}}
+.toast{position:fixed; left:50%; top:14px; transform:translateX(-50%) translateY(-10px) scale(.96); padding:11px 16px; border-radius:99px; background:rgba(29,29,31,.92); color:#fff; font-size:13px; font-weight:600; box-shadow:0 12px 30px rgba(0,0,0,.22); opacity:0; pointer-events:none; z-index:100; transition:all .45s var(--spring)}
+.toast.show{opacity:1; transform:translateX(-50%) translateY(0) scale(1)} .toast.success{background:rgba(18,183,106,.94)} .toast.error{background:rgba(255,59,48,.92)}
+.shake{animation:shake .36s var(--spring) both} @keyframes shake{0%,100%{transform:translateX(0)} 20%,60%{transform:translateX(-4px)} 40%,80%{transform:translateX(4px)}}
 
-/* Modals - Apple sheet */
-.modal{position:fixed; inset:0; display:none; align-items:flex-end; justify-content:center; z-index:80; padding:12px}
-.modal.open{display:flex}
-.modal-bg{position:absolute; inset:0; background:rgba(0,0,0,.32); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); animation:bgIn .3s var(--spring) both}
-@keyframes bgIn{from{opacity:0} to{opacity:1}}
-.modal-card{
-  position:relative; width:min(100%,520px); background:white; border-radius:28px 28px 28px 28px;
-  box-shadow:0 30px 80px rgba(0,0,0,.28); padding:20px; display:flex; flex-direction:column; gap:14px;
-  animation:sheetIn .5s var(--spring) both;
+/* ========= MOBILE ADAPTATION ========= */
+@media(max-width:600px){
+  .app{padding:8px 8px calc(24px + env(safe-area-inset-bottom, 0px));}
+  .h-wrap{top:8px; margin-bottom:12px; padding:0}
+  .hdr{padding:10px 12px; border-radius:18px; gap:8px}
+  .brand{gap:8px; flex:1; min-width:0}
+  .code-badge{padding:5px 7px; font-size:9px}
+  .logo{font-size:16px}
+  .operario{padding:6px 10px} .operario input{width:76px; font-size:12px}
+  .sheet{border-radius:24px; margin:0 0 12px}
+  .sheet-head{padding:12px 14px}
+  .screens{min-height:168px}
+  .screen{padding:18px 14px; gap:12px}
+  .input-wrap{max-width:none}
+  .btn{width:100%; min-height:50px; font-size:16px}
+  .btn-ghost{width:auto; min-height:40px}
+  .states{gap:6px; padding:3px; border-radius:16px}
+  .state{padding:10px 2px 8px; min-height:68px; border-radius:12px}
+  .state .ico{width:24px; height:24px; font-size:12px}
+  .state .lb{font-size:10.5px} .state .sl{display:none}
+  .actions{flex-direction:row; gap:8px; margin:10px 0 16px}
+  .actions .btn{flex:1; min-height:48px; padding:12px 10px; font-size:14px}
+  .sum-head{margin:0 2px 8px}
+  .chart-card{padding:12px; border-radius:18px}
+  .widgets{grid-template-columns:repeat(2,1fr); gap:8px}
+  .w{padding:10px 10px 8px; border-radius:18px} .w-v{font-size:22px}
+  .list{border-radius:22px}
+  .list-head{flex-direction:column; align-items:stretch; gap:10px; padding:10px 12px}
+  .seg-tabs{overflow-x:auto; scrollbar-width:none; -webkit-overflow-scrolling:touch; flex-wrap:nowrap; gap:2px}
+  .seg-tabs::-webkit-scrollbar{display:none}
+  .seg-tabs button{flex:0 0 auto; padding:8px 12px; font-size:12px}
+  .search{max-width:none; width:100%; padding:10px 12px}
+  .call{width:100%; justify-content:center; padding:11px; min-height:44px}
+  .records{grid-template-columns:1fr; gap:1px}
+  .rec{padding:14px 12px}
+  .modal{padding:0; align-items:flex-end}
+  .card{border-radius:24px 24px 0 0; width:100%; max-width:none; padding:16px 14px calc(16px + env(safe-area-inset-bottom));}
+  .toast{top:calc(10px + env(safe-area-inset-top, 0px)); font-size:12px; padding:10px 14px; max-width:90vw; text-align:center}
 }
-@keyframes sheetIn{from{transform:translateY(28px) scale(.98); opacity:0} to{transform:translateY(0) scale(1); opacity:1}}
-.modal-title{font-weight:700; font-size:18px; letter-spacing:-.02em}
-.modal-row{display:grid; grid-template-columns:1fr 1fr; gap:10px} @media(max-width:520px){ .modal-row{grid-template-columns:1fr} }
-
-/* Island toast - Apple */
-.toast{
-  position:fixed; left:50%; top:16px; transform:translateX(-50%) translateY(-12px) scale(.96);
-  padding:11px 16px; border-radius:99px; background:rgba(29,29,31,.92); color:white;
-  font-size:13px; font-weight:600; letter-spacing:-.01em;
-  box-shadow:0 12px 30px rgba(0,0,0,.22); opacity:0; pointer-events:none; z-index:100;
-  transition:all .45s var(--spring); display:flex; align-items:center; gap:8px;
+@media(max-width:360px){
+  .states{padding:2px} .state{padding:8px 2px 6px} .state .lb{font-size:9.5px}
+  .operario input{width:64px}
 }
-.toast.show{opacity:1; transform:translateX(-50%) translateY(0) scale(1)}
-.toast.success{background:rgba(29,157,110,.94)} .toast.error{background:rgba(255,59,48,.92)}
-
-.call-btn{
-  display:inline-flex; align-items:center; gap:6px; padding:6px 12px; border-radius:99px;
-  background:var(--bg); border:1px solid var(--line); font-size:13px; font-weight:600; text-decoration:none; color:var(--text);
-}
-.call-btn.has-alert{background:rgba(255,59,48,.10); border-color:rgba(255,59,48,.18); color:#FF3B30}
-.badge-dot{width:6px; height:6px; border-radius:50%; background:#FF3B30; display:inline-block}
-
-.meta-line{font-size:14px; color:var(--text-2); display:flex; gap:8px; align-items:center; justify-content:center; flex-wrap:wrap}
-.meta-line strong{color:var(--text)}
 </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
 <div id="toast" class="toast">Guardado</div>
-
 <div class="app">
-  <div class="header-wrap">
-    <header class="header" id="hdr">
-      <div class="brand"><span class="badge-code">CODE</span><div class="logo"><span class="xpo">XPO</span>&nbsp;<span class="log">LOGISTICS</span></div></div>
-      <div class="sub">Registro de Plataformas</div>
-    </header>
-  </div>
+  <div class="h-wrap"><header class="hdr" id="hdr">
+    <div class="brand"><span class="code-badge">CODE</span><div class="logo"><b>XPO</b>&nbsp;LOGISTICS</div></div>
+    <label class="operario"><span>👤</span><input id="operarioInput" placeholder="Operario" maxlength="20" autocomplete="off"/></label>
+  </header></div>
 
   <section class="sheet" id="flowCard">
-    <div class="sheet-head">
-      <div class="chevron">‹</div>
-      <div class="sheet-title" id="flowTitle">Matrícula</div>
-      <div class="chevron">›</div>
-    </div>
+    <div class="sheet-head"><div class="dot-mini">‹</div><div class="sheet-title" id="flowTitle">Matrícula</div><div class="dot-mini">›</div></div>
     <div class="screens">
       <div class="screen active" id="s1">
-        <div class="input-wrap"><input id="matriculaInput" class="input-apple" placeholder="Matrícula — ej. 1234 BCD" maxlength="20" autocomplete="off" autofocus/></div>
-        <button class="btn-apple btn-primary" id="toS2">Continuar</button>
-        <div style="font-size:12px; color:var(--text-3)">Pulsa ⏎ para continuar</div>
+        <div class="input-wrap"><input id="matriculaInput" class="input-apple" placeholder="Matrícula — 1234 BCD" maxlength="20" autocomplete="off" autocapitalize="characters" enterkeyhint="next"/></div>
+        <button class="btn btn-primary" id="toS2" style="width:100%; max-width:440px">Continuar →</button>
+        <div style="font-size:11px; color:var(--t3); text-align:center">VACÍA guarda directo • CARGADA/AVERIADA piden detalle</div>
       </div>
       <div class="screen" id="s2">
-        <div class="meta-line"><span>Matrícula:</span><strong id="matriculaDisplay">—</strong></div>
-        <div class="state-grid">
-          <div class="state-card" data-est="CARGADA" id="btnCargada"><span class="dot"></span><span class="label">CARGADA</span><span style="font-size:11px; color:var(--text-3)">Lista para salir</span></div>
-          <div class="state-card" data-est="VACÍA" id="btnVacia"><span class="dot"></span><span class="label">VACÍA</span><span style="font-size:11px; color:var(--text-3)">Disponible</span></div>
-          <div class="state-card" data-est="AVERIADA" id="btnAveriada"><span class="dot"></span><span class="label">AVERIADA</span><span style="font-size:11px; color:var(--text-3)">Requiere revisión</span></div>
+        <div style="font-size:13px; color:var(--t2)">Matrícula <b id="matriculaDisplay" style="color:var(--t1)">—</b></div>
+        <div class="states" id="statesRow">
+          <div class="state" data-est="CARGADA" id="btnCargada"><div class="ico">✓</div><div class="lb">CARGADA</div><div class="sl">Lista</div></div>
+          <div class="state" data-est="VACÍA" id="btnVacia"><div class="ico">◍</div><div class="lb">VACÍA</div><div class="sl">Directo</div></div>
+          <div class="state" data-est="AVERIADA" id="btnAveriada"><div class="ico">!</div><div class="lb">AVERIADA</div><div class="sl">Revisión</div></div>
         </div>
-        <button class="btn-apple btn-ghost" id="back1">← Volver</button>
+        <button class="btn btn-ghost" id="back1">← Volver</button>
       </div>
       <div class="screen" id="s3">
-        <div class="meta-line"><strong id="matriculaDisplay2">—</strong><span style="opacity:.3">·</span><strong id="estadoDisplay">—</strong></div>
-        <div class="input-wrap"><textarea id="contenidoInput" class="textarea-apple" placeholder="Describe el contenido o la avería…"></textarea></div>
-        <div style="display:flex; gap:10px; flex-wrap:wrap; justify-content:center">
-          <button class="btn-apple btn-secondary" id="back2">Volver</button>
-          <button class="btn-apple btn-primary" id="btnRegistrar">Registrar</button>
-        </div>
+        <div style="font-size:13px; color:var(--t2)"><b id="matriculaDisplay2">—</b> · <b id="estadoDisplay">—</b></div>
+        <div class="input-wrap"><textarea id="contenidoInput" class="textarea-apple" placeholder="Describe el contenido o avería…" enterkeyhint="done"></textarea></div>
+        <div style="display:flex; gap:10px; width:100%; max-width:440px"><button class="btn btn-secondary" style="flex:1" id="back2">Volver</button><button class="btn btn-primary" style="flex:1" id="btnRegistrar">Registrar</button></div>
       </div>
     </div>
-    <div class="page-control"><div class="page-dot active" id="d1"></div><div class="page-dot" id="d2"></div><div class="page-dot" id="d3"></div></div>
+    <div class="page"><div class="pd active" id="d1"></div><div class="pd" id="d2"></div><div class="pd" id="d3"></div></div>
   </section>
 
   <div class="actions">
-    <button class="btn-apple btn-secondary" id="genPdf">Generar PDF</button>
-    <button class="btn-apple btn-danger" id="clearAll">Limpiar</button>
+    <button class="btn btn-secondary" id="genPdf">📄 PDF original</button>
+    <button class="btn btn-danger" id="clearAll">🗑️ Limpiar</button>
   </div>
 
   <section class="summary">
-    <div class="summary-title">Resumen de hoy</div>
-    <div class="widget-grid">
-      <div class="widget" data-k="CARGADA"><span class="k">Cargadas</span><span class="v" id="cargadasCount">0</span></div>
-      <div class="widget" data-k="VACÍA"><span class="k">Vacías</span><span class="v" id="vaciasCount">0</span></div>
-      <div class="widget" data-k="AVERIADA"><span class="k">Averiadas</span><span class="v" id="averiadasCount">0</span></div>
-      <div class="widget" data-k="TOTAL"><span class="k">Total</span><span class="v" id="totalCount">0</span></div>
+    <div class="sum-head"><div class="sum-title">Resumen de hoy</div><div class="sum-date" id="sumDate"></div></div>
+    <div class="chart-card">
+      <div class="chart-track" id="chartTrack"><div class="seg c" id="segC"></div><div class="seg v" id="segV"></div><div class="seg a" id="segA"></div></div>
+      <div class="chart-legend" id="chartLegend"></div>
+    </div>
+    <div class="widgets">
+      <div class="w" data-k="CARGADA"><div class="w-top"><div class="w-ico">✓</div><div class="w-k">Cargadas</div></div><div class="w-v" id="cargadasCount">0</div><div class="w-foot"><b id="pCargadas">0%</b></div></div>
+      <div class="w" data-k="VACÍA"><div class="w-top"><div class="w-ico">◍</div><div class="w-k">Vacías</div></div><div class="w-v" id="vaciasCount">0</div><div class="w-foot"><b id="pVacias">0%</b></div></div>
+      <div class="w" data-k="AVERIADA"><div class="w-top"><div class="w-ico">!</div><div class="w-k">Averiadas</div></div><div class="w-v" id="averiadasCount">0</div><div class="w-foot"><b id="pAveriadas">0%</b></div></div>
+      <div class="w" data-k="TOTAL"><div class="w-top"><div class="w-ico">≡</div><div class="w-k">Total</div></div><div class="w-v" id="totalCount">0</div><div class="w-foot"><span id="totalSub">0 plataformas</span></div></div>
     </div>
   </section>
 
-  <section class="list-wrap" id="compactPanel">
+  <section class="list">
     <div class="list-head">
-      <div class="segmented" role="tablist">
-        <button class="active" data-tab="TODAS">Todo <span id="bAll" style="opacity:.6; margin-left:4px">0</span></button>
-        <button data-tab="CARGADA">Cargadas <span id="bCargadas" style="opacity:.6; margin-left:4px">0</span></button>
-        <button data-tab="VACÍA">Vacías <span id="bVacias" style="opacity:.6; margin-left:4px">0</span></button>
-        <button data-tab="AVERIADA">Averiadas <span id="bAveriadas" style="opacity:.6; margin-left:4px">0</span></button>
+      <div class="seg-tabs" role="tablist">
+        <button class="active" data-tab="TODAS">Todo <span id="bAll">0</span></button>
+        <button data-tab="CARGADA">Cargadas <span id="bCargadas">0</span></button>
+        <button data-tab="VACÍA">Vacías <span id="bVacias">0</span></button>
+        <button data-tab="AVERIADA">Averiadas <span id="bAveriadas">0</span></button>
       </div>
-      <div style="display:flex; gap:8px; align-items:center; flex:1; justify-content:flex-end">
-        <div class="search-apple">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="6"/><path d="m21 21-4.3-4.3"/></svg>
-          <input id="searchInput" type="search" placeholder="Buscar" autocomplete="off"/>
-        </div>
-        <a href="tel:942355219" class="call-btn" id="callBtn">📞 Reclamar <span id="callBadge" class="badge-dot" style="display:none"></span></a>
+      <div style="display:flex; gap:8px; flex:1; justify-content:flex-end; flex-wrap:wrap">
+        <label class="search"><span>🔍</span><input id="searchInput" type="search" placeholder="Buscar matrícula" autocomplete="off"/></label>
+        <a href="tel:942355219" class="call" id="callBtn">📞 Reclamar <span id="callBadge" style="display:none">•</span></a>
       </div>
     </div>
     <div class="records" id="recordsContainer"></div>
   </section>
 </div>
 
-<div class="modal" id="editModal">
-  <div class="modal-bg"></div>
-  <div class="modal-card" role="dialog" aria-modal="true">
-    <div class="modal-title">Editar registro</div>
-    <div class="modal-row">
-      <input class="input-apple" id="editMatricula" placeholder="Matrícula"/>
-      <select id="editEstado" class="input-apple">
-        <option value="CARGADA">CARGADA</option>
-        <option value="VACÍA">VACÍA</option>
-        <option value="AVERIADA">AVERIADA</option>
-      </select>
-    </div>
-    <textarea id="editContenido" class="textarea-apple" placeholder="Contenido"></textarea>
-    <div style="display:flex; gap:10px; justify-content:flex-end">
-      <button class="btn-apple btn-secondary" id="editCancel">Cancelar</button>
-      <button class="btn-apple btn-primary" id="editSave">Guardar</button>
-    </div>
-  </div>
-</div>
+<div class="modal" id="editModal"><div class="bg"></div><div class="card" role="dialog" aria-modal="true">
+  <div style="font-weight:700; font-size:18px">Editar registro</div>
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px"><input id="editMatricula" class="input-apple"/><select id="editEstado" class="input-apple"><option value="CARGADA">CARGADA</option><option value="VACÍA">VACÍA</option><option value="AVERIADA">AVERIADA</option></select></div>
+  <textarea id="editContenido" class="textarea-apple" placeholder="Contenido"></textarea>
+  <div style="display:flex; gap:10px; justify-content:flex-end"><button class="btn btn-secondary" id="editCancel">Cancelar</button><button class="btn btn-primary" id="editSave">Guardar</button></div>
+</div></div>
 
-<div class="modal" id="confirmModal">
-  <div class="modal-bg"></div>
-  <div class="modal-card" role="dialog" aria-modal="true" style="max-width:400px; text-align:center">
-    <div style="width:44px; height:44px; border-radius:50%; background:rgba(255,59,48,.12); display:grid; place-items:center; margin:0 auto">🗑️</div>
-    <div class="modal-title" style="text-align:center">¿Borrar todo?</div>
-    <div style="font-size:14px; color:var(--text-2); text-align:center; line-height:1.4">Se eliminarán todos los registros guardados en este dispositivo. No se puede deshacer.</div>
-    <div style="display:flex; gap:10px">
-      <button class="btn-apple btn-secondary" style="flex:1" id="confirmCancel">Cancelar</button>
-      <button class="btn-apple btn-danger" style="flex:1" id="confirmOk">Borrar</button>
-    </div>
-  </div>
-</div>
+<div class="modal" id="confirmModal"><div class="bg"></div><div class="card" style="max-width:380px; text-align:center">
+  <div style="width:48px; height:48px; border-radius:50%; background:rgba(255,59,48,.12); display:grid; place-items:center; margin:0 auto">🗑️</div>
+  <div style="font-weight:700; text-align:center">¿Borrar todo?</div>
+  <div style="font-size:13px; color:var(--t2)">Se eliminarán todos los registros de este dispositivo.</div>
+  <div style="display:flex; gap:10px"><button class="btn btn-secondary" style="flex:1" id="confirmCancel">Cancelar</button><button class="btn btn-danger" style="flex:1" id="confirmOk">Borrar</button></div>
+</div></div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
 const $=id=>document.getElementById(id);
-const KEY='xpo-plataformas-v3', DRAFT='xpo-draft-v3';
+const KEY='xpo-mobile-final', DRAFT='xpo-draft-mobile', OP_KEY='xpo-operario';
 let data=[], curMat='', curEst='', curTab='TODAS', editId=null, q='';
 
 const load=()=>{ try{ const r=localStorage.getItem(KEY); data=r?JSON.parse(r):[]; if(!Array.isArray(data)) data=[]; }catch{ data=[]; } };
 const save=()=>{ try{ localStorage.setItem(KEY, JSON.stringify(data)); }catch{} };
 const toast=(m,type='default')=>{
   const el=$('toast'); el.textContent=m; el.className='toast show '+type;
-  clearTimeout(el._t); el._t=setTimeout(()=>el.classList.remove('show'), 2000);
+  clearTimeout(el._t); el._t=setTimeout(()=>el.classList.remove('show'), 2200);
   if(navigator.vibrate) navigator.vibrate(type==='error'?[30,30,30]:20);
 };
 const hour=()=> new Date().toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
 
 function showStep(n){
-  const titles=['Matrícula','Estado','Detalle']; $('flowTitle').textContent=titles[n-1];
-  document.querySelectorAll('.screen').forEach((s,i)=>s.classList.toggle('active', i===n-1));
-  document.querySelectorAll('.page-dot').forEach((d,i)=>{
-    d.classList.toggle('active', i===n-1); d.classList.toggle('done', i<n-1);
-  });
-  if(n===1) setTimeout(()=>$('matriculaInput').focus(), 300);
+  $('flowTitle').textContent=['Matrícula','Estado','Detalle'][n-1];
+  document.querySelectorAll('.screen').forEach((s,i)=> s.classList.toggle('active', i===n-1));
+  document.querySelectorAll('.pd').forEach((d,i)=>{ d.classList.toggle('active', i===n-1); d.classList.toggle('done', i<n-1); });
+  if(n===1) setTimeout(()=>$('matriculaInput').focus(), 200);
 }
-
-function validMat(v){
-  const s=v.trim().toUpperCase();
-  if(!s) return {ok:false, m:'Escribe la matrícula'};
-  if(s.length<2) return {ok:false, m:'Matrícula muy corta'};
-  return {ok:true, v:s};
-}
+function validMat(v){ const s=v.trim().toUpperCase(); if(!s) return {ok:false, m:'Escribe la matrícula'}; if(s.length<2) return {ok:false, m:'Muy corta'}; return {ok:true, v:s}; }
 
 function goS2(){
   const r=validMat($('matriculaInput').value);
-  if(!r.ok){ toast(r.m,'error'); $('matriculaInput').focus(); return; }
+  if(!r.ok){ const el=$('matriculaInput'); el.classList.add('shake'); toast(r.m,'error'); setTimeout(()=>el.classList.remove('shake'),400); el.focus(); return; }
   curMat=r.v; $('matriculaDisplay').textContent=curMat; $('matriculaDisplay2').textContent=curMat; showStep(2);
 }
 function pickEst(est){
-  curEst=est; document.querySelectorAll('.state-card').forEach(c=>c.classList.toggle('selected', c.dataset.est===est));
+  curEst=est; document.querySelectorAll('.state').forEach(c=>c.classList.toggle('selected', c.dataset.est===est));
   $('estadoDisplay').textContent=est;
-  setTimeout(()=>showStep(3), 220);
+  if(est==='VACÍA'){
+    const rec={id:Date.now()+Math.random(), matricula:curMat, estado:'VACÍA', contenido:'', timestamp:hour(), iso:new Date().toISOString()};
+    data.push(rec); save();
+    $('matriculaInput').value=''; curMat=''; curEst=''; document.querySelectorAll('.state').forEach(c=>c.classList.remove('selected'));
+    try{ localStorage.removeItem(DRAFT); }catch{}
+    render(); toast('Vacía guardada ✓','success'); showStep(1); return;
+  }
+  setTimeout(()=>showStep(3), 180);
 }
 function register(){
   if(!curMat){ toast('Falta matrícula','error'); showStep(1); return; }
@@ -446,123 +366,193 @@ function register(){
   const rec={id:Date.now()+Math.random(), matricula:curMat, estado:curEst, contenido:cont, timestamp:hour(), iso:new Date().toISOString()};
   data.push(rec); save();
   $('matriculaInput').value=''; $('contenidoInput').value=''; curMat=''; curEst='';
-  document.querySelectorAll('.state-card').forEach(c=>c.classList.remove('selected'));
+  document.querySelectorAll('.state').forEach(c=>c.classList.remove('selected'));
   try{ localStorage.removeItem(DRAFT); }catch{}
   render(); toast('Registrado ✓','success'); showStep(1);
 }
+function animateCount(el,to){ const from=parseInt(el.textContent)||0; if(from===to) return; const t0=performance.now(), dur=480; const step=t=>{ const p=Math.min(1,(t-t0)/dur); const e=1-Math.pow(1-p,3); el.textContent=Math.round(from+(to-from)*e); if(p<1) requestAnimationFrame(step); }; requestAnimationFrame(step); }
 
 function render(){
-  const box=$('recordsContainer'); box.innerHTML='';
+  const box=$('recordsContainer');
   const base = curTab==='TODAS'? [...data].reverse() : [...data].filter(d=>d.estado===curTab).reverse();
   const filtered = q ? base.filter(d=> d.matricula.toLowerCase().includes(q) || (d.contenido||'').toLowerCase().includes(q)) : base;
-  const counts={
-    CARGADA:data.filter(d=>d.estado==='CARGADA').length,
-    VACÍA:data.filter(d=>d.estado==='VACÍA').length,
-    AVERIADA:data.filter(d=>d.estado==='AVERIADA').length,
-    TOTAL:data.length
-  };
-  $('cargadasCount').textContent=counts.CARGADA;
-  $('vaciasCount').textContent=counts.VACÍA;
-  $('averiadasCount').textContent=counts.AVERIADA;
-  $('totalCount').textContent=counts.TOTAL;
-  $('bAll').textContent=counts.TOTAL;
-  $('bCargadas').textContent=counts.CARGADA;
-  $('bVacias').textContent=counts.VACÍA;
-  $('bAveriadas').textContent=counts.AVERIADA;
-  const callBtn=$('callBtn'), badge=$('callBadge');
-  if(counts.AVERIADA>0){ callBtn.classList.add('has-alert'); badge.style.display='inline-block'; } else { callBtn.classList.remove('has-alert'); badge.style.display='none'; }
+  const cC=data.filter(d=>d.estado==='CARGADA').length, cV=data.filter(d=>d.estado==='VACÍA').length, cA=data.filter(d=>d.estado==='AVERIADA').length, tot=data.length;
+  animateCount($('cargadasCount'), cC); animateCount($('vaciasCount'), cV); animateCount($('averiadasCount'), cA); animateCount($('totalCount'), tot);
+  $('bAll').textContent=tot; $('bCargadas').textContent=cC; $('bVacias').textContent=cV; $('bAveriadas').textContent=cA;
+  $('pCargadas').textContent= tot? Math.round(cC/tot*100)+'%' : '0%';
+  $('pVacias').textContent= tot? Math.round(cV/tot*100)+'%' : '0%';
+  $('pAveriadas').textContent= tot? Math.round(cA/tot*100)+'%' : '0%';
+  $('totalSub').textContent= tot+' plataformas';
+  $('sumDate').textContent=new Date().toLocaleDateString('es-ES',{weekday:'short', day:'numeric', month:'short'});
+  const callBtn=$('callBtn'); if(cA>0){ callBtn.classList.add('has'); $('callBadge').style.display='inline'; } else { callBtn.classList.remove('has'); $('callBadge').style.display='none'; }
+  const totC=tot||1; $('segC').style.width=(cC/totC*100)+'%'; $('segV').style.width=(cV/totC*100)+'%'; $('segA').style.width=(cA/totC*100)+'%';
+  $('chartLegend').innerHTML=`<span class="legend"><i style="background:var(--green)"></i> Cargadas ${cC}</span><span class="legend"><i style="background:var(--blue)"></i> Vacías ${cV}</span><span class="legend"><i style="background:var(--orange)"></i> Averiadas ${cA}</span>`;
 
+  box.innerHTML='';
   if(!filtered.length){
     const em=document.createElement('div'); em.className='empty';
-    em.innerHTML=`<div class="empty-ic">📦</div><div style="font-weight:600">No hay registros</div><div style="font-size:13px; color:var(--text-3)">${q?`Sin resultados para "${q}"`:'Añade una plataforma para empezar'}</div>`;
+    em.innerHTML=`<div class="empty-ico">📦</div><div style="font-weight:600">No hay registros</div><div style="font-size:12px; color:var(--t3)">${q?`Sin resultados para "${q}"`:'Toca arriba para registrar'}</div>`;
     box.appendChild(em); return;
   }
   const frag=document.createDocumentFragment();
   filtered.forEach(it=>{
-    const cell=document.createElement('div'); cell.className='record-cell'; cell.dataset.id=it.id; cell.dataset.estado=it.estado;
-    const top=document.createElement('div'); top.className='record-top';
+    const cell=document.createElement('div'); cell.className='rec'; cell.dataset.id=it.id;
+    const top=document.createElement('div'); top.className='rec-top';
     const mat=document.createElement('div'); mat.className='mat'; mat.textContent=it.matricula;
-    const right=document.createElement('div'); right.className='meta-right';
+    const right=document.createElement('div'); right.className='right';
     const ts=document.createElement('div'); ts.className='ts'; ts.textContent=it.timestamp;
     const pill=document.createElement('div'); pill.className='pill '+it.estado; pill.textContent=it.estado;
     right.append(ts,pill); top.append(mat,right);
     const note=document.createElement('div'); note.className='note'; note.textContent=it.contenido||'— sin descripción —';
-    const acts=document.createElement('div'); acts.className='record-actions';
+    const acts=document.createElement('div'); acts.className='rec-actions';
     const b1=document.createElement('button'); b1.className='mini'; b1.textContent='Editar'; b1.dataset.act='edit';
     const b2=document.createElement('button'); b2.className='mini'; b2.textContent='Borrar'; b2.dataset.act='del';
-    acts.append(b1,b2);
-    cell.append(top,note,acts); frag.appendChild(cell);
+    acts.append(b1,b2); cell.append(top,note,acts); frag.appendChild(cell);
   });
   box.appendChild(frag);
 }
 
-function openEdit(id){
-  const r=data.find(d=>String(d.id)===String(id)); if(!r) return; editId=r.id;
-  $('editMatricula').value=r.matricula; $('editEstado').value=r.estado; $('editContenido').value=r.contenido||'';
-  $('editModal').classList.add('open');
-}
-function closeEdit(){ $('editModal').classList.remove('open'); editId=null; }
-function saveEdit(){
-  const mat=$('editMatricula').value.trim().toUpperCase();
-  if(mat.length<2){ toast('Matrícula inválida','error'); return; }
-  const idx=data.findIndex(d=>String(d.id)===String(editId)); if(idx<0) return;
-  data[idx].matricula=mat; data[idx].estado=$('editEstado').value; data[idx].contenido=$('editContenido').value.trim();
-  save(); render(); closeEdit(); toast('Actualizado','success');
-}
-function delOne(id){ data=data.filter(d=>String(d.id)!==String(id)); save(); render(); toast('Eliminado','success'); }
-
-function genPDF(){
+// PDF ORIGINAL EXACTO
+function generatePDF_ORIGINAL(){
   if(!data.length){ toast('No hay datos','error'); return; }
-  if(typeof window.jspdf==='undefined'){ toast('Cargando PDF…'); setTimeout(genPDF,500); return; }
+  if(typeof window.jspdf==='undefined'){ toast('Cargando PDF…'); setTimeout(generatePDF_ORIGINAL,500); return; }
   const {jsPDF}=window.jspdf; const doc=new jsPDF();
-  const TEXT=[29,29,31], MUTED=[110,110,115], LINE=[230,230,234];
-  doc.setFillColor(255,255,255); doc.roundedRect(10,8,190,36,5,5,'F'); doc.setDrawColor(...LINE); doc.roundedRect(10,8,190,36,5,5);
+  const TEXT=[17,20,24], MUTED=[106,111,117], LINE=[230,230,234], PANEL=[255,255,255], SOFT=[245,246,247];
+  const BADGE_RED=[254,226,226], BADGE_GREEN=[237,249,237], BADGE_ORNG=[255,245,230];
+  const cargadas=data.filter(p=>p.estado==='CARGADA'), vacias=data.filter(p=>p.estado==='VACÍA'), averiadas=data.filter(p=>p.estado==='AVERIADA');
+  const registrador=($('operarioInput').value||localStorage.getItem(OP_KEY)||'OPERARIO').trim()||'OPERARIO';
+  doc.setFillColor(...PANEL); doc.roundedRect(10,8,190,36,5,5,'F');
+  doc.setDrawColor(...LINE); doc.roundedRect(10,8,190,36,5,5); doc.setDrawColor(210,210,214); doc.line(10,44,200,44);
+  doc.setDrawColor(210,210,214); doc.setLineWidth(0.6); doc.line(14,12,14,22);
+  doc.setFont('helvetica','bold'); doc.setFontSize(6.5); doc.setTextColor(120,124,130); doc.text('REGISTRADO POR',18,15);
+  doc.setFont('helvetica','bold'); doc.setFontSize(9); doc.setTextColor(35,35,38); doc.text(registrador.toUpperCase(),18,20);
   doc.setFont('helvetica','bold'); doc.setFontSize(11); doc.setTextColor(40,40,40); doc.text('CODE',195,14,{align:'right'});
-  doc.setFontSize(18); const full='XPO LOGISTICS'; const xp='XPO '; const sx=105-doc.getTextWidth(full)/2; doc.setTextColor(227,6,19); doc.text(xp,sx,22); doc.setTextColor(...TEXT); doc.text('LOGISTICS',sx+doc.getTextWidth(xp),22);
-  const fecha=new Date().toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'long',year:'numeric'}); doc.setFont('helvetica','normal'); doc.setFontSize(10); doc.setTextColor(150,150,155); doc.text(fecha.charAt(0).toUpperCase()+fecha.slice(1),105,28,{align:'center'});
-  let y=46;
-  const groups=[['CARGADAS',data.filter(d=>d.estado==='CARGADA')],['VACÍAS',data.filter(d=>d.estado==='VACÍA')],['AVERIADAS',data.filter(d=>d.estado==='AVERIADA')]];
-  groups.forEach(([title, arr])=>{
-    if(!arr.length) return;
-    if(y>250){ doc.addPage(); y=20; }
-    doc.setFont('helvetica','bold'); doc.setFontSize(11); doc.setTextColor(...TEXT); doc.text(`${title} (${arr.length})`,15,y); y+=7;
-    doc.setFillColor(245,245,247); doc.rect(15,y-4,180,7,'F'); doc.setFont('helvetica','bold'); doc.setFontSize(8); doc.setTextColor(...MUTED); doc.text('MATRÍCULA',17,y); doc.text('DETALLE',55,y); y+=7;
+  doc.setFont('helvetica','bold'); doc.setFontSize(18);
+  const full='XPO LOGISTICS'; const xpoPart='XPO '; const startX=105-(doc.getTextWidth(full)/2);
+  doc.setTextColor(229,57,53); doc.text(xpoPart,startX,22);
+  doc.setTextColor(...TEXT); doc.text('LOGISTICS',startX+doc.getTextWidth(xpoPart),22);
+  const fecha=new Date(); const fechaLarga=fecha.toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  const fechaFinal=fechaLarga.charAt(0).toUpperCase()+fechaLarga.slice(1);
+  doc.setFont('helvetica','normal'); doc.setFontSize(10); doc.setTextColor(150,150,155); doc.text(fechaFinal,105,28,{align:'center'});
+  function drawBadge(x,y,w,h,bg,label,num,numColor){
+    doc.setFillColor(...bg); doc.roundedRect(x,y,w,h,h/2,h/2,'F'); doc.setDrawColor(...LINE); doc.roundedRect(x,y,w,h,h/2,h/2);
+    doc.setFont('helvetica','bold'); doc.setFontSize(8.5); doc.setTextColor(...TEXT); doc.text(label,x+7,y+h/2+2,{align:'left'});
+    doc.setTextColor(...numColor); doc.text(String(num),x+w-7,y+h/2+2,{align:'right'});
+  }
+  const usable=180, gap=8, w=(usable-gap*2)/3, h=10, y=32; let x=15;
+  drawBadge(x,y,w,h,BADGE_RED,'CARGADAS',cargadas.length,[180,30,50]); x+=w+gap;
+  drawBadge(x,y,w,h,BADGE_GREEN,'VACÍAS',vacias.length,[16,185,129]); x+=w+gap;
+  drawBadge(x,y,w,h,BADGE_ORNG,'AVERIADAS',averiadas.length,[200,110,20]);
+  let yPosition=52; const bottomMargin=260;
+  function createTwoColumnTables(leftTitle,leftData,rightTitle,rightData,startY){
+    let currentY=startY; const leftX=15, rightX=110, columnWidth=85;
+    doc.setFont('helvetica','bold'); doc.setFontSize(12); doc.setTextColor(...TEXT);
+    if(leftData.length>0) doc.text((leftTitle+' ('+leftData.length+')').toUpperCase(),leftX,currentY);
+    if(rightData.length>0) doc.text((rightTitle+' ('+rightData.length+')').toUpperCase(),rightX,currentY);
+    currentY+=8;
+    if(leftData.length>0){
+      doc.setFillColor(...SOFT); doc.rect(leftX,currentY-4,columnWidth,7,'F');
+      doc.setFont('helvetica','bold'); doc.setFontSize(9); doc.setTextColor(...MUTED);
+      doc.text('MATRÍCULA',leftX+2,currentY); doc.text('CONTENIDO',leftX+35,currentY);
+    }
+    if(rightData.length>0){
+      doc.setFillColor(...SOFT); doc.rect(rightX,currentY-4,columnWidth,7,'F');
+      doc.setFont('helvetica','bold'); doc.setFontSize(9); doc.setTextColor(...MUTED);
+      doc.text('MATRÍCULA',rightX+2,currentY);
+    }
+    currentY+=8; doc.setFont('helvetica','normal'); doc.setFontSize(8); doc.setTextColor(...TEXT);
+    const maxRows=Math.max(leftData.length,rightData.length);
+    for(let i=0;i<maxRows;i++){
+      if(i%2===0){
+        if(leftData[i]){doc.setFillColor(252,253,255);doc.rect(leftX,currentY-3,columnWidth,6,'F');}
+        if(rightData[i]){doc.setFillColor(252,253,255);doc.rect(rightX,currentY-3,columnWidth,6,'F');}
+      }
+      if(leftData[i]){
+        doc.text(leftData[i].matricula.toUpperCase(),leftX+2,currentY);
+        if(leftData[i].contenido){
+          const lines=doc.splitTextToSize(leftData[i].contenido.toUpperCase(),45);
+          doc.text(lines,leftX+35,currentY);
+          if(lines.length>1) currentY+=(lines.length-1)*3;
+        }
+      }
+      if(rightData[i]){ doc.text(rightData[i].matricula.toUpperCase(),rightX+2,currentY); }
+      currentY+=6;
+      if(currentY>bottomMargin){ doc.addPage(); currentY=30; }
+    }
+    return currentY+10;
+  }
+  function createSingleTable(title,data,startY){
+    let currentY=startY; if(data.length===0) return currentY;
+    doc.setFont('helvetica','bold'); doc.setFontSize(12); doc.setTextColor(...TEXT); doc.text((title+' ('+data.length+')').toUpperCase(),15,currentY); currentY+=8;
+    doc.setFillColor(...SOFT); doc.rect(15,currentY-4,180,7,'F');
+    doc.setFont('helvetica','bold'); doc.setFontSize(9); doc.setTextColor(...MUTED); doc.text('MATRÍCULA',17,currentY); doc.text('DESCRIPCIÓN',70,currentY); currentY+=8;
     doc.setFont('helvetica','normal'); doc.setFontSize(8); doc.setTextColor(...TEXT);
-    arr.forEach((it,i)=>{ if(i%2===0){ doc.setFillColor(251,251,253); doc.rect(15,y-3,180,6,'F'); } doc.text(it.matricula,17,y); if(it.contenido){ const lines=doc.splitTextToSize(it.contenido,120); doc.text(lines,55,y); y+=(lines.length-1)*3; } y+=6; if(y>270){ doc.addPage(); y=20; } });
-    y+=6;
-  });
-  const name='XPO_'+new Date().toLocaleDateString('es-ES').replace(/\//g,'-')+'.pdf'; doc.save(name); toast('PDF generado','success');
+    data.forEach((platform,index)=>{
+      if(index%2===0){doc.setFillColor(252,253,255);doc.rect(15,currentY-3,180,6,'F');}
+      doc.text(platform.matricula.toUpperCase(),17,currentY);
+      if(platform.contenido){
+        const lines=doc.splitTextToSize(platform.contenido.toUpperCase(),120);
+        doc.text(lines,70,currentY);
+        if(lines.length>1) currentY+=(lines.length-1)*3;
+      }
+      currentY+=6;
+      if(currentY>bottomMargin){ doc.addPage(); currentY=30; }
+    });
+    return currentY+10;
+  }
+  if(cargadas.length>0||vacias.length>0){ yPosition=createTwoColumnTables('PLATAFORMAS CARGADAS',cargadas,'PLATAFORMAS VACÍAS',vacias,yPosition); }
+  if(averiadas.length>0){ yPosition=createSingleTable('PLATAFORMAS AVERIADAS',averiadas,yPosition); }
+  const pageCount=doc.internal.getNumberOfPages();
+  for(let i=1;i<=pageCount;i++){
+    doc.setPage(i); doc.setFont('helvetica','normal'); doc.setFontSize(8); doc.setTextColor(100,100,110);
+    doc.text('© 2026 XPO LOGISTICS – Informe interno',20,285);
+    doc.setTextColor(60,90,180);
+    doc.textWithLink('CODE.COM',105,285,{url:'https://vbenyx.github.io/XPO/', align:'center'});
+    doc.setTextColor(100,100,110); doc.text('Página '+i+' de '+pageCount,190,285,{align:'right'});
+  }
+  const exportDateForName=new Date().toLocaleDateString('es-ES',{day:'2-digit',month:'2-digit',year:'numeric'}).replace(/\//g,'-');
+  doc.save('reporte_plataformas_'+exportDateForName+'.pdf');
 }
 
 document.addEventListener('DOMContentLoaded', ()=>{
   load(); render();
-  // draft
-  try{ const d=JSON.parse(localStorage.getItem(DRAFT)||'{}'); if(d.m) $('matriculaInput').value=d.m; if(d.c) $('contenidoInput').value=d.c; if(d.m){ curMat=d.m.toUpperCase(); $('matriculaDisplay').textContent=curMat; $('matriculaDisplay2').textContent=curMat; } if(d.e){ curEst=d.e; document.querySelectorAll('.state-card').forEach(c=>c.classList.toggle('selected', c.dataset.est===d.e)); $('estadoDisplay').textContent=d.e; } }catch{}
+  try{
+    const op=localStorage.getItem(OP_KEY); if(op) $('operarioInput').value=op;
+    const d=JSON.parse(localStorage.getItem(DRAFT)||'{}');
+    if(d.m) $('matriculaInput').value=d.m; if(d.c) $('contenidoInput').value=d.c;
+    if(d.m){ curMat=d.m.toUpperCase(); $('matriculaDisplay').textContent=curMat; $('matriculaDisplay2').textContent=curMat; }
+    if(d.e){ curEst=d.e; document.querySelectorAll('.state').forEach(c=>c.classList.toggle('selected', c.dataset.est===d.e)); $('estadoDisplay').textContent=d.e; }
+  }catch{}
   const saveDraft=()=>{ try{ localStorage.setItem(DRAFT, JSON.stringify({m:$('matriculaInput').value, c:$('contenidoInput').value, e:curEst})); }catch{} };
+  const saveOp=()=>{ try{ localStorage.setItem(OP_KEY, $('operarioInput').value.trim()); }catch{} };
   $('matriculaInput').addEventListener('input', saveDraft); $('contenidoInput').addEventListener('input', saveDraft);
+  $('operarioInput').addEventListener('input', saveOp);
   $('toS2').addEventListener('click', goS2);
   $('matriculaInput').addEventListener('keydown', e=>{ if(e.key==='Enter'){ e.preventDefault(); goS2(); } });
   $('back1').addEventListener('click', ()=>showStep(1)); $('back2').addEventListener('click', ()=>showStep(2));
-  document.querySelectorAll('.state-card').forEach(c=> c.addEventListener('click', ()=>{ pickEst(c.dataset.est); saveDraft(); }));
+  document.querySelectorAll('.state').forEach(c=> c.addEventListener('click', ()=>{ pickEst(c.dataset.est); saveDraft(); }));
   $('btnRegistrar').addEventListener('click', register);
-  $('genPdf').addEventListener('click', genPDF);
+  $('genPdf').addEventListener('click', generatePDF_ORIGINAL);
   $('searchInput').addEventListener('input', e=>{ q=e.target.value.trim().toLowerCase(); render(); });
-  document.querySelectorAll('.segmented [data-tab]').forEach(b=> b.addEventListener('click', ()=>{ document.querySelectorAll('.segmented [data-tab]').forEach(x=>x.classList.remove('active')); b.classList.add('active'); curTab=b.dataset.tab; render(); }));
+  document.querySelectorAll('.seg-tabs [data-tab]').forEach(b=> b.addEventListener('click', ()=>{ document.querySelectorAll('.seg-tabs [data-tab]').forEach(x=>x.classList.remove('active')); b.classList.add('active'); curTab=b.dataset.tab; render(); }));
   $('recordsContainer').addEventListener('click', e=>{
-    const cell=e.target.closest('.record-cell'); if(!cell) return;
-    const id=cell.dataset.id;
-    const act=e.target.dataset.act;
-    if(act==='edit'){ openEdit(id); return; }
-    if(act==='del'){ delOne(id); return; }
+    const cell=e.target.closest('.rec'); if(!cell) return; const id=cell.dataset.id; const act=e.target.dataset.act;
+    if(act==='edit'){ const r=data.find(d=>String(d.id)===String(id)); if(!r) return; editId=r.id; $('editMatricula').value=r.matricula; $('editEstado').value=r.estado; $('editContenido').value=r.contenido||''; $('editModal').classList.add('open'); return; }
+    if(act==='del'){ data=data.filter(d=>String(d.id)!==String(id)); save(); render(); toast('Eliminado','success'); return; }
     cell.classList.toggle('expanded');
   });
-  $('editCancel').addEventListener('click', closeEdit); $('editSave').addEventListener('click', saveEdit);
-  $('editModal').addEventListener('click', e=>{ if(e.target.classList.contains('modal-bg')) closeEdit(); });
+  $('editCancel').addEventListener('click', ()=> $('editModal').classList.remove('open'));
+  $('editSave').addEventListener('click', ()=>{
+    const mat=$('editMatricula').value.trim().toUpperCase(); if(mat.length<2){ toast('Matrícula inválida','error'); return; }
+    const idx=data.findIndex(d=>String(d.id)===String(editId)); if(idx<0) return;
+    data[idx].matricula=mat; data[idx].estado=$('editEstado').value; data[idx].contenido=$('editContenido').value.trim(); save(); render(); $('editModal').classList.remove('open'); toast('Actualizado','success');
+  });
+  $('editModal').addEventListener('click', e=>{ if(e.target.classList.contains('bg')) e.currentTarget.classList.remove('open'); });
   $('clearAll').addEventListener('click', ()=>{ if(!data.length){ toast('No hay registros','error'); return; } $('confirmModal').classList.add('open'); });
   $('confirmCancel').addEventListener('click', ()=> $('confirmModal').classList.remove('open'));
   $('confirmOk').addEventListener('click', ()=>{ data=[]; save(); render(); $('confirmModal').classList.remove('open'); try{localStorage.removeItem(DRAFT)}catch{}; toast('Borrado','success'); });
-  $('confirmModal').addEventListener('click', e=>{ if(e.target.classList.contains('modal-bg')) e.currentTarget.classList.remove('open'); });
-  document.addEventListener('keydown', e=>{ if(e.key==='Escape'){ closeEdit(); $('confirmModal').classList.remove('open'); } });
+  $('confirmModal').addEventListener('click', e=>{ if(e.target.classList.contains('bg')) e.currentTarget.classList.remove('open'); });
+  document.addEventListener('keydown', e=>{ if(e.key==='Escape'){ $('editModal').classList.remove('open'); $('confirmModal').classList.remove('open'); } });
   window.addEventListener('scroll', ()=>{ document.body.classList.toggle('scrolled', window.scrollY>10); }, {passive:true});
 });
 </script>
